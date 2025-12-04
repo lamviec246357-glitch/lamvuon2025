@@ -1,36 +1,521 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi phí làm vườn</title>
     <style>
-        body { font-family: Arial; background: #e8f5e8; padding: 40px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h1 { color: #2d5c2a; text-align: center; }
-        .success { background: #4CAF50; color: white; padding: 20px; border-radius: 10px; text-align: center; margin: 20px 0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7f0;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 4px solid #4CAF50;
+        }
+        
+        h1 {
+            color: #2d5c2a;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+        
+        .success-banner {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .success-banner h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #4CAF50;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            color: #2d5c2a;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .amount {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .note {
+            color: #777;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+        }
+        
+        button:hover {
+            background-color: #3d8b40;
+            transform: scale(1.05);
+        }
+        
+        .instructions {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 40px;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .instructions h3 {
+            color: #2d5c2a;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 2px solid #eee;
+            color: #777;
+            font-size: 0.95em;
+        }
+        
+        .url-display {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+            border: 1px solid #4CAF50;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .amount {
+                font-size: 1.8em;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌿 CHI PHÍ LÀM VƯỜN 🎉</h1>
+        <header>
+            <h1>🌿 CHI PHÍ LÀM VƯỜN 🎉</h1>
+            <p>Thống kê chi phí làm vườn tự động từ Google Sheet</p>
+        </header>
         
-        <div class="success">
+        <div class="success-banner">
             <h2>✅ THÀNH CÔNG!</h2>
-            <p>Trang web đã được tạo thành công!</p>
-            <p>Bước tiếp theo: Kích hoạt GitHub Pages</p>
+            <p>Trang web của bạn đã hoạt động trên GitHub Pages!</p>
+            <p><strong>URL:</strong> <span id="currentUrl"></span></p>
         </div>
         
-        <h3>Hướng dẫn tiếp theo:</h3>
-        <ol>
-            <li>Vào Settings → Pages</li>
-            <li>Chọn Branch: main, Folder: / (root)</li>
-            <li>Click Save</li>
-            <li>Chờ 2-5 phút</li>
-            <li>Truy cập trang web</li>
-        </ol>
+        <div class="summary-grid">
+            <div class="card">
+                <h3>💰 Tổng chi phí làm vườn</h3>
+                <div class="amount" id="totalChiPhi">0 ₫</div>
+                <div class="note">D = Phí vật tư + E = Tiền công</div>
+            </div>
+            
+            <div class="card">
+                <h3>🛠️ Tổng phí vật tư</h3>
+                <div class="amount" id="totalVatTu">0 ₫</div>
+                <div class="note">Cột D trong Google Sheet</div>
+            </div>
+            
+            <div class="card">
+                <h3>👷 Tổng tiền công</h3>
+                <div class="amount" id="totalTienCong">0 ₫</div>
+                <div class="note">Cột E trong Google Sheet</div>
+            </div>
+            
+            <div class="card">
+                <h3>👨 Triều</h3>
+                <div class="amount" id="totalTrieu">0 ₫</div>
+                <div class="note">Cột G trong Google Sheet</div>
+            </div>
+            
+            <div class="card">
+                <h3>👨 Tèo</h3>
+                <div class="amount" id="totalTeo">0 ₫</div>
+                <div class="note">Cột H trong Google Sheet</div>
+            </div>
+            
+            <div class="card">
+                <h3>👨 Thiện</h3>
+                <div class="amount" id="totalThien">0 ₫</div>
+                <div class="note">Cột I trong Google Sheet</div>
+            </div>
+            
+            <div class="card">
+                <h3>👨 Thuân</h3>
+                <div class="amount" id="totalThuan">0 ₫</div>
+                <div class="note">Cột J trong Google Sheet</div>
+            </div>
+        </div>
         
-        <footer style="text-align: center; margin-top: 30px; color: #777;">
-            <p>Trang web chi phí làm vườn - Tự động từ Google Sheet</p>
+        <div class="button-container">
+            <button onclick="showDetail()">📋 Xem chi tiết</button>
+        </div>
+        
+        <div id="detailSection" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 25px; color: #2d5c2a;">Chi tiết các khoản chi</h2>
+            <div class="loading" id="loadingDetail">
+                Đang tải dữ liệu từ Google Sheet...
+                <p style="margin-top: 10px; font-size: 0.9em;">
+                    Cần cấu hình Google Sheet ID để xem dữ liệu thực
+                </p>
+            </div>
+            <div id="detailContent"></div>
+            <div class="button-container">
+                <button onclick="hideDetail()" style="background-color: #666;">Đóng chi tiết</button>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📝 Hướng dẫn cấu hình Google Sheet:</h3>
+            <ol>
+                <li>Mở Google Sheet "Chi phi lam vuon"</li>
+                <li>Copy ID từ URL (phần giữa /d/ và /edit)</li>
+                <li>Quay lại file này, tìm dòng <code>const SHEET_ID = ''</code></li>
+                <li>Dán ID vào giữa dấu nháy đơn: <code>const SHEET_ID = 'ID_CUA_BAN'</code></li>
+                <li>Click "Commit changes" để lưu</li>
+                <li>Refresh trang web sau 1 phút</li>
+            </ol>
+            
+            <div class="url-display">
+                <strong>URL trang web của bạn:</strong><br>
+                https://lamviec246357-glitch.github.io/lamvuon2025/
+            </div>
+        </div>
+        
+        <footer>
+            <p>Trang web chi phí làm vườn - Tự động cập nhật từ Google Sheet</p>
+            <p>© 2025 - Cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></p>
         </footer>
     </div>
+
+    <script>
+        // ============================
+        // CẤU HÌNH QUAN TRỌNG - THAY ĐỔI Ở ĐÂY
+        // ============================
+        
+        // THAY ĐỔI ID NÀY BẰNG ID CỦA SHEET CỦA BẠN
+        const SHEET_ID = '';
+        const SHEET_NAME = 'SR2526';
+        
+        // ============================
+        // HÀM HIỂN THỊ
+        // ============================
+        
+        // Hiển thị URL hiện tại
+        document.getElementById('currentUrl').textContent = window.location.href;
+        
+        // Định dạng tiền Việt Nam
+        function formatCurrency(value) {
+            if (!value && value !== 0) return '0 ₫';
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(value);
+        }
+        
+        // Hiển thị/ẩn chi tiết
+        function showDetail() {
+            if (!SHEET_ID) {
+                alert('⚠️ Vui lòng cấu hình Google Sheet ID trước!\n\nXem hướng dẫn trong phần "Hướng dẫn cấu hình Google Sheet"');
+                return;
+            }
+            document.getElementById('detailSection').style.display = 'block';
+            loadDetailData();
+        }
+        
+        function hideDetail() {
+            document.getElementById('detailSection').style.display = 'none';
+        }
+        
+        // Tải dữ liệu chi tiết
+        async function loadDetailData() {
+            if (!SHEET_ID) {
+                document.getElementById('detailContent').innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #d32f2f;">
+                        <h3>Chưa cấu hình Google Sheet ID</h3>
+                        <p>Vui lòng thêm ID Google Sheet vào mã nguồn</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(url);
+                const csvText = await response.text();
+                
+                // Xử lý dữ liệu CSV
+                const rows = parseCSV(csvText);
+                
+                if (rows.length < 3) {
+                    document.getElementById('detailContent').innerHTML = `
+                        <div style="text-align: center; padding: 30px; color: #d32f2f;">
+                            <h3>Không có dữ liệu</h3>
+                            <p>Google Sheet không có dữ liệu hoặc Sheet name không đúng</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Tính toán tổng và hiển thị
+                calculateAndDisplayTotals(rows);
+                displayDetailTable(rows);
+                
+                // Cập nhật thời gian
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('vi-VN');
+                
+            } catch (error) {
+                console.error('Lỗi khi tải dữ liệu:', error);
+                document.getElementById('detailContent').innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #d32f2f;">
+                        <h3>Lỗi khi tải dữ liệu</h3>
+                        <p>Vui lòng kiểm tra:</p>
+                        <ul style="text-align: left; display: inline-block; margin-top: 10px;">
+                            <li>Google Sheet ID có đúng không</li>
+                            <li>Sheet đã chia sẻ public chưa</li>
+                            <li>Sheet name có đúng "SR2526" không</li>
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('loadingDetail').style.display = 'none';
+        }
+        
+        // Phân tích CSV
+        function parseCSV(csvText) {
+            const rows = [];
+            let currentRow = [];
+            let currentField = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < csvText.length; i++) {
+                const char = csvText[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentField);
+                    currentField = '';
+                } else if (char === '\n' && !inQuotes) {
+                    currentRow.push(currentField);
+                    rows.push(currentRow);
+                    currentRow = [];
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+            }
+            
+            if (currentField || currentRow.length > 0) {
+                currentRow.push(currentField);
+                rows.push(currentRow);
+            }
+            
+            return rows;
+        }
+        
+        // Tính toán và hiển thị tổng
+        function calculateAndDisplayTotals(rows) {
+            let totalVatTu = 0, totalTienCong = 0, totalTrieu = 0, totalTeo = 0, totalThien = 0, totalThuan = 0;
+            
+            // Bắt đầu từ hàng 3 (index 2) vì hàng 1-2 là tiêu đề
+            for (let i = 2; i < rows.length; i++) {
+                const row = rows[i];
+                totalVatTu += parseFloat(row[3] || 0);
+                totalTienCong += parseFloat(row[4] || 0);
+                totalTrieu += parseFloat(row[6] || 0);
+                totalTeo += parseFloat(row[7] || 0);
+                totalThien += parseFloat(row[8] || 0);
+                totalThuan += parseFloat(row[9] || 0);
+            }
+            
+            const totalChiPhi = totalVatTu + totalTienCong;
+            
+            // Cập nhật giao diện
+            document.getElementById('totalChiPhi').textContent = formatCurrency(totalChiPhi);
+            document.getElementById('totalVatTu').textContent = formatCurrency(totalVatTu);
+            document.getElementById('totalTienCong').textContent = formatCurrency(totalTienCong);
+            document.getElementById('totalTrieu').textContent = formatCurrency(totalTrieu);
+            document.getElementById('totalTeo').textContent = formatCurrency(totalTeo);
+            document.getElementById('totalThien').textContent = formatCurrency(totalThien);
+            document.getElementById('totalThuan').textContent = formatCurrency(totalThuan);
+        }
+        
+        // Hiển thị bảng chi tiết
+        function displayDetailTable(rows) {
+            let html = `
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                        <thead>
+                            <tr style="background-color: #4CAF50; color: white;">
+                                <th style="padding: 15px; text-align: left;">ID</th>
+                                <th style="padding: 15px; text-align: left;">Ngày</th>
+                                <th style="padding: 15px; text-align: left;">Nội dung</th>
+                                <th style="padding: 15px; text-align: left;">Phí vật tư</th>
+                                <th style="padding: 15px; text-align: left;">Tiền công</th>
+                                <th style="padding: 15px; text-align: left;">Triều</th>
+                                <th style="padding: 15px; text-align: left;">Tèo</th>
+                                <th style="padding: 15px; text-align: left;">Thiện</th>
+                                <th style="padding: 15px; text-align: left;">Thuân</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            // Bắt đầu từ hàng 3
+            for (let i = 2; i < Math.min(rows.length, 52); i++) { // Hiển thị tối đa 50 dòng
+                const row = rows[i];
+                html += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px 15px;">${row[0] || ''}</td>
+                        <td style="padding: 12px 15px;">${row[1] || ''}</td>
+                        <td style="padding: 12px 15px;">${row[2] || ''}</td>
+                        <td style="padding: 12px 15px;">${formatCurrency(row[3] || 0)}</td>
+                        <td style="padding: 12px 15px;">${formatCurrency(row[4] || 0)}</td>
+                        <td style="padding: 12px 15px;">${formatCurrency(row[6] || 0)}</td>
+                        <td style="padding: 12px 15px;">${formatCurrency(row[7] || 0)}</td>
+                        <td style="padding: 12px 15px;">${formatCurrency(row[8] || 0)}</td>
+                        <td style="padding: 12px 15px;">${formatCurrency(row[9] || 0)}</td>
+                    </tr>
+                `;
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 20px; color: #666;">
+                        <strong>Tổng số bản ghi:</strong> ${Math.max(0, rows.length - 2)} dòng dữ liệu
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('detailContent').innerHTML = html;
+        }
+        
+        // Tự động cập nhật dữ liệu mỗi 5 phút
+        if (SHEET_ID) {
+            setInterval(loadDetailData, 5 * 60 * 1000);
+        }
+        
+        // Kiểm tra khi trang được tải
+        window.onload = function() {
+            if (!SHEET_ID) {
+                setTimeout(() => {
+                    alert('⚠️ QUAN TRỌNG: Chưa cấu hình Google Sheet ID!\n\nVui lòng thêm ID Google Sheet vào mã nguồn để hiển thị dữ liệu thực.');
+                }, 1000);
+            } else {
+                // Tự động tải dữ liệu nếu đã cấu hình
+                loadDetailData();
+            }
+        };
+    </script>
 </body>
 </html>
