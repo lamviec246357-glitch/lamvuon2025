@@ -195,6 +195,41 @@
             color: #666;
             font-style: italic;
         }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #4CAF50;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .data-success {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid #4CAF50;
+        }
     </style>
 </head>
 <body>
@@ -205,51 +240,52 @@
         </header>
         
         <div class="success-banner">
-            <h2>✅ THÀNH CÔNG!</h2>
-            <p>Trang web của bạn đã hoạt động trên GitHub Pages!</p>
+            <h2>✅ KẾT NỐI THÀNH CÔNG!</h2>
+            <p>Trang web đã được kết nối với Google Sheet của bạn!</p>
             <p><strong>URL:</strong> <span id="currentUrl"></span></p>
         </div>
         
-        <div class="summary-grid">
+        <div id="summary" class="summary-grid">
+            <!-- Dữ liệu sẽ được tải tự động -->
             <div class="card">
                 <h3>💰 Tổng chi phí làm vườn</h3>
-                <div class="amount" id="totalChiPhi">0 ₫</div>
+                <div class="amount" id="totalChiPhi">Đang tải...</div>
                 <div class="note">D = Phí vật tư + E = Tiền công</div>
             </div>
             
             <div class="card">
                 <h3>🛠️ Tổng phí vật tư</h3>
-                <div class="amount" id="totalVatTu">0 ₫</div>
+                <div class="amount" id="totalVatTu">Đang tải...</div>
                 <div class="note">Cột D trong Google Sheet</div>
             </div>
             
             <div class="card">
                 <h3>👷 Tổng tiền công</h3>
-                <div class="amount" id="totalTienCong">0 ₫</div>
+                <div class="amount" id="totalTienCong">Đang tải...</div>
                 <div class="note">Cột E trong Google Sheet</div>
             </div>
             
             <div class="card">
                 <h3>👨 Triều</h3>
-                <div class="amount" id="totalTrieu">0 ₫</div>
+                <div class="amount" id="totalTrieu">Đang tải...</div>
                 <div class="note">Cột G trong Google Sheet</div>
             </div>
             
             <div class="card">
                 <h3>👨 Tèo</h3>
-                <div class="amount" id="totalTeo">0 ₫</div>
+                <div class="amount" id="totalTeo">Đang tải...</div>
                 <div class="note">Cột H trong Google Sheet</div>
             </div>
             
             <div class="card">
                 <h3>👨 Thiện</h3>
-                <div class="amount" id="totalThien">0 ₫</div>
+                <div class="amount" id="totalThien">Đang tải...</div>
                 <div class="note">Cột I trong Google Sheet</div>
             </div>
             
             <div class="card">
                 <h3>👨 Thuân</h3>
-                <div class="amount" id="totalThuan">0 ₫</div>
+                <div class="amount" id="totalThuan">Đang tải...</div>
                 <div class="note">Cột J trong Google Sheet</div>
             </div>
         </div>
@@ -262,9 +298,6 @@
             <h2 style="text-align: center; margin-bottom: 25px; color: #2d5c2a;">Chi tiết các khoản chi</h2>
             <div class="loading" id="loadingDetail">
                 Đang tải dữ liệu từ Google Sheet...
-                <p style="margin-top: 10px; font-size: 0.9em;">
-                    Cần cấu hình Google Sheet ID để xem dữ liệu thực
-                </p>
             </div>
             <div id="detailContent"></div>
             <div class="button-container">
@@ -273,35 +306,40 @@
         </div>
         
         <div class="instructions">
-            <h3>📝 Hướng dẫn cấu hình Google Sheet:</h3>
-            <ol>
-                <li>Mở Google Sheet "Chi phi lam vuon"</li>
-                <li>Copy ID từ URL (phần giữa /d/ và /edit)</li>
-                <li>Quay lại file này, tìm dòng <code>const SHEET_ID = ''</code></li>
-                <li>Dán ID vào giữa dấu nháy đơn: <code>const SHEET_ID = 'ID_CUA_BAN'</code></li>
-                <li>Click "Commit changes" để lưu</li>
-                <li>Refresh trang web sau 1 phút</li>
-            </ol>
+            <h3>📊 Thông tin kết nối:</h3>
+            <div class="data-success">
+                <p><strong>✅ Google Sheet ID:</strong> 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
+                <p><strong>✅ Sheet name:</strong> SR2526</p>
+                <p><strong>✅ Tự động cập nhật:</strong> Mỗi 5 phút</p>
+            </div>
             
             <div class="url-display">
-                <strong>URL trang web của bạn:</strong><br>
+                <strong>🌐 URL trang web của bạn:</strong><br>
                 https://lamviec246357-glitch.github.io/lamvuon2025/
             </div>
+            
+            <h3 style="margin-top: 25px;">📝 Lưu ý quan trọng:</h3>
+            <ol>
+                <li>Google Sheet phải được chia sẻ <strong>public</strong> (View cho mọi người)</li>
+                <li>Dữ liệu sẽ tự động cập nhật khi bạn sửa Google Sheet</li>
+                <li>Refresh trang web để xem dữ liệu mới nhất</li>
+            </ol>
         </div>
         
         <footer>
             <p>Trang web chi phí làm vườn - Tự động cập nhật từ Google Sheet</p>
             <p>© 2025 - Cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></p>
+            <p style="margin-top: 10px; font-size: 0.85em; color: #999;">
+                Sheet ID: 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4
+            </p>
         </footer>
     </div>
 
     <script>
         // ============================
-        // CẤU HÌNH QUAN TRỌNG - THAY ĐỔI Ở ĐÂY
+        // CẤU HÌNH GOOGLE SHEET
         // ============================
-        
-        // THAY ĐỔI ID NÀY BẰNG ID CỦA SHEET CỦA BẠN
-        const SHEET_ID = '';
+        const SHEET_ID = '1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4';
         const SHEET_NAME = 'SR2526';
         
         // ============================
@@ -313,7 +351,7 @@
         
         // Định dạng tiền Việt Nam
         function formatCurrency(value) {
-            if (!value && value !== 0) return '0 ₫';
+            if (value === null || value === undefined || isNaN(value)) return '0 ₫';
             return new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
@@ -322,10 +360,6 @@
         
         // Hiển thị/ẩn chi tiết
         function showDetail() {
-            if (!SHEET_ID) {
-                alert('⚠️ Vui lòng cấu hình Google Sheet ID trước!\n\nXem hướng dẫn trong phần "Hướng dẫn cấu hình Google Sheet"');
-                return;
-            }
             document.getElementById('detailSection').style.display = 'block';
             loadDetailData();
         }
@@ -336,31 +370,25 @@
         
         // Tải dữ liệu chi tiết
         async function loadDetailData() {
-            if (!SHEET_ID) {
-                document.getElementById('detailContent').innerHTML = `
-                    <div style="text-align: center; padding: 30px; color: #d32f2f;">
-                        <h3>Chưa cấu hình Google Sheet ID</h3>
-                        <p>Vui lòng thêm ID Google Sheet vào mã nguồn</p>
-                    </div>
-                `;
-                return;
-            }
-            
             try {
+                // Hiển thị loading
+                document.getElementById('loadingDetail').style.display = 'block';
+                document.getElementById('detailContent').innerHTML = '';
+                
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
                 const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Lỗi HTTP: ${response.status}`);
+                }
+                
                 const csvText = await response.text();
                 
                 // Xử lý dữ liệu CSV
                 const rows = parseCSV(csvText);
                 
                 if (rows.length < 3) {
-                    document.getElementById('detailContent').innerHTML = `
-                        <div style="text-align: center; padding: 30px; color: #d32f2f;">
-                            <h3>Không có dữ liệu</h3>
-                            <p>Google Sheet không có dữ liệu hoặc Sheet name không đúng</p>
-                        </div>
-                    `;
+                    showError('Google Sheet không có dữ liệu hoặc Sheet name không đúng');
                     return;
                 }
                 
@@ -371,22 +399,30 @@
                 // Cập nhật thời gian
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString('vi-VN');
                 
+                // Ẩn loading
+                document.getElementById('loadingDetail').style.display = 'none';
+                
             } catch (error) {
                 console.error('Lỗi khi tải dữ liệu:', error);
-                document.getElementById('detailContent').innerHTML = `
-                    <div style="text-align: center; padding: 30px; color: #d32f2f;">
-                        <h3>Lỗi khi tải dữ liệu</h3>
-                        <p>Vui lòng kiểm tra:</p>
-                        <ul style="text-align: left; display: inline-block; margin-top: 10px;">
-                            <li>Google Sheet ID có đúng không</li>
-                            <li>Sheet đã chia sẻ public chưa</li>
-                            <li>Sheet name có đúng "SR2526" không</li>
-                        </ul>
-                    </div>
-                `;
+                showError(`Không thể tải dữ liệu từ Google Sheet. Vui lòng kiểm tra:<br>
+                    1. Google Sheet đã chia sẻ public chưa?<br>
+                    2. Sheet name có đúng "SR2526" không?<br>
+                    3. Kết nối internet của bạn`);
             }
-            
+        }
+        
+        // Hiển thị lỗi
+        function showError(message) {
             document.getElementById('loadingDetail').style.display = 'none';
+            document.getElementById('detailContent').innerHTML = `
+                <div style="text-align: center; padding: 30px; color: #d32f2f; background: #ffebee; border-radius: 8px;">
+                    <h3>❌ Lỗi kết nối</h3>
+                    <p>${message}</p>
+                    <button onclick="loadDetailData()" style="margin-top: 15px; padding: 10px 20px; background: #d32f2f; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Thử lại
+                    </button>
+                </div>
+            `;
         }
         
         // Phân tích CSV
@@ -402,20 +438,24 @@
                 if (char === '"') {
                     inQuotes = !inQuotes;
                 } else if (char === ',' && !inQuotes) {
-                    currentRow.push(currentField);
+                    currentRow.push(currentField.trim());
                     currentField = '';
                 } else if (char === '\n' && !inQuotes) {
-                    currentRow.push(currentField);
+                    currentRow.push(currentField.trim());
                     rows.push(currentRow);
                     currentRow = [];
                     currentField = '';
+                } else if (char === '\r') {
+                    // Bỏ qua ký tự carriage return
+                    continue;
                 } else {
                     currentField += char;
                 }
             }
             
-            if (currentField || currentRow.length > 0) {
-                currentRow.push(currentField);
+            // Thêm dòng cuối cùng
+            if (currentField.trim() || currentRow.length > 0) {
+                currentRow.push(currentField.trim());
                 rows.push(currentRow);
             }
             
@@ -429,6 +469,8 @@
             // Bắt đầu từ hàng 3 (index 2) vì hàng 1-2 là tiêu đề
             for (let i = 2; i < rows.length; i++) {
                 const row = rows[i];
+                if (row.length < 10) continue; // Bỏ qua hàng không đủ cột
+                
                 totalVatTu += parseFloat(row[3] || 0);
                 totalTienCong += parseFloat(row[4] || 0);
                 totalTrieu += parseFloat(row[6] || 0);
@@ -452,69 +494,66 @@
         // Hiển thị bảng chi tiết
         function displayDetailTable(rows) {
             let html = `
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <div style="overflow-x: auto; margin-top: 20px;">
+                    <table>
                         <thead>
-                            <tr style="background-color: #4CAF50; color: white;">
-                                <th style="padding: 15px; text-align: left;">ID</th>
-                                <th style="padding: 15px; text-align: left;">Ngày</th>
-                                <th style="padding: 15px; text-align: left;">Nội dung</th>
-                                <th style="padding: 15px; text-align: left;">Phí vật tư</th>
-                                <th style="padding: 15px; text-align: left;">Tiền công</th>
-                                <th style="padding: 15px; text-align: left;">Triều</th>
-                                <th style="padding: 15px; text-align: left;">Tèo</th>
-                                <th style="padding: 15px; text-align: left;">Thiện</th>
-                                <th style="padding: 15px; text-align: left;">Thuân</th>
+                            <tr>
+                                <th>ID</th>
+                                <th>Ngày</th>
+                                <th>Nội dung</th>
+                                <th>Phí vật tư</th>
+                                <th>Tiền công</th>
+                                <th>Triều</th>
+                                <th>Tèo</th>
+                                <th>Thiện</th>
+                                <th>Thuân</th>
                             </tr>
                         </thead>
                         <tbody>
             `;
             
-            // Bắt đầu từ hàng 3
-            for (let i = 2; i < Math.min(rows.length, 52); i++) { // Hiển thị tối đa 50 dòng
+            // Bắt đầu từ hàng 3 (bỏ 2 hàng tiêu đề)
+            let dataCount = 0;
+            for (let i = 2; i < rows.length; i++) {
                 const row = rows[i];
+                if (row.length < 10) continue; // Bỏ qua hàng không đủ cột
+                
                 html += `
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px 15px;">${row[0] || ''}</td>
-                        <td style="padding: 12px 15px;">${row[1] || ''}</td>
-                        <td style="padding: 12px 15px;">${row[2] || ''}</td>
-                        <td style="padding: 12px 15px;">${formatCurrency(row[3] || 0)}</td>
-                        <td style="padding: 12px 15px;">${formatCurrency(row[4] || 0)}</td>
-                        <td style="padding: 12px 15px;">${formatCurrency(row[6] || 0)}</td>
-                        <td style="padding: 12px 15px;">${formatCurrency(row[7] || 0)}</td>
-                        <td style="padding: 12px 15px;">${formatCurrency(row[8] || 0)}</td>
-                        <td style="padding: 12px 15px;">${formatCurrency(row[9] || 0)}</td>
+                    <tr>
+                        <td>${row[0] || ''}</td>
+                        <td>${row[1] || ''}</td>
+                        <td>${row[2] || ''}</td>
+                        <td>${formatCurrency(row[3] || 0)}</td>
+                        <td>${formatCurrency(row[4] || 0)}</td>
+                        <td>${formatCurrency(row[6] || 0)}</td>
+                        <td>${formatCurrency(row[7] || 0)}</td>
+                        <td>${formatCurrency(row[8] || 0)}</td>
+                        <td>${formatCurrency(row[9] || 0)}</td>
                     </tr>
                 `;
+                dataCount++;
             }
             
             html += `
                         </tbody>
                     </table>
-                    <p style="margin-top: 20px; color: #666;">
-                        <strong>Tổng số bản ghi:</strong> ${Math.max(0, rows.length - 2)} dòng dữ liệu
-                    </p>
+                    <div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 8px;">
+                        <p><strong>📊 Tổng số bản ghi:</strong> ${dataCount} dòng dữ liệu</p>
+                        <p><strong>🔄 Tự động cập nhật:</strong> Mỗi 5 phút</p>
+                    </div>
                 </div>
             `;
             
             document.getElementById('detailContent').innerHTML = html;
         }
         
-        // Tự động cập nhật dữ liệu mỗi 5 phút
-        if (SHEET_ID) {
-            setInterval(loadDetailData, 5 * 60 * 1000);
-        }
-        
-        // Kiểm tra khi trang được tải
+        // Tự động tải dữ liệu khi trang được mở
         window.onload = function() {
-            if (!SHEET_ID) {
-                setTimeout(() => {
-                    alert('⚠️ QUAN TRỌNG: Chưa cấu hình Google Sheet ID!\n\nVui lòng thêm ID Google Sheet vào mã nguồn để hiển thị dữ liệu thực.');
-                }, 1000);
-            } else {
-                // Tự động tải dữ liệu nếu đã cấu hình
-                loadDetailData();
-            }
+            // Tự động tải dữ liệu tổng
+            loadDetailData();
+            
+            // Tự động cập nhật dữ liệu mỗi 5 phút
+            setInterval(loadDetailData, 5 * 60 * 1000);
         };
     </script>
 </body>
