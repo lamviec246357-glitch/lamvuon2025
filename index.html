@@ -52,11 +52,6 @@
             box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
         }
         
-        .success-banner h2 {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
-        
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -83,10 +78,6 @@
             color: #2d5c2a;
             margin-bottom: 20px;
             font-size: 1.3em;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .amount {
@@ -94,10 +85,6 @@
             font-weight: bold;
             color: #4CAF50;
             margin: 20px 0;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .note {
@@ -137,21 +124,6 @@
             border-left: 5px solid #4CAF50;
         }
         
-        .instructions h3 {
-            color: #2d5c2a;
-            margin-bottom: 15px;
-        }
-        
-        .instructions ol {
-            padding-left: 25px;
-            margin: 15px 0;
-        }
-        
-        .instructions li {
-            margin-bottom: 10px;
-            padding-left: 10px;
-        }
-        
         footer {
             text-align: center;
             margin-top: 50px;
@@ -169,24 +141,6 @@
             font-family: monospace;
             word-break: break-all;
             border: 1px solid #4CAF50;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .amount {
-                font-size: 1.8em;
-            }
-            
-            h1 {
-                font-size: 2em;
-            }
         }
         
         .loading {
@@ -211,8 +165,6 @@
         th {
             background-color: #4CAF50;
             color: white;
-            position: sticky;
-            top: 0;
         }
         
         tr:nth-child(even) {
@@ -223,7 +175,7 @@
             background-color: #f1f1f1;
         }
         
-        .data-success {
+        .data-info {
             background: #e8f5e9;
             padding: 15px;
             border-radius: 8px;
@@ -231,86 +183,92 @@
             border-left: 5px solid #4CAF50;
         }
         
-        .info-box {
-            background: #e3f2fd;
-            border-radius: 8px;
+        .error-box {
+            background: #ffebee;
             padding: 15px;
+            border-radius: 8px;
             margin: 15px 0;
-            border-left: 5px solid #2196f3;
+            border-left: 5px solid #f44336;
+        }
+        
+        .debug-info {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 0.9em;
+            color: #1565c0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🌿 CHI PHÍ LÀM VƯỜN 🎉</h1>
+            <h1>🌿 CHI PHÍ LÀM VƯỜN</h1>
             <p>Thống kê chi phí làm vườn tự động từ Google Sheet</p>
         </header>
         
         <div class="success-banner">
             <h2>✅ KẾT NỐI THÀNH CÔNG!</h2>
-            <p>Trang web đã được kết nối với Google Sheet của bạn!</p>
-            <p><strong>URL:</strong> <span id="currentUrl"></span></p>
+            <p>Trang web đã kết nối với Google Sheet của bạn</p>
+            <p><strong>Tính tổng từ D3:D89 và các cột tương ứng</strong></p>
         </div>
         
-        <div class="info-box">
-            <p><strong>📌 Lưu ý:</strong> Dữ liệu được lấy từ <strong>hàng 2</strong> trong Google Sheet (các ô tổng cộng)</p>
+        <div id="debugInfo" class="debug-info" style="display: none;">
+            Đang tải thông tin debug...
         </div>
         
         <div id="summary" class="summary-grid">
-            <!-- Dữ liệu sẽ được tải tự động -->
             <div class="card">
                 <h3>💰 Tổng chi phí làm vườn</h3>
                 <div class="amount" id="totalChiPhi">Đang tải...</div>
-                <div class="note">Giá trị từ ô <strong>C2</strong></div>
+                <div class="note">Phí vật tư + Tiền công</div>
             </div>
             
             <div class="card">
                 <h3>🛠️ Tổng phí vật tư</h3>
                 <div class="amount" id="totalVatTu">Đang tải...</div>
-                <div class="note">Giá trị từ ô <strong>D2</strong></div>
+                <div class="note">SUM(D3:D89) = 25.950.000</div>
             </div>
             
             <div class="card">
                 <h3>👷 Tổng tiền công</h3>
                 <div class="amount" id="totalTienCong">Đang tải...</div>
-                <div class="note">Giá trị từ ô <strong>E2</strong></div>
+                <div class="note">SUM(E3:E89)</div>
             </div>
             
             <div class="card">
                 <h3>👨 Triều</h3>
                 <div class="amount" id="totalTrieu">Đang tải...</div>
-                <div class="note">Giá trị từ ô <strong>G2</strong></div>
+                <div class="note">SUM(G3:G89)</div>
             </div>
             
             <div class="card">
                 <h3>👨 Tèo</h3>
                 <div class="amount" id="totalTeo">Đang tải...</div>
-                <div class="note">Giá trị từ ô <strong>H2</strong></div>
+                <div class="note">SUM(H3:H89)</div>
             </div>
             
             <div class="card">
                 <h3>👨 Thiện</h3>
                 <div class="amount" id="totalThien">Đang tải...</div>
-                <div class="note">Giá trị từ ô <strong>I2</strong></div>
+                <div class="note">SUM(I3:I89)</div>
             </div>
             
             <div class="card">
                 <h3>👨 Thuận</h3>
                 <div class="amount" id="totalThuan">Đang tải...</div>
-                <div class="note">Giá trị từ ô <strong>J2</strong></div>
+                <div class="note">SUM(J3:J89)</div>
             </div>
         </div>
         
         <div class="button-container">
-            <button onclick="showDetail()">📋 Xem chi tiết</button>
+            <button onclick="showDetail()">📋 Xem chi tiết (D3:D89)</button>
         </div>
         
         <div id="detailSection" style="display: none;">
-            <h2 style="text-align: center; margin-bottom: 25px; color: #2d5c2a;">Chi tiết các khoản chi</h2>
-            <div class="loading" id="loadingDetail">
-                Đang tải dữ liệu từ Google Sheet...
-            </div>
+            <h2 style="text-align: center; margin-bottom: 25px; color: #2d5c2a;">Chi tiết các khoản chi (Hàng 3-89)</h2>
+            <div class="loading" id="loadingDetail">Đang tải dữ liệu...</div>
             <div id="detailContent"></div>
             <div class="button-container">
                 <button onclick="hideDetail()" style="background-color: #666;">Đóng chi tiết</button>
@@ -318,34 +276,24 @@
         </div>
         
         <div class="instructions">
-            <h3>📊 Thông tin kết nối:</h3>
-            <div class="data-success">
-                <p><strong>✅ Google Sheet ID:</strong> 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
-                <p><strong>✅ Sheet name:</strong> SR2526</p>
-                <p><strong>✅ Lấy giá trị từ:</strong> Hàng 2 (C2, D2, E2, G2, H2, I2, J2)</p>
-                <p><strong>✅ Tự động cập nhật:</strong> Mỗi 5 phút</p>
+            <div class="data-info">
+                <p><strong>📊 Thông tin kết nối:</strong></p>
+                <p>✅ Google Sheet ID: 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
+                <p>✅ Sheet name: SR2526</p>
+                <p>✅ Tính tổng từ: Hàng 3 đến 89</p>
+                <p>✅ Kiểm tra: Tổng phí vật tư phải = 25.950.000</p>
             </div>
             
             <div class="url-display">
                 <strong>🌐 URL trang web của bạn:</strong><br>
                 https://lamviec246357-glitch.github.io/lamvuon2025/
             </div>
-            
-            <h3 style="margin-top: 25px;">📝 Lưu ý quan trọng:</h3>
-            <ol>
-                <li>Google Sheet phải được chia sẻ <strong>public</strong> (View cho mọi người)</li>
-                <li>Đảm bảo hàng 2 có các giá trị tổng cộng</li>
-                <li>Dữ liệu sẽ tự động cập nhật khi bạn sửa Google Sheet</li>
-                <li>Refresh trang web để xem dữ liệu mới nhất</li>
-            </ol>
         </div>
         
         <footer>
             <p>Trang web chi phí làm vườn - Tự động cập nhật từ Google Sheet</p>
             <p>© 2025 - Cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></p>
-            <p style="margin-top: 10px; font-size: 0.85em; color: #999;">
-                Sheet ID: 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4
-            </p>
+            <p id="rowCountInfo" style="font-size: 0.85em; color: #666;">Đang đếm số hàng...</p>
         </footer>
     </div>
 
@@ -355,21 +303,58 @@
         // ============================
         const SHEET_ID = '1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4';
         const SHEET_NAME = 'SR2526';
+        const START_ROW = 3; // Bắt đầu từ hàng 3
+        const END_ROW = 89;  // Kết thúc ở hàng 89
         
         // ============================
-        // HÀM HIỂN THỊ
+        // HÀM CHÍNH
         // ============================
-        
-        // Hiển thị URL hiện tại
-        document.getElementById('currentUrl').textContent = window.location.href;
         
         // Định dạng tiền Việt Nam
         function formatCurrency(value) {
-            if (value === null || value === undefined || value === '' || isNaN(value)) return '0 ₫';
+            if (value === null || value === undefined || isNaN(value)) {
+                return '0 ₫';
+            }
+            
+            // Đảm bảo value là số
+            const numValue = typeof value === 'number' ? value : parseFloat(value);
+            
+            if (isNaN(numValue)) {
+                return '0 ₫';
+            }
+            
             return new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
-                currency: 'VND'
-            }).format(parseFloat(value));
+                currency: 'VND',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(numValue);
+        }
+        
+        // Xử lý số từ Google Sheet (hỗ trợ định dạng 1.000.000)
+        function parseSheetNumber(value) {
+            if (!value && value !== 0) return 0;
+            
+            // Nếu là số, trả về luôn
+            if (typeof value === 'number') return value;
+            
+            // Nếu là chuỗi
+            if (typeof value === 'string') {
+                // Xóa tất cả dấu chấm phân cách nghìn
+                let cleanValue = value.replace(/\./g, '');
+                // Thay dấu phẩy thập phân thành dấu chấm
+                cleanValue = cleanValue.replace(',', '.');
+                // Xóa ký tự không phải số, dấu chấm, dấu trừ
+                cleanValue = cleanValue.replace(/[^\d.-]/g, '');
+                
+                // Nếu chuỗi rỗng sau khi xử lý, trả về 0
+                if (cleanValue === '' || cleanValue === '-') return 0;
+                
+                const num = parseFloat(cleanValue);
+                return isNaN(num) ? 0 : num;
+            }
+            
+            return 0;
         }
         
         // Hiển thị/ẩn chi tiết
@@ -382,43 +367,40 @@
             document.getElementById('detailSection').style.display = 'none';
         }
         
-        // Tải dữ liệu chi tiết
+        // Tải dữ liệu từ Google Sheet với phương pháp mới
         async function loadDetailData() {
             try {
                 // Hiển thị loading
                 document.getElementById('loadingDetail').style.display = 'block';
                 document.getElementById('detailContent').innerHTML = '';
+                document.getElementById('debugInfo').style.display = 'block';
+                document.getElementById('debugInfo').innerHTML = '🔄 Đang tải dữ liệu từ Google Sheet...';
                 
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
-                const response = await fetch(url);
+                // Sử dụng Google Sheets API v4 với API key public
+                // Lưu ý: Cần chia sẻ Google Sheet public
+                const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=AIzaSyB3hVdHiStUP3h81FeAqS1gD57E5nC09N4`;
+                
+                const response = await fetch(apiUrl);
                 
                 if (!response.ok) {
                     throw new Error(`Lỗi HTTP: ${response.status}`);
                 }
                 
-                const csvText = await response.text();
+                const data = await response.json();
+                const rows = data.values || [];
                 
-                // Xử lý dữ liệu CSV
-                const rows = parseCSV(csvText);
+                document.getElementById('debugInfo').innerHTML = `✅ Đã tải ${rows.length} hàng từ Google Sheet`;
                 
-                if (rows.length < 2) {
-                    showError('Google Sheet không có đủ dữ liệu');
+                if (rows.length < START_ROW) {
+                    showError('Google Sheet không có đủ dữ liệu (ít hơn 3 hàng)');
                     return;
                 }
                 
-                // LẤY GIÁ TRỊ TỪ HÀNG 2 (index 1)
-                // Hàng 1 (index 0): Tiêu đề cột
-                // Hàng 2 (index 1): Giá trị tổng cộng
-                const row2 = rows[1]; // Hàng thứ 2 (index 1)
+                // Tính tổng từ hàng START_ROW đến END_ROW
+                calculateTotalsFromRange(rows);
                 
-                // C2 = cột 2 (index 2), D2 = cột 3 (index 3), E2 = cột 4 (index 4)
-                // G2 = cột 6 (index 6), H2 = cột 7 (index 7), I2 = cột 8 (index 8), J2 = cột 9 (index 9)
-                
-                // Hiển thị giá trị từ hàng 2
-                displayRow2Values(row2);
-                
-                // Hiển thị bảng chi tiết (từ hàng 3 trở đi)
-                displayDetailTable(rows);
+                // Hiển thị bảng chi tiết
+                displayDetailTableFromRange(rows);
                 
                 // Cập nhật thời gian
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString('vi-VN');
@@ -428,75 +410,56 @@
                 
             } catch (error) {
                 console.error('Lỗi khi tải dữ liệu:', error);
-                showError(`Không thể tải dữ liệu từ Google Sheet. Vui lòng kiểm tra:<br>
-                    1. Google Sheet đã chia sẻ public chưa?<br>
-                    2. Sheet name có đúng "SR2526" không?<br>
-                    3. Kết nối internet của bạn`);
+                
+                // Thử phương pháp CSV nếu API không hoạt động
+                document.getElementById('debugInfo').innerHTML = '🔄 API không hoạt động, thử phương pháp CSV...';
+                loadDataViaCSV();
             }
         }
         
-        // Hiển thị giá trị từ hàng 2
-        function displayRow2Values(row) {
-            // Kiểm tra nếu row có đủ phần tử
-            if (!row || row.length < 10) {
-                console.error('Hàng 2 không có đủ dữ liệu:', row);
-                return;
+        // Phương pháp dự phòng: Tải qua CSV
+        async function loadDataViaCSV() {
+            try {
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(csvUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Lỗi CSV: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                const rows = parseCSVAdvanced(csvText);
+                
+                document.getElementById('debugInfo').innerHTML = `✅ Đã tải ${rows.length} hàng qua CSV`;
+                
+                if (rows.length < START_ROW) {
+                    showError('Google Sheet không có đủ dữ liệu');
+                    return;
+                }
+                
+                // Tính tổng từ hàng START_ROW đến END_ROW
+                calculateTotalsFromRange(rows);
+                
+                // Hiển thị bảng chi tiết
+                displayDetailTableFromRange(rows);
+                
+                // Cập nhật thời gian
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('vi-VN');
+                
+                // Ẩn loading
+                document.getElementById('loadingDetail').style.display = 'none';
+                
+            } catch (error) {
+                console.error('Lỗi CSV:', error);
+                showError(`Không thể tải dữ liệu. Vui lòng kiểm tra:<br>
+                    1. Google Sheet đã chia sẻ public<br>
+                    2. Sheet name đúng "SR2526"<br>
+                    3. <a href="https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit" target="_blank">Kiểm tra Google Sheet</a>`);
             }
-            
-            // Lấy giá trị từ các cột (0-based index)
-            // C2 = cột C (index 2)
-            // D2 = cột D (index 3) 
-            // E2 = cột E (index 4)
-            // G2 = cột G (index 6)
-            // H2 = cột H (index 7)
-            // I2 = cột I (index 8)
-            // J2 = cột J (index 9)
-            
-            const c2Value = row[2] || '0';  // C2
-            const d2Value = row[3] || '0';  // D2
-            const e2Value = row[4] || '0';  // E2
-            const g2Value = row[6] || '0';  // G2
-            const h2Value = row[7] || '0';  // H2
-            const i2Value = row[8] || '0';  // I2
-            const j2Value = row[9] || '0';  // J2
-            
-            // Hiển thị lên giao diện
-            document.getElementById('totalChiPhi').textContent = formatCurrency(c2Value);
-            document.getElementById('totalVatTu').textContent = formatCurrency(d2Value);
-            document.getElementById('totalTienCong').textContent = formatCurrency(e2Value);
-            document.getElementById('totalTrieu').textContent = formatCurrency(g2Value);
-            document.getElementById('totalTeo').textContent = formatCurrency(h2Value);
-            document.getElementById('totalThien').textContent = formatCurrency(i2Value);
-            document.getElementById('totalThuan').textContent = formatCurrency(j2Value);
-            
-            // Log để debug
-            console.log('Dữ liệu từ hàng 2:', {
-                'C2 (Tổng chi phí)': c2Value,
-                'D2 (Phí vật tư)': d2Value,
-                'E2 (Tiền công)': e2Value,
-                'G2 (Triều)': g2Value,
-                'H2 (Tèo)': h2Value,
-                'I2 (Thiện)': i2Value,
-                'J2 (Thuận)': j2Value
-            });
         }
         
-        // Hiển thị lỗi
-        function showError(message) {
-            document.getElementById('loadingDetail').style.display = 'none';
-            document.getElementById('detailContent').innerHTML = `
-                <div style="text-align: center; padding: 30px; color: #d32f2f; background: #ffebee; border-radius: 8px;">
-                    <h3>❌ Lỗi kết nối</h3>
-                    <p>${message}</p>
-                    <button onclick="loadDetailData()" style="margin-top: 15px; padding: 10px 20px; background: #d32f2f; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        Thử lại
-                    </button>
-                </div>
-            `;
-        }
-        
-        // Phân tích CSV
-        function parseCSV(csvText) {
+        // Phân tích CSV nâng cao
+        function parseCSVAdvanced(csvText) {
             const rows = [];
             let currentRow = [];
             let currentField = '';
@@ -508,37 +471,116 @@
                 if (char === '"') {
                     inQuotes = !inQuotes;
                 } else if (char === ',' && !inQuotes) {
-                    currentRow.push(currentField.trim());
+                    currentRow.push(currentField);
                     currentField = '';
                 } else if (char === '\n' && !inQuotes) {
-                    currentRow.push(currentField.trim());
+                    currentRow.push(currentField);
                     rows.push(currentRow);
                     currentRow = [];
                     currentField = '';
                 } else if (char === '\r') {
-                    // Bỏ qua ký tự carriage return
                     continue;
                 } else {
                     currentField += char;
                 }
             }
             
-            // Thêm dòng cuối cùng
-            if (currentField.trim() || currentRow.length > 0) {
-                currentRow.push(currentField.trim());
+            // Thêm dòng cuối
+            if (currentField !== '' || currentRow.length > 0) {
+                currentRow.push(currentField);
                 rows.push(currentRow);
             }
             
             return rows;
         }
         
-        // Hiển thị bảng chi tiết (từ hàng 3 trở đi)
-        function displayDetailTable(rows) {
+        // Tính tổng từ phạm vi cụ thể (hàng START_ROW đến END_ROW)
+        function calculateTotalsFromRange(rows) {
+            let totalVatTu = 0;
+            let totalTienCong = 0;
+            let totalTrieu = 0;
+            let totalTeo = 0;
+            let totalThien = 0;
+            let totalThuan = 0;
+            
+            let actualEndRow = Math.min(END_ROW, rows.length);
+            let count = 0;
+            
+            document.getElementById('debugInfo').innerHTML += `<br>📊 Tính tổng từ hàng ${START_ROW} đến ${actualEndRow}`;
+            
+            for (let i = START_ROW - 1; i < actualEndRow; i++) {
+                const row = rows[i];
+                count++;
+                
+                // Cột D (index 3): Phí vật tư
+                if (row[3]) {
+                    const value = parseSheetNumber(row[3]);
+                    totalVatTu += value;
+                }
+                
+                // Cột E (index 4): Tiền công
+                if (row[4]) {
+                    const value = parseSheetNumber(row[4]);
+                    totalTienCong += value;
+                }
+                
+                // Cột G (index 6): Triều
+                if (row[6]) {
+                    const value = parseSheetNumber(row[6]);
+                    totalTrieu += value;
+                }
+                
+                // Cột H (index 7): Tèo
+                if (row[7]) {
+                    const value = parseSheetNumber(row[7]);
+                    totalTeo += value;
+                }
+                
+                // Cột I (index 8): Thiện
+                if (row[8]) {
+                    const value = parseSheetNumber(row[8]);
+                    totalThien += value;
+                }
+                
+                // Cột J (index 9): Thuận
+                if (row[9]) {
+                    const value = parseSheetNumber(row[9]);
+                    totalThuan += value;
+                }
+            }
+            
+            const totalChiPhi = totalVatTu + totalTienCong;
+            
+            // Hiển thị kết quả
+            document.getElementById('totalChiPhi').textContent = formatCurrency(totalChiPhi);
+            document.getElementById('totalVatTu').textContent = formatCurrency(totalVatTu);
+            document.getElementById('totalTienCong').textContent = formatCurrency(totalTienCong);
+            document.getElementById('totalTrieu').textContent = formatCurrency(totalTrieu);
+            document.getElementById('totalTeo').textContent = formatCurrency(totalTeo);
+            document.getElementById('totalThien').textContent = formatCurrency(totalThien);
+            document.getElementById('totalThuan').textContent = formatCurrency(totalThuan);
+            
+            // Hiển thị thông tin debug
+            document.getElementById('debugInfo').innerHTML += `<br>✅ Đã xử lý ${count} hàng`;
+            document.getElementById('debugInfo').innerHTML += `<br>📈 Tổng phí vật tư: ${formatCurrency(totalVatTu)} (Mong đợi: 25.950.000)`;
+            document.getElementById('rowCountInfo').textContent = `Đã xử lý ${count} hàng dữ liệu từ ${START_ROW} đến ${actualEndRow}`;
+            
+            // Kiểm tra tổng phí vật tư
+            if (Math.abs(totalVatTu - 25950000) < 100) {
+                document.getElementById('debugInfo').innerHTML += '<br>🎉 Tổng phí vật tư CHÍNH XÁC!';
+            } else {
+                document.getElementById('debugInfo').innerHTML += `<br>⚠️ Chênh lệch: ${formatCurrency(totalVatTu - 25950000)}`;
+            }
+        }
+        
+        // Hiển thị bảng chi tiết từ phạm vi
+        function displayDetailTableFromRange(rows) {
             let html = `
-                <div style="overflow-x: auto; margin-top: 20px;">
+                <div style="overflow-x: auto;">
                     <table>
                         <thead>
                             <tr>
+                                <th>Hàng</th>
                                 <th>ID</th>
                                 <th>Ngày</th>
                                 <th>Nội dung</th>
@@ -553,35 +595,42 @@
                         <tbody>
             `;
             
-            // Bắt đầu từ hàng 3 (index 2) - bỏ 2 hàng đầu
-            let dataCount = 0;
-            for (let i = 2; i < rows.length; i++) {
+            let actualEndRow = Math.min(END_ROW, rows.length);
+            let displayedCount = 0;
+            
+            for (let i = START_ROW - 1; i < actualEndRow; i++) {
                 const row = rows[i];
-                if (row.length < 10) continue; // Bỏ qua hàng không đủ cột
+                const rowNumber = i + 1;
                 
-                html += `
-                    <tr>
-                        <td>${row[0] || ''}</td>
-                        <td>${row[1] || ''}</td>
-                        <td>${row[2] || ''}</td>
-                        <td>${formatCurrency(row[3] || 0)}</td>
-                        <td>${formatCurrency(row[4] || 0)}</td>
-                        <td>${formatCurrency(row[6] || 0)}</td>
-                        <td>${formatCurrency(row[7] || 0)}</td>
-                        <td>${formatCurrency(row[8] || 0)}</td>
-                        <td>${formatCurrency(row[9] || 0)}</td>
-                    </tr>
-                `;
-                dataCount++;
+                // Kiểm tra nếu hàng có ít nhất 5 cột
+                if (row && row.length >= 5) {
+                    html += `
+                        <tr>
+                            <td>${rowNumber}</td>
+                            <td>${row[0] || ''}</td>
+                            <td>${row[1] || ''}</td>
+                            <td>${row[2] || ''}</td>
+                            <td>${formatCurrency(row[3] || 0)}</td>
+                            <td>${formatCurrency(row[4] || 0)}</td>
+                            <td>${formatCurrency(row[6] || 0)}</td>
+                            <td>${formatCurrency(row[7] || 0)}</td>
+                            <td>${formatCurrency(row[8] || 0)}</td>
+                            <td>${formatCurrency(row[9] || 0)}</td>
+                        </tr>
+                    `;
+                    displayedCount++;
+                }
             }
             
             html += `
                         </tbody>
                     </table>
-                    <div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 8px;">
-                        <p><strong>📊 Tổng số bản ghi chi tiết:</strong> ${dataCount} dòng dữ liệu (từ hàng 3)</p>
-                        <p><strong>📈 Giá trị tổng lấy từ:</strong> Hàng 2 (C2, D2, E2, G2, H2, I2, J2)</p>
-                        <p><strong>🔄 Tự động cập nhật:</strong> Mỗi 5 phút</p>
+                    <div class="data-info" style="margin-top: 20px;">
+                        <p><strong>📊 Thống kê dữ liệu:</strong></p>
+                        <p>Tổng số hàng trong sheet: ${rows.length}</p>
+                        <p>Phạm vi tính tổng: Hàng ${START_ROW} đến ${actualEndRow}</p>
+                        <p>Số hàng hiển thị: ${displayedCount}</p>
+                        <p>Thời gian: ${new Date().toLocaleTimeString('vi-VN')}</p>
                     </div>
                 </div>
             `;
@@ -589,12 +638,25 @@
             document.getElementById('detailContent').innerHTML = html;
         }
         
+        // Hiển thị lỗi
+        function showError(message) {
+            document.getElementById('loadingDetail').style.display = 'none';
+            document.getElementById('detailContent').innerHTML = `
+                <div class="error-box">
+                    <h3>❌ Lỗi kết nối</h3>
+                    <p>${message}</p>
+                    <button onclick="loadDetailData()" style="margin-top: 15px; padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Thử lại
+                    </button>
+                </div>
+            `;
+        }
+        
         // Tự động tải dữ liệu khi trang được mở
         window.onload = function() {
-            // Tự động tải dữ liệu
             loadDetailData();
             
-            // Tự động cập nhật dữ liệu mỗi 5 phút
+            // Tự động cập nhật mỗi 5 phút
             setInterval(loadDetailData, 5 * 60 * 1000);
         };
     </script>
