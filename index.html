@@ -230,6 +230,14 @@
             margin: 15px 0;
             border-left: 5px solid #4CAF50;
         }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 5px solid #2196f3;
+        }
     </style>
 </head>
 <body>
@@ -245,48 +253,52 @@
             <p><strong>URL:</strong> <span id="currentUrl"></span></p>
         </div>
         
+        <div class="info-box">
+            <p><strong>📌 Lưu ý:</strong> Dữ liệu được lấy từ <strong>hàng 2</strong> trong Google Sheet (các ô tổng cộng)</p>
+        </div>
+        
         <div id="summary" class="summary-grid">
             <!-- Dữ liệu sẽ được tải tự động -->
             <div class="card">
                 <h3>💰 Tổng chi phí làm vườn</h3>
                 <div class="amount" id="totalChiPhi">Đang tải...</div>
-                <div class="note">D = Phí vật tư + E = Tiền công</div>
+                <div class="note">Giá trị từ ô <strong>C2</strong></div>
             </div>
             
             <div class="card">
                 <h3>🛠️ Tổng phí vật tư</h3>
                 <div class="amount" id="totalVatTu">Đang tải...</div>
-                <div class="note">Cột D trong Google Sheet</div>
+                <div class="note">Giá trị từ ô <strong>D2</strong></div>
             </div>
             
             <div class="card">
                 <h3>👷 Tổng tiền công</h3>
                 <div class="amount" id="totalTienCong">Đang tải...</div>
-                <div class="note">Cột E trong Google Sheet</div>
+                <div class="note">Giá trị từ ô <strong>E2</strong></div>
             </div>
             
             <div class="card">
                 <h3>👨 Triều</h3>
                 <div class="amount" id="totalTrieu">Đang tải...</div>
-                <div class="note">Cột G trong Google Sheet</div>
+                <div class="note">Giá trị từ ô <strong>G2</strong></div>
             </div>
             
             <div class="card">
                 <h3>👨 Tèo</h3>
                 <div class="amount" id="totalTeo">Đang tải...</div>
-                <div class="note">Cột H trong Google Sheet</div>
+                <div class="note">Giá trị từ ô <strong>H2</strong></div>
             </div>
             
             <div class="card">
                 <h3>👨 Thiện</h3>
                 <div class="amount" id="totalThien">Đang tải...</div>
-                <div class="note">Cột I trong Google Sheet</div>
+                <div class="note">Giá trị từ ô <strong>I2</strong></div>
             </div>
             
             <div class="card">
-                <h3>👨 Thuân</h3>
+                <h3>👨 Thuận</h3>
                 <div class="amount" id="totalThuan">Đang tải...</div>
-                <div class="note">Cột J trong Google Sheet</div>
+                <div class="note">Giá trị từ ô <strong>J2</strong></div>
             </div>
         </div>
         
@@ -310,6 +322,7 @@
             <div class="data-success">
                 <p><strong>✅ Google Sheet ID:</strong> 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
                 <p><strong>✅ Sheet name:</strong> SR2526</p>
+                <p><strong>✅ Lấy giá trị từ:</strong> Hàng 2 (C2, D2, E2, G2, H2, I2, J2)</p>
                 <p><strong>✅ Tự động cập nhật:</strong> Mỗi 5 phút</p>
             </div>
             
@@ -321,6 +334,7 @@
             <h3 style="margin-top: 25px;">📝 Lưu ý quan trọng:</h3>
             <ol>
                 <li>Google Sheet phải được chia sẻ <strong>public</strong> (View cho mọi người)</li>
+                <li>Đảm bảo hàng 2 có các giá trị tổng cộng</li>
                 <li>Dữ liệu sẽ tự động cập nhật khi bạn sửa Google Sheet</li>
                 <li>Refresh trang web để xem dữ liệu mới nhất</li>
             </ol>
@@ -351,11 +365,11 @@
         
         // Định dạng tiền Việt Nam
         function formatCurrency(value) {
-            if (value === null || value === undefined || isNaN(value)) return '0 ₫';
+            if (value === null || value === undefined || value === '' || isNaN(value)) return '0 ₫';
             return new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
-            }).format(value);
+            }).format(parseFloat(value));
         }
         
         // Hiển thị/ẩn chi tiết
@@ -387,13 +401,23 @@
                 // Xử lý dữ liệu CSV
                 const rows = parseCSV(csvText);
                 
-                if (rows.length < 3) {
-                    showError('Google Sheet không có dữ liệu hoặc Sheet name không đúng');
+                if (rows.length < 2) {
+                    showError('Google Sheet không có đủ dữ liệu');
                     return;
                 }
                 
-                // Tính toán tổng và hiển thị
-                calculateAndDisplayTotals(rows);
+                // LẤY GIÁ TRỊ TỪ HÀNG 2 (index 1)
+                // Hàng 1 (index 0): Tiêu đề cột
+                // Hàng 2 (index 1): Giá trị tổng cộng
+                const row2 = rows[1]; // Hàng thứ 2 (index 1)
+                
+                // C2 = cột 2 (index 2), D2 = cột 3 (index 3), E2 = cột 4 (index 4)
+                // G2 = cột 6 (index 6), H2 = cột 7 (index 7), I2 = cột 8 (index 8), J2 = cột 9 (index 9)
+                
+                // Hiển thị giá trị từ hàng 2
+                displayRow2Values(row2);
+                
+                // Hiển thị bảng chi tiết (từ hàng 3 trở đi)
                 displayDetailTable(rows);
                 
                 // Cập nhật thời gian
@@ -409,6 +433,52 @@
                     2. Sheet name có đúng "SR2526" không?<br>
                     3. Kết nối internet của bạn`);
             }
+        }
+        
+        // Hiển thị giá trị từ hàng 2
+        function displayRow2Values(row) {
+            // Kiểm tra nếu row có đủ phần tử
+            if (!row || row.length < 10) {
+                console.error('Hàng 2 không có đủ dữ liệu:', row);
+                return;
+            }
+            
+            // Lấy giá trị từ các cột (0-based index)
+            // C2 = cột C (index 2)
+            // D2 = cột D (index 3) 
+            // E2 = cột E (index 4)
+            // G2 = cột G (index 6)
+            // H2 = cột H (index 7)
+            // I2 = cột I (index 8)
+            // J2 = cột J (index 9)
+            
+            const c2Value = row[2] || '0';  // C2
+            const d2Value = row[3] || '0';  // D2
+            const e2Value = row[4] || '0';  // E2
+            const g2Value = row[6] || '0';  // G2
+            const h2Value = row[7] || '0';  // H2
+            const i2Value = row[8] || '0';  // I2
+            const j2Value = row[9] || '0';  // J2
+            
+            // Hiển thị lên giao diện
+            document.getElementById('totalChiPhi').textContent = formatCurrency(c2Value);
+            document.getElementById('totalVatTu').textContent = formatCurrency(d2Value);
+            document.getElementById('totalTienCong').textContent = formatCurrency(e2Value);
+            document.getElementById('totalTrieu').textContent = formatCurrency(g2Value);
+            document.getElementById('totalTeo').textContent = formatCurrency(h2Value);
+            document.getElementById('totalThien').textContent = formatCurrency(i2Value);
+            document.getElementById('totalThuan').textContent = formatCurrency(j2Value);
+            
+            // Log để debug
+            console.log('Dữ liệu từ hàng 2:', {
+                'C2 (Tổng chi phí)': c2Value,
+                'D2 (Phí vật tư)': d2Value,
+                'E2 (Tiền công)': e2Value,
+                'G2 (Triều)': g2Value,
+                'H2 (Tèo)': h2Value,
+                'I2 (Thiện)': i2Value,
+                'J2 (Thuận)': j2Value
+            });
         }
         
         // Hiển thị lỗi
@@ -462,36 +532,7 @@
             return rows;
         }
         
-        // Tính toán và hiển thị tổng
-        function calculateAndDisplayTotals(rows) {
-            let totalVatTu = 0, totalTienCong = 0, totalTrieu = 0, totalTeo = 0, totalThien = 0, totalThuan = 0;
-            
-            // Bắt đầu từ hàng 3 (index 2) vì hàng 1-2 là tiêu đề
-            for (let i = 2; i < rows.length; i++) {
-                const row = rows[i];
-                if (row.length < 10) continue; // Bỏ qua hàng không đủ cột
-                
-                totalVatTu += parseFloat(row[3] || 0);
-                totalTienCong += parseFloat(row[4] || 0);
-                totalTrieu += parseFloat(row[6] || 0);
-                totalTeo += parseFloat(row[7] || 0);
-                totalThien += parseFloat(row[8] || 0);
-                totalThuan += parseFloat(row[9] || 0);
-            }
-            
-            const totalChiPhi = totalVatTu + totalTienCong;
-            
-            // Cập nhật giao diện
-            document.getElementById('totalChiPhi').textContent = formatCurrency(totalChiPhi);
-            document.getElementById('totalVatTu').textContent = formatCurrency(totalVatTu);
-            document.getElementById('totalTienCong').textContent = formatCurrency(totalTienCong);
-            document.getElementById('totalTrieu').textContent = formatCurrency(totalTrieu);
-            document.getElementById('totalTeo').textContent = formatCurrency(totalTeo);
-            document.getElementById('totalThien').textContent = formatCurrency(totalThien);
-            document.getElementById('totalThuan').textContent = formatCurrency(totalThuan);
-        }
-        
-        // Hiển thị bảng chi tiết
+        // Hiển thị bảng chi tiết (từ hàng 3 trở đi)
         function displayDetailTable(rows) {
             let html = `
                 <div style="overflow-x: auto; margin-top: 20px;">
@@ -506,13 +547,13 @@
                                 <th>Triều</th>
                                 <th>Tèo</th>
                                 <th>Thiện</th>
-                                <th>Thuân</th>
+                                <th>Thuận</th>
                             </tr>
                         </thead>
                         <tbody>
             `;
             
-            // Bắt đầu từ hàng 3 (bỏ 2 hàng tiêu đề)
+            // Bắt đầu từ hàng 3 (index 2) - bỏ 2 hàng đầu
             let dataCount = 0;
             for (let i = 2; i < rows.length; i++) {
                 const row = rows[i];
@@ -538,7 +579,8 @@
                         </tbody>
                     </table>
                     <div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 8px;">
-                        <p><strong>📊 Tổng số bản ghi:</strong> ${dataCount} dòng dữ liệu</p>
+                        <p><strong>📊 Tổng số bản ghi chi tiết:</strong> ${dataCount} dòng dữ liệu (từ hàng 3)</p>
+                        <p><strong>📈 Giá trị tổng lấy từ:</strong> Hàng 2 (C2, D2, E2, G2, H2, I2, J2)</p>
                         <p><strong>🔄 Tự động cập nhật:</strong> Mỗi 5 phút</p>
                     </div>
                 </div>
@@ -549,7 +591,7 @@
         
         // Tự động tải dữ liệu khi trang được mở
         window.onload = function() {
-            // Tự động tải dữ liệu tổng
+            // Tự động tải dữ liệu
             loadDetailData();
             
             // Tự động cập nhật dữ liệu mỗi 5 phút
