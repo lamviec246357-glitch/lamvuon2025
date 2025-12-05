@@ -690,7 +690,7 @@
             return rows;
         }
         
-        // Định dạng tiền Việt Nam
+        // Định dạng tiền Việt Nam (cho tổng)
         function formatCurrency(value) {
             if (value === null || value === undefined || isNaN(value)) {
                 return '0 ₫';
@@ -704,12 +704,51 @@
             }).format(value);
         }
         
-        // Chuyển đổi số từ Google Sheet
+        // Hiển thị số tiền đúng định dạng (cho bảng chi tiết - GIỮ NGUYÊN DẤU CHẤM)
+        function displayAmount(value) {
+            if (!value && value !== 0) return '0 ₫';
+            
+            // Nếu đã là chuỗi rỗng hoặc "0"
+            if (value === '' || value === '0') return '0 ₫';
+            
+            // Nếu đã có định dạng tiền (có dấu . phân cách nghìn)
+            if (typeof value === 'string') {
+                // Kiểm tra nếu đã có dấu chấm phân cách nghìn (ví dụ: 300.000, 1.500.000)
+                if (value.includes('.') && value.split('.').length > 1) {
+                    // Giữ nguyên và thêm ký hiệu tiền nếu chưa có
+                    if (!value.includes('₫') && !value.includes('đ')) {
+                        return value + ' ₫';
+                    }
+                    return value;
+                }
+                
+                // Nếu là số nguyên không có dấu chấm (ví dụ: 300000)
+                if (/^\d+$/.test(value)) {
+                    // Thêm dấu chấm phân cách nghìn
+                    return parseInt(value).toLocaleString('vi-VN') + ' ₫';
+                }
+                
+                // Giữ nguyên và thêm ký hiệu tiền nếu chưa có
+                if (!value.includes('₫') && !value.includes('đ')) {
+                    return value + ' ₫';
+                }
+                return value;
+            }
+            
+            // Nếu là số, định dạng lại
+            if (typeof value === 'number') {
+                return value.toLocaleString('vi-VN') + ' ₫';
+            }
+            
+            return '0 ₫';
+        }
+        
+        // Chuyển đổi số từ Google Sheet (cho tính toán)
         function parseSheetNumber(value) {
             if (!value && value !== 0) return 0;
             
             if (typeof value === 'string') {
-                // Xóa dấu chấm phân cách nghìn
+                // Xóa tất cả dấu chấm phân cách nghìn
                 let cleanValue = value.replace(/\./g, '');
                 // Thay dấu phẩy thập phân thành dấu chấm
                 cleanValue = cleanValue.replace(',', '.');
@@ -850,7 +889,7 @@
             }
         }
         
-        // Hiển thị bảng chi tiết
+        // Hiển thị bảng chi tiết (SỬA LẠI: Sử dụng displayAmount thay vì formatCurrency)
         function displayDetailTable(rows) {
             let html = `
                 <div style="overflow-x: auto;">
@@ -886,12 +925,12 @@
                             <td>${row[0] || ''}</td>
                             <td>${row[1] || ''}</td>
                             <td>${row[2] || ''}</td>
-                            <td>${formatCurrency(row[3] || 0)}</td>
-                            <td>${formatCurrency(row[4] || 0)}</td>
-                            <td>${formatCurrency(row[6] || 0)}</td>
-                            <td>${formatCurrency(row[7] || 0)}</td>
-                            <td>${formatCurrency(row[8] || 0)}</td>
-                            <td>${formatCurrency(row[9] || 0)}</td>
+                            <td>${displayAmount(row[3])}</td>
+                            <td>${displayAmount(row[4])}</td>
+                            <td>${displayAmount(row[6])}</td>
+                            <td>${displayAmount(row[7])}</td>
+                            <td>${displayAmount(row[8])}</td>
+                            <td>${displayAmount(row[9])}</td>
                         </tr>
                     `;
                     displayedCount++;
