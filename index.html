@@ -3,415 +3,927 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý chi phí</title>
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Chi phí làm vườn - Tự động cập nhật</title>
     <style>
-        body {
-            background-color: #f8f9fa;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-            border: none;
-            margin-bottom: 25px;
-        }
-        .card-header {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 15px 15px 0 0 !important;
+        
+        body {
+            background-color: #f0f7f0;
+            color: #333;
+            line-height: 1.6;
             padding: 20px;
-            font-weight: 600;
-            font-size: 1.4rem;
+            min-height: 100vh;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
         }
-        .table th {
-            background-color: #e9ecef;
-            border-top: none;
-            font-weight: 600;
-            color: #495057;
-        }
-        .btn-custom {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .btn-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
-        }
-        .modal-header {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-        }
-        .badge-success {
-            background-color: #28a745;
-            padding: 8px 12px;
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
             border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
         }
-        .total-section {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 5px solid #6a11cb;
-            margin-top: 20px;
+        
+        header {
+            text-align: center;
+            margin-bottom: 45px;
+            padding-bottom: 30px;
+            border-bottom: 4px solid #4CAF50;
+            position: relative;
         }
-        .icon-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #4CAF50, transparent);
+        }
+        
+        h1 {
+            color: #2d5c2a;
+            margin-bottom: 10px;
+            font-size: 2.8em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        .update-info {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .update-item {
+            margin: 10px;
+        }
+        
+        .update-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #ffffff, #f8fff8);
+            border-radius: 18px;
+            padding: 28px;
+            text-align: center;
+            border: 2px solid #4CAF50;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+        }
+        
+        .card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card h3 {
+            color: #2d5c2a;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 1.6em;
+        }
+        
+        .amount {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 25px 0;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .note {
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 50px 0;
+        }
+        
+        .action-button {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
             color: white;
-            font-size: 1.5rem;
-            margin-right: 15px;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.2em;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
         }
-        .detail-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+        
+        .action-button:hover {
+            background: linear-gradient(135deg, #45a049, #1B5E20);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.4);
         }
-        .detail-label {
+        
+        .action-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .detail-section {
+            background: #f9f9f9;
+            border-radius: 18px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 2px solid #e0e0e0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        th {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 18px 15px;
+            text-align: left;
             font-weight: 600;
-            color: #555;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
-        .detail-value {
-            color: #333;
-            font-weight: 500;
+        
+        td {
+            border-bottom: 1px solid #eee;
+            padding: 16px 15px;
+            text-align: left;
         }
-        .money {
-            color: #28a745;
-            font-weight: 700;
+        
+        tr:hover {
+            background-color: #f5f9f5;
+            transition: background-color 0.2s;
+        }
+        
+        .data-info {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+            color: #777;
+            font-size: 0.95em;
+        }
+        
+        .auto-update {
+            background: #e3f2fd;
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(33, 150, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .amount {
+                font-size: 2em;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            table {
+                font-size: 0.9em;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+            }
+        }
+        
+        .currency {
+            font-size: 0.8em;
+            color: #888;
+            margin-left: 5px;
+        }
+        
+        .last-updated {
+            background: #fff3e0;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid py-4">
-        <!-- Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center">
-                            <div class="icon-circle">
-                                <i class="fas fa-file-invoice-dollar"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0">QUẢN LÝ CHI PHÍ CÔNG VIỆC</h4>
-                                <p class="mb-0 opacity-75">Theo dõi và phân bổ chi phí theo thành viên</p>
-                            </div>
-                        </div>
-                        <button class="btn btn-light" onclick="exportToExcel()">
-                            <i class="fas fa-file-excel me-2"></i>Xuất Excel
-                        </button>
-                    </div>
+    <div class="container">
+        <header>
+            <h1>🌿 CHI PHÍ LÀM VƯỜN</h1>
+            <p class="subtitle">Hệ thống quản lý chi phí làm vườn tự động</p>
+            
+            <div class="update-info">
+                <div class="update-item">
+                    <div>⏰ Tự động cập nhật</div>
+                    <div class="update-value" id="nextUpdate">3:00</div>
+                    <div>phút nữa</div>
+                </div>
+                <div class="update-item">
+                    <div>📊 Số hàng dữ liệu</div>
+                    <div class="update-value" id="totalRows">0</div>
+                    <div>hàng</div>
+                </div>
+                <div class="update-item">
+                    <div>🔄 Lần cập nhật cuối</div>
+                    <div class="update-value" id="lastUpdateTime">--:--</div>
+                    <div>giờ</div>
                 </div>
             </div>
-        </div>
-
-        <!-- Main Table -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-table me-2"></i>CHI TIẾT CÁC KHOẢN CHI
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover" id="expenseTable">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>ID</th>
-                                        <th>Ngày</th>
-                                        <th>Nội dung</th>
-                                        <th>Phí vật tư</th>
-                                        <th>Tiền công</th>
-                                        <th>Triều</th>
-                                        <th>Tèo</th>
-                                        <th>Thiện</th>
-                                        <th>Thuận</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <!-- Tổng chi phí -->
-                        <div class="total-section">
-                            <div class="row">
-                                <div class="col-md-3 col-6 mb-3">
-                                    <h6>Tổng chi vật tư</h6>
-                                    <h4 class="money" id="totalMaterial">0 đ</h4>
-                                </div>
-                                <div class="col-md-3 col-6 mb-3">
-                                    <h6>Tổng tiền công</h6>
-                                    <h4 class="money" id="totalWage">0 đ</h4>
-                                </div>
-                                <div class="col-md-3 col-6 mb-3">
-                                    <h6>Tổng chi phí</h6>
-                                    <h4 class="money" id="totalAll">0 đ</h4>
-                                </div>
-                                <div class="col-md-3 col-6 mb-3">
-                                    <h6>Số khoản chi</h6>
-                                    <h4 id="totalCount">0</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        </header>
+        
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="dataRows">0</div>
+                <div class="stat-label">Hàng dữ liệu</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="dataColumns">10</div>
+                <div class="stat-label">Cột dữ liệu</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="updateCount">0</div>
+                <div class="stat-label">Lần cập nhật</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="autoUpdateStatus">🟢</div>
+                <div class="stat-label">Tự động cập nhật</div>
             </div>
         </div>
+        
+        <div id="summary" class="summary-grid">
+            <div class="card">
+                <h3><span class="card-icon">💰</span> Tổng chi phí làm vườn</h3>
+                <div class="amount" id="totalChiPhi">0 ₫</div>
+                <div class="note">Tự động tính đến hàng cuối cùng trong sheet</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">🛠️</span> Tổng phí vật tư</h3>
+                <div class="amount" id="totalVatTu">0 ₫</div>
+                <div class="note">SUM(D3:D) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👷</span> Tổng tiền công</h3>
+                <div class="amount" id="totalTienCong">0 ₫</div>
+                <div class="note">SUM(E3:E) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👨</span> Triều</h3>
+                <div class="amount" id="totalTrieu">0 ₫</div>
+                <div class="note">SUM(G3:G) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👨</span> Tèo</h3>
+                <div class="amount" id="totalTeo">0 ₫</div>
+                <div class="note">SUM(H3:H) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👨</span> Thiện</h3>
+                <div class="amount" id="totalThien">0 ₫</div>
+                <div class="note">SUM(I3:I) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👨</span> Thuận</h3>
+                <div class="amount" id="totalThuan">0 ₫</div>
+                <div class="note">SUM(J3:J) - Tự động đến hàng cuối</div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <button class="action-button" onclick="toggleDetail()">
+                <span>📋</span>
+                <span id="detailButtonText">Xem chi tiết dữ liệu</span>
+            </button>
+        </div>
+        
+        <div id="detailSection" class="detail-section">
+            <div class="detail-header">
+                <h2 style="color: #2d5c2a; margin: 0;">📊 Chi tiết các khoản chi</h2>
+                <button class="action-button" onclick="toggleDetail()" style="background: linear-gradient(135deg, #666, #444); padding: 12px 25px;">
+                    <span>✕</span> Đóng
+                </button>
+            </div>
+            
+            <div class="loading" id="loadingDetail">Đang tải dữ liệu từ Google Sheet</div>
+            <div id="detailContent"></div>
+        </div>
+        
+        <div class="data-info">
+            <h3 style="color: #2d5c2a; margin-bottom: 15px;">ℹ️ Thông tin hệ thống</h3>
+            <p><strong>Google Sheet ID:</strong> 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
+            <p><strong>Sheet name:</strong> SR2526</p>
+            <p><strong>Tính tổng:</strong> Tự động đến hàng cuối cùng trong sheet</p>
+            <p><strong>Tự động cập nhật:</strong> Mỗi 3 phút</p>
+            <p><strong>Trạng thái:</strong> <span id="connectionStatus" style="color: #4CAF50;">✅ Đang kết nối...</span></p>
+            
+            <div class="auto-update">
+                <span>🔄</span>
+                <span>Tự động cập nhật sau: <span id="countdownTimer">180</span> giây</span>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Hệ thống quản lý chi phí làm vườn - Tự động đồng bộ với Google Sheet</p>
+            <p>© 2025 - <span id="currentYear"></span> | Cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></p>
+            <div class="last-updated">
+                ⏱️ Thời gian thực: <span id="currentTime">--:--:--</span>
+            </div>
+        </footer>
     </div>
 
-    <!-- Modal Chi tiết -->
-    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel"><i class="fas fa-info-circle me-2"></i>CHI TIẾT KHOẢN CHI</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="detail-item">
-                                <span class="detail-label">ID:</span>
-                                <span class="detail-value" id="detailId">-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Ngày:</span>
-                                <span class="detail-value" id="detailDate">-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Nội dung:</span>
-                                <span class="detail-value" id="detailContent">-</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="detail-item">
-                                <span class="detail-label">Phí vật tư:</span>
-                                <span class="detail-value money" id="detailMaterial">0 đ</span>
-                            </div>
-                            <div class="detail-item">
-                                <!-- ĐÃ SỬA: Định dạng số với dấu phân cách hàng nghìn -->
-                                <span class="detail-label">Tiền công:</span>
-                                <span class="detail-value money" id="detailWage">0 đ</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Tổng chi phí:</span>
-                                <span class="detail-value money" id="detailTotal">0 đ</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <hr>
-                    
-                    <h6 class="mb-3"><i class="fas fa-users me-2"></i>Phân bổ chi phí</h6>
-                    <div class="row">
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="text-center p-3 border rounded bg-light">
-                                <h6 class="mb-1">Triều</h6>
-                                <h5 class="money mb-0" id="detailTrieu">0 đ</h5>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="text-center p-3 border rounded bg-light">
-                                <h6 class="mb-1">Tèo</h6>
-                                <h5 class="money mb-0" id="detailTeo">0 đ</h5>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="text-center p-3 border rounded bg-light">
-                                <h6 class="mb-1">Thiện</h6>
-                                <h5 class="money mb-0" id="detailThien">0 đ</h5>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6 mb-3">
-                            <div class="text-center p-3 border rounded bg-light">
-                                <h6 class="mb-1">Thuận</h6>
-                                <h5 class="money mb-0" id="detailThuan">0 đ</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-custom" onclick="editItem()">
-                        <i class="fas fa-edit me-2"></i>Sửa
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS & Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Excel export library -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
-    
     <script>
-        // Dữ liệu mẫu (đã sửa: lưu dưới dạng số nguyên, không có "đ" và thêm dòng thứ 3 từ ảnh)
-        const data = [
-            { 
-                id: "001", 
-                date: "06/06/2025", 
-                content: "xít thuoc sau", 
-                material: 0, 
-                wage: 300000,  // 300.000 đ
-                Trieu: 200000,  // 200.000 đ
-                Teo: 100000,    // 100.000 đ
-                Thien: 0, 
-                Thuan: 0 
-            },
-            { 
-                id: "002", 
-                date: "06/06/2025", 
-                content: "sua moter bom nuoc xít thuoc", 
-                material: 0, 
-                wage: 550000,  // 550.000 đ
-                Trieu: 0, 
-                Teo: 0, 
-                Thien: 0, 
-                Thuan: 550000   // 550.000 đ
-            },
-            { 
-                id: "003", 
-                date: "16/06/2025", 
-                content: "mau 1 chay hopyang nha ty", 
-                material: 140000,  // 140.000 đ
-                wage: 0, 
-                Trieu: 0, 
-                Teo: 0, 
-                Thien: 0, 
-                Thuan: 0 
+        // ============================
+        // CẤU HÌNH HỆ THỐNG
+        // ============================
+        const SHEET_ID = '1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4';
+        const SHEET_NAME = 'SR2526';
+        const AUTO_UPDATE_INTERVAL = 3 * 60 * 1000; // 3 phút (đổi thành mili giây)
+        const START_ROW = 3; // Bắt đầu tính từ hàng 3
+        
+        // Biến hệ thống
+        let updateCount = 0;
+        let lastUpdateTime = null;
+        let autoUpdateTimer = null;
+        let countdownTimer = null;
+        let countdownSeconds = AUTO_UPDATE_INTERVAL / 1000;
+        let isDetailVisible = false;
+        
+        // ============================
+        // KHỞI TẠO HỆ THỐNG
+        // ============================
+        
+        // Khởi tạo thời gian
+        function initSystem() {
+            // Cài đặt năm hiện tại
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Cài đặt thời gian thực
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            
+            // Cài đặt countdown timer
+            startCountdown();
+            
+            // Tải dữ liệu lần đầu
+            loadData();
+            
+            // Bắt đầu tự động cập nhật
+            startAutoUpdate();
+        }
+        
+        // Cập nhật thời gian hiện tại
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN');
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        
+        // Bắt đầu đếm ngược
+        function startCountdown() {
+            countdownSeconds = AUTO_UPDATE_INTERVAL / 1000;
+            
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
             }
-        ];
-
-        // Hàm định dạng số tiền với dấu phân cách hàng nghìn
-        function formatMoney(amount) {
-            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
-        }
-
-        // Hiển thị dữ liệu vào bảng
-        function renderTable() {
-            const tbody = document.querySelector('#expenseTable tbody');
-            tbody.innerHTML = '';
             
-            let totalMaterial = 0;
-            let totalWage = 0;
-            let totalAll = 0;
-            
-            data.forEach((item, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${item.id}</td>
-                    <td>${item.date}</td>
-                    <td>${item.content}</td>
-                    <td class="money">${formatMoney(item.material)}</td>
-                    <!-- ĐÃ SỬA: Hiển thị tiền công với định dạng số có dấu phân cách -->
-                    <td class="money">${formatMoney(item.wage)}</td>
-                    <td class="money">${formatMoney(item.Trieu)}</td>
-                    <td class="money">${formatMoney(item.Teo)}</td>
-                    <td class="money">${formatMoney(item.Thien)}</td>
-                    <td class="money">${formatMoney(item.Thuan)}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary" onclick="viewDetail('${item.id}')">
-                            <i class="fas fa-eye"></i> Xem
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
+            countdownTimer = setInterval(() => {
+                countdownSeconds--;
                 
-                totalMaterial += item.material;
-                totalWage += item.wage;
-                totalAll += item.material + item.wage;
+                // Cập nhật hiển thị
+                const minutes = Math.floor(countdownSeconds / 60);
+                const seconds = countdownSeconds % 60;
+                
+                document.getElementById('countdownTimer').textContent = countdownSeconds;
+                document.getElementById('nextUpdate').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Khi hết giờ
+                if (countdownSeconds <= 0) {
+                    clearInterval(countdownTimer);
+                    loadData(); // Tải dữ liệu mới
+                    startCountdown(); // Khởi động lại countdown
+                }
+            }, 1000);
+        }
+        
+        // Bắt đầu tự động cập nhật
+        function startAutoUpdate() {
+            if (autoUpdateTimer) {
+                clearInterval(autoUpdateTimer);
+            }
+            
+            autoUpdateTimer = setInterval(() => {
+                loadData();
+            }, AUTO_UPDATE_INTERVAL);
+            
+            document.getElementById('autoUpdateStatus').textContent = '🟢';
+            document.getElementById('autoUpdateStatus').style.color = '#4CAF50';
+        }
+        
+        // ============================
+        // XỬ LÝ DỮ LIỆU
+        // ============================
+        
+        // Tải dữ liệu từ Google Sheet
+        async function loadData() {
+            try {
+                // Cập nhật trạng thái
+                document.getElementById('connectionStatus').textContent = '🔄 Đang tải dữ liệu...';
+                document.getElementById('connectionStatus').style.color = '#FF9800';
+                
+                // Sử dụng phương pháp CSV (ổn định nhất)
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(csvUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Lỗi kết nối: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                
+                // Cập nhật thông tin hệ thống
+                updateCount++;
+                lastUpdateTime = new Date();
+                
+                document.getElementById('totalRows').textContent = rows.length;
+                document.getElementById('updateCount').textContent = updateCount;
+                document.getElementById('lastUpdateTime').textContent = 
+                    lastUpdateTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                
+                // Tính tổng và hiển thị
+                calculateAndDisplayTotals(rows);
+                
+                // Cập nhật trạng thái thành công
+                document.getElementById('connectionStatus').textContent = `✅ Kết nối thành công (${rows.length} hàng)`;
+                document.getElementById('connectionStatus').style.color = '#4CAF50';
+                
+                // Cập nhật thời gian cuối
+                document.getElementById('lastUpdate').textContent = 
+                    lastUpdateTime.toLocaleString('vi-VN', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                
+                // Nếu đang xem chi tiết, cập nhật bảng
+                if (isDetailVisible) {
+                    displayDetailTable(rows);
+                }
+                
+                console.log(`✅ Đã cập nhật dữ liệu lần thứ ${updateCount} (${rows.length} hàng)`);
+                
+            } catch (error) {
+                console.error('Lỗi khi tải dữ liệu:', error);
+                
+                document.getElementById('connectionStatus').textContent = '❌ Lỗi kết nối';
+                document.getElementById('connectionStatus').style.color = '#f44336';
+                
+                // Thử lại sau 30 giây nếu có lỗi
+                setTimeout(loadData, 30000);
+            }
+        }
+        
+        // Phân tích CSV
+        function parseCSV(csvText) {
+            const rows = [];
+            let currentRow = [];
+            let currentField = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < csvText.length; i++) {
+                const char = csvText[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentField);
+                    currentField = '';
+                } else if (char === '\n' && !inQuotes) {
+                    currentRow.push(currentField);
+                    rows.push(currentRow);
+                    currentRow = [];
+                    currentField = '';
+                } else if (char === '\r') {
+                    continue;
+                } else {
+                    currentField += char;
+                }
+            }
+            
+            // Thêm dòng cuối
+            if (currentField || currentRow.length > 0) {
+                currentRow.push(currentField);
+                rows.push(currentRow);
+            }
+            
+            return rows;
+        }
+        
+        // Định dạng tiền Việt Nam
+        function formatCurrency(value) {
+            if (value === null || value === undefined || isNaN(value)) {
+                return '0 ₫';
+            }
+            
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+        
+        // Chuyển đổi số từ Google Sheet
+        function parseSheetNumber(value) {
+            if (!value && value !== 0) return 0;
+            
+            if (typeof value === 'string') {
+                // Xóa dấu chấm phân cách nghìn
+                let cleanValue = value.replace(/\./g, '');
+                // Thay dấu phẩy thập phân thành dấu chấm
+                cleanValue = cleanValue.replace(',', '.');
+                // Xóa ký tự không phải số
+                cleanValue = cleanValue.replace(/[^\d.-]/g, '');
+                
+                const num = parseFloat(cleanValue);
+                return isNaN(num) ? 0 : num;
+            }
+            
+            return parseFloat(value) || 0;
+        }
+        
+        // Tính tổng và hiển thị
+        function calculateAndDisplayTotals(rows) {
+            let totalVatTu = 0;
+            let totalTienCong = 0;
+            let totalTrieu = 0;
+            let totalTeo = 0;
+            let totalThien = 0;
+            let totalThuan = 0;
+            
+            let dataRowsCount = 0;
+            
+            // Bắt đầu từ hàng START_ROW (index START_ROW-1) đến hàng cuối cùng
+            for (let i = START_ROW - 1; i < rows.length; i++) {
+                const row = rows[i];
+                dataRowsCount++;
+                
+                // Cột D (index 3): Phí vật tư
+                if (row[3]) {
+                    totalVatTu += parseSheetNumber(row[3]);
+                }
+                
+                // Cột E (index 4): Tiền công
+                if (row[4]) {
+                    totalTienCong += parseSheetNumber(row[4]);
+                }
+                
+                // Cột G (index 6): Triều
+                if (row[6]) {
+                    totalTrieu += parseSheetNumber(row[6]);
+                }
+                
+                // Cột H (index 7): Tèo
+                if (row[7]) {
+                    totalTeo += parseSheetNumber(row[7]);
+                }
+                
+                // Cột I (index 8): Thiện
+                if (row[8]) {
+                    totalThien += parseSheetNumber(row[8]);
+                }
+                
+                // Cột J (index 9): Thuận
+                if (row[9]) {
+                    totalThuan += parseSheetNumber(row[9]);
+                }
+            }
+            
+            const totalChiPhi = totalVatTu + totalTienCong;
+            
+            // Hiển thị kết quả
+            document.getElementById('totalChiPhi').textContent = formatCurrency(totalChiPhi);
+            document.getElementById('totalVatTu').textContent = formatCurrency(totalVatTu);
+            document.getElementById('totalTienCong').textContent = formatCurrency(totalTienCong);
+            document.getElementById('totalTrieu').textContent = formatCurrency(totalTrieu);
+            document.getElementById('totalTeo').textContent = formatCurrency(totalTeo);
+            document.getElementById('totalThien').textContent = formatCurrency(totalThien);
+            document.getElementById('totalThuan').textContent = formatCurrency(totalThuan);
+            
+            // Cập nhật thống kê
+            document.getElementById('dataRows').textContent = dataRowsCount;
+            
+            console.log('Tổng kết:', {
+                'Tổng hàng dữ liệu': dataRowsCount,
+                'Phí vật tư': formatCurrency(totalVatTu),
+                'Tiền công': formatCurrency(totalTienCong),
+                'Tổng chi phí': formatCurrency(totalChiPhi)
             });
-            
-            // Cập nhật tổng
-            document.getElementById('totalMaterial').textContent = formatMoney(totalMaterial);
-            document.getElementById('totalWage').textContent = formatMoney(totalWage);
-            document.getElementById('totalAll').textContent = formatMoney(totalAll);
-            document.getElementById('totalCount').textContent = data.length;
         }
-
-        // Xem chi tiết khoản chi
-        function viewDetail(id) {
-            const item = data.find(d => d.id === id);
-            if (!item) return;
+        
+        // ============================
+        // HIỂN THỊ CHI TIẾT
+        // ============================
+        
+        // Hiển thị/ẩn chi tiết
+        function toggleDetail() {
+            const detailSection = document.getElementById('detailSection');
+            const detailButton = document.getElementById('detailButtonText');
             
-            // Điền thông tin vào modal
-            document.getElementById('detailId').textContent = item.id;
-            document.getElementById('detailDate').textContent = item.date;
-            document.getElementById('detailContent').textContent = item.content;
+            isDetailVisible = !isDetailVisible;
             
-            // ĐÃ SỬA: Định dạng tiền công với dấu phân cách hàng nghìn
-            document.getElementById('detailMaterial').textContent = formatMoney(item.material);
-            document.getElementById('detailWage').textContent = formatMoney(item.wage);
-            
-            // Tính tổng chi phí
-            const totalCost = item.material + item.wage;
-            document.getElementById('detailTotal').textContent = formatMoney(totalCost);
-            
-            // Phân bổ chi phí
-            document.getElementById('detailTrieu').textContent = formatMoney(item.Trieu);
-            document.getElementById('detailTeo').textContent = formatMoney(item.Teo);
-            document.getElementById('detailThien').textContent = formatMoney(item.Thien);
-            document.getElementById('detailThuan').textContent = formatMoney(item.Thuan);
-            
-            // Hiển thị modal
-            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
-            modal.show();
+            if (isDetailVisible) {
+                detailSection.style.display = 'block';
+                detailButton.textContent = 'Ẩn chi tiết';
+                
+                // Tải và hiển thị dữ liệu chi tiết
+                loadDetailData();
+            } else {
+                detailSection.style.display = 'none';
+                detailButton.textContent = 'Xem chi tiết dữ liệu';
+            }
         }
-
-        // Xuất file Excel
-        function exportToExcel() {
-            const wsData = [
-                ["#", "ID", "Ngày", "Nội dung", "Phí vật tư", "Tiền công", "Triều", "Tèo", "Thiện", "Thuận"]
-            ];
-            
-            data.forEach((item, index) => {
-                wsData.push([
-                    index + 1,
-                    item.id,
-                    item.date,
-                    item.content,
-                    formatMoney(item.material),
-                    formatMoney(item.wage), // Đã định dạng
-                    formatMoney(item.Trieu),
-                    formatMoney(item.Teo),
-                    formatMoney(item.Thien),
-                    formatMoney(item.Thuan)
-                ]);
-            });
-            
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Chi tiết chi phí");
-            
-            // Xuất file
-            XLSX.writeFile(wb, "Chi_tiet_chi_phi.xlsx");
+        
+        // Tải dữ liệu chi tiết
+        async function loadDetailData() {
+            try {
+                document.getElementById('loadingDetail').style.display = 'block';
+                document.getElementById('detailContent').innerHTML = '';
+                
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(csvUrl);
+                
+                if (!response.ok) {
+                    throw new Error('Lỗi tải dữ liệu');
+                }
+                
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                
+                displayDetailTable(rows);
+                
+                document.getElementById('loadingDetail').style.display = 'none';
+                
+            } catch (error) {
+                console.error('Lỗi tải chi tiết:', error);
+                document.getElementById('detailContent').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #f44336;">
+                        <h3>❌ Không thể tải dữ liệu chi tiết</h3>
+                        <p>Vui lòng thử lại sau</p>
+                        <button onclick="loadDetailData()" style="margin-top: 20px; padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            Thử lại
+                        </button>
+                    </div>
+                `;
+                document.getElementById('loadingDetail').style.display = 'none';
+            }
         }
-
-        // Hàm sửa khoản chi (chưa triển khai đầy đủ)
-        function editItem() {
-            alert("Chức năng sửa đang được phát triển!");
+        
+        // Hiển thị bảng chi tiết
+        function displayDetailTable(rows) {
+            let html = `
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ID</th>
+                                <th>Ngày</th>
+                                <th>Nội dung</th>
+                                <th>Phí vật tư</th>
+                                <th>Tiền công</th>
+                                <th>Triều</th>
+                                <th>Tèo</th>
+                                <th>Thiện</th>
+                                <th>Thuận</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            let displayedCount = 0;
+            
+            // Bắt đầu từ hàng START_ROW
+            for (let i = START_ROW - 1; i < rows.length; i++) {
+                const row = rows[i];
+                const rowNumber = i + 1;
+                
+                if (row && row.length >= 5) {
+                    html += `
+                        <tr>
+                            <td>${rowNumber}</td>
+                            <td>${row[0] || ''}</td>
+                            <td>${row[1] || ''}</td>
+                            <td>${row[2] || ''}</td>
+                            <td>${formatCurrency(row[3] || 0)}</td>
+                            <td>${formatCurrency(row[4] || 0)}</td>
+                            <td>${formatCurrency(row[6] || 0)}</td>
+                            <td>${formatCurrency(row[7] || 0)}</td>
+                            <td>${formatCurrency(row[8] || 0)}</td>
+                            <td>${formatCurrency(row[9] || 0)}</td>
+                        </tr>
+                    `;
+                    displayedCount++;
+                }
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                    <div class="data-info" style="margin-top: 25px;">
+                        <p><strong>📈 Thống kê chi tiết:</strong></p>
+                        <p>Tổng số hàng dữ liệu: ${displayedCount} (từ hàng ${START_ROW} đến ${rows.length})</p>
+                        <p>Thời gian cập nhật: ${new Date().toLocaleTimeString('vi-VN')}</p>
+                        <p>Lần cập nhật thứ: ${updateCount}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detailContent').innerHTML = html;
         }
-
-        // Khởi tạo khi trang tải xong
-        document.addEventListener('DOMContentLoaded', function() {
-            renderTable();
+        
+        // ============================
+        // KHỞI CHẠY HỆ THỐNG
+        // ============================
+        window.onload = initSystem;
+        
+        // Cho phép refresh thủ công bằng phím F5
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'F5') {
+                event.preventDefault();
+                loadData();
+            }
         });
     </script>
 </body>
