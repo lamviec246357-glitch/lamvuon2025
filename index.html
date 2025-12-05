@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi phí làm vườn</title>
+    <title>Chi phí làm vườn - Tự động cập nhật</title>
     <style>
         * {
             margin: 0;
@@ -18,186 +18,353 @@
             line-height: 1.6;
             padding: 20px;
             min-height: 100vh;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
         }
         
         header {
             text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 25px;
+            margin-bottom: 45px;
+            padding-bottom: 30px;
             border-bottom: 4px solid #4CAF50;
+            position: relative;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #4CAF50, transparent);
         }
         
         h1 {
             color: #2d5c2a;
-            margin-bottom: 15px;
-            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-size: 2.8em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
-        .success-banner {
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        .update-info {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
-            padding: 25px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: 15px;
             text-align: center;
             margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .update-item {
+            margin: 10px;
+        }
+        
+        .update-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 5px;
         }
         
         .summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
         }
         
         .card {
-            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
-            border-radius: 12px;
-            padding: 25px;
+            background: linear-gradient(145deg, #ffffff, #f8fff8);
+            border-radius: 18px;
+            padding: 28px;
             text-align: center;
             border: 2px solid #4CAF50;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
         }
         
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
         
         .card h3 {
             color: #2d5c2a;
-            margin-bottom: 20px;
-            font-size: 1.3em;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 1.6em;
         }
         
         .amount {
-            font-size: 2.2em;
+            font-size: 2.5em;
             font-weight: bold;
             color: #4CAF50;
-            margin: 20px 0;
+            margin: 25px 0;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .note {
-            color: #777;
-            font-size: 0.9em;
-            margin-top: 10px;
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #4CAF50;
         }
         
         .button-container {
             text-align: center;
-            margin: 40px 0;
+            margin: 50px 0;
         }
         
-        button {
-            background-color: #4CAF50;
+        .action-button {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
             color: white;
             border: none;
-            padding: 16px 40px;
-            font-size: 18px;
-            border-radius: 10px;
+            padding: 18px 45px;
+            font-size: 1.2em;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
-            transition: background-color 0.3s;
-            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
         }
         
-        button:hover {
-            background-color: #3d8b40;
-            transform: scale(1.05);
+        .action-button:hover {
+            background: linear-gradient(135deg, #45a049, #1B5E20);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.4);
         }
         
-        .instructions {
+        .action-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .detail-section {
             background: #f9f9f9;
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 40px;
-            border-left: 5px solid #4CAF50;
+            border-radius: 18px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 2px solid #e0e0e0;
+            display: none;
+            animation: fadeIn 0.5s ease;
         }
         
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding-top: 25px;
-            border-top: 2px solid #eee;
-            color: #777;
-            font-size: 0.95em;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .url-display {
-            background: #e8f5e8;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            font-family: monospace;
-            word-break: break-all;
-            border: 1px solid #4CAF50;
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
         }
         
         .loading {
             text-align: center;
-            padding: 20px;
+            padding: 40px;
             color: #666;
             font-style: italic;
+            font-size: 1.1em;
+        }
+        
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-        }
-        
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px 15px;
-            text-align: left;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
         
         th {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
             color: white;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        td {
+            border-bottom: 1px solid #eee;
+            padding: 16px 15px;
+            text-align: left;
         }
         
         tr:hover {
-            background-color: #f1f1f1;
+            background-color: #f5f9f5;
+            transition: background-color 0.2s;
         }
         
         .data-info {
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
             border-left: 5px solid #4CAF50;
         }
         
-        .error-box {
-            background: #ffebee;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 5px solid #f44336;
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+            color: #777;
+            font-size: 0.95em;
         }
         
-        .debug-info {
+        .auto-update {
             background: #e3f2fd;
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(33, 150, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
             padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
+        }
+        
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .stat-label {
             font-size: 0.9em;
-            color: #1565c0;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .amount {
+                font-size: 2em;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            table {
+                font-size: 0.9em;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+            }
+        }
+        
+        .currency {
+            font-size: 0.8em;
+            color: #888;
+            margin-left: 5px;
+        }
+        
+        .last-updated {
+            background: #fff3e0;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9em;
         }
     </style>
 </head>
@@ -205,261 +372,290 @@
     <div class="container">
         <header>
             <h1>🌿 CHI PHÍ LÀM VƯỜN</h1>
-            <p>Thống kê chi phí làm vườn tự động từ Google Sheet</p>
+            <p class="subtitle">Hệ thống quản lý chi phí làm vườn tự động</p>
+            
+            <div class="update-info">
+                <div class="update-item">
+                    <div>⏰ Tự động cập nhật</div>
+                    <div class="update-value" id="nextUpdate">3:00</div>
+                    <div>phút nữa</div>
+                </div>
+                <div class="update-item">
+                    <div>📊 Số hàng dữ liệu</div>
+                    <div class="update-value" id="totalRows">0</div>
+                    <div>hàng</div>
+                </div>
+                <div class="update-item">
+                    <div>🔄 Lần cập nhật cuối</div>
+                    <div class="update-value" id="lastUpdateTime">--:--</div>
+                    <div>giờ</div>
+                </div>
+            </div>
         </header>
         
-        <div class="success-banner">
-            <h2>✅ KẾT NỐI THÀNH CÔNG!</h2>
-            <p>Trang web đã kết nối với Google Sheet của bạn</p>
-            <p><strong>Tính tổng từ D3:D89 và các cột tương ứng</strong></p>
-        </div>
-        
-        <div id="debugInfo" class="debug-info" style="display: none;">
-            Đang tải thông tin debug...
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="dataRows">0</div>
+                <div class="stat-label">Hàng dữ liệu</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="dataColumns">10</div>
+                <div class="stat-label">Cột dữ liệu</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="updateCount">0</div>
+                <div class="stat-label">Lần cập nhật</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="autoUpdateStatus">🟢</div>
+                <div class="stat-label">Tự động cập nhật</div>
+            </div>
         </div>
         
         <div id="summary" class="summary-grid">
             <div class="card">
-                <h3>💰 Tổng chi phí làm vườn</h3>
-                <div class="amount" id="totalChiPhi">Đang tải...</div>
-                <div class="note">Phí vật tư + Tiền công</div>
+                <h3><span class="card-icon">💰</span> Tổng chi phí làm vườn</h3>
+                <div class="amount" id="totalChiPhi">0 ₫</div>
+                <div class="note">Tự động tính đến hàng cuối cùng trong sheet</div>
             </div>
             
             <div class="card">
-                <h3>🛠️ Tổng phí vật tư</h3>
-                <div class="amount" id="totalVatTu">Đang tải...</div>
-                <div class="note">SUM(D3:D89) = 25.950.000</div>
+                <h3><span class="card-icon">🛠️</span> Tổng phí vật tư</h3>
+                <div class="amount" id="totalVatTu">0 ₫</div>
+                <div class="note">SUM(D3:D) - Tự động đến hàng cuối</div>
             </div>
             
             <div class="card">
-                <h3>👷 Tổng tiền công</h3>
-                <div class="amount" id="totalTienCong">Đang tải...</div>
-                <div class="note">SUM(E3:E89)</div>
+                <h3><span class="card-icon">👷</span> Tổng tiền công</h3>
+                <div class="amount" id="totalTienCong">0 ₫</div>
+                <div class="note">SUM(E3:E) - Tự động đến hàng cuối</div>
             </div>
             
             <div class="card">
-                <h3>👨 Triều</h3>
-                <div class="amount" id="totalTrieu">Đang tải...</div>
-                <div class="note">SUM(G3:G89)</div>
+                <h3><span class="card-icon">👨</span> Triều</h3>
+                <div class="amount" id="totalTrieu">0 ₫</div>
+                <div class="note">SUM(G3:G) - Tự động đến hàng cuối</div>
             </div>
             
             <div class="card">
-                <h3>👨 Tèo</h3>
-                <div class="amount" id="totalTeo">Đang tải...</div>
-                <div class="note">SUM(H3:H89)</div>
+                <h3><span class="card-icon">👨</span> Tèo</h3>
+                <div class="amount" id="totalTeo">0 ₫</div>
+                <div class="note">SUM(H3:H) - Tự động đến hàng cuối</div>
             </div>
             
             <div class="card">
-                <h3>👨 Thiện</h3>
-                <div class="amount" id="totalThien">Đang tải...</div>
-                <div class="note">SUM(I3:I89)</div>
+                <h3><span class="card-icon">👨</span> Thiện</h3>
+                <div class="amount" id="totalThien">0 ₫</div>
+                <div class="note">SUM(I3:I) - Tự động đến hàng cuối</div>
             </div>
             
             <div class="card">
-                <h3>👨 Thuận</h3>
-                <div class="amount" id="totalThuan">Đang tải...</div>
-                <div class="note">SUM(J3:J89)</div>
+                <h3><span class="card-icon">👨</span> Thuận</h3>
+                <div class="amount" id="totalThuan">0 ₫</div>
+                <div class="note">SUM(J3:J) - Tự động đến hàng cuối</div>
             </div>
         </div>
         
         <div class="button-container">
-            <button onclick="showDetail()">📋 Xem chi tiết (D3:D89)</button>
+            <button class="action-button" onclick="toggleDetail()">
+                <span>📋</span>
+                <span id="detailButtonText">Xem chi tiết dữ liệu</span>
+            </button>
         </div>
         
-        <div id="detailSection" style="display: none;">
-            <h2 style="text-align: center; margin-bottom: 25px; color: #2d5c2a;">Chi tiết các khoản chi (Hàng 3-89)</h2>
-            <div class="loading" id="loadingDetail">Đang tải dữ liệu...</div>
-            <div id="detailContent"></div>
-            <div class="button-container">
-                <button onclick="hideDetail()" style="background-color: #666;">Đóng chi tiết</button>
-            </div>
-        </div>
-        
-        <div class="instructions">
-            <div class="data-info">
-                <p><strong>📊 Thông tin kết nối:</strong></p>
-                <p>✅ Google Sheet ID: 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
-                <p>✅ Sheet name: SR2526</p>
-                <p>✅ Tính tổng từ: Hàng 3 đến 89</p>
-                <p>✅ Kiểm tra: Tổng phí vật tư phải = 25.950.000</p>
+        <div id="detailSection" class="detail-section">
+            <div class="detail-header">
+                <h2 style="color: #2d5c2a; margin: 0;">📊 Chi tiết các khoản chi</h2>
+                <button class="action-button" onclick="toggleDetail()" style="background: linear-gradient(135deg, #666, #444); padding: 12px 25px;">
+                    <span>✕</span> Đóng
+                </button>
             </div>
             
-            <div class="url-display">
-                <strong>🌐 URL trang web của bạn:</strong><br>
-                https://lamviec246357-glitch.github.io/lamvuon2025/
+            <div class="loading" id="loadingDetail">Đang tải dữ liệu từ Google Sheet</div>
+            <div id="detailContent"></div>
+        </div>
+        
+        <div class="data-info">
+            <h3 style="color: #2d5c2a; margin-bottom: 15px;">ℹ️ Thông tin hệ thống</h3>
+            <p><strong>Google Sheet ID:</strong> 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
+            <p><strong>Sheet name:</strong> SR2526</p>
+            <p><strong>Tính tổng:</strong> Tự động đến hàng cuối cùng trong sheet</p>
+            <p><strong>Tự động cập nhật:</strong> Mỗi 3 phút</p>
+            <p><strong>Trạng thái:</strong> <span id="connectionStatus" style="color: #4CAF50;">✅ Đang kết nối...</span></p>
+            
+            <div class="auto-update">
+                <span>🔄</span>
+                <span>Tự động cập nhật sau: <span id="countdownTimer">180</span> giây</span>
             </div>
         </div>
         
         <footer>
-            <p>Trang web chi phí làm vườn - Tự động cập nhật từ Google Sheet</p>
-            <p>© 2025 - Cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></p>
-            <p id="rowCountInfo" style="font-size: 0.85em; color: #666;">Đang đếm số hàng...</p>
+            <p>Hệ thống quản lý chi phí làm vườn - Tự động đồng bộ với Google Sheet</p>
+            <p>© 2025 - <span id="currentYear"></span> | Cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></p>
+            <div class="last-updated">
+                ⏱️ Thời gian thực: <span id="currentTime">--:--:--</span>
+            </div>
         </footer>
     </div>
 
     <script>
         // ============================
-        // CẤU HÌNH GOOGLE SHEET
+        // CẤU HÌNH HỆ THỐNG
         // ============================
         const SHEET_ID = '1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4';
         const SHEET_NAME = 'SR2526';
-        const START_ROW = 3; // Bắt đầu từ hàng 3
-        const END_ROW = 89;  // Kết thúc ở hàng 89
+        const AUTO_UPDATE_INTERVAL = 3 * 60 * 1000; // 3 phút (đổi thành mili giây)
+        const START_ROW = 3; // Bắt đầu tính từ hàng 3
+        
+        // Biến hệ thống
+        let updateCount = 0;
+        let lastUpdateTime = null;
+        let autoUpdateTimer = null;
+        let countdownTimer = null;
+        let countdownSeconds = AUTO_UPDATE_INTERVAL / 1000;
+        let isDetailVisible = false;
         
         // ============================
-        // HÀM CHÍNH
+        // KHỞI TẠO HỆ THỐNG
         // ============================
         
-        // Định dạng tiền Việt Nam
-        function formatCurrency(value) {
-            if (value === null || value === undefined || isNaN(value)) {
-                return '0 ₫';
+        // Khởi tạo thời gian
+        function initSystem() {
+            // Cài đặt năm hiện tại
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Cài đặt thời gian thực
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            
+            // Cài đặt countdown timer
+            startCountdown();
+            
+            // Tải dữ liệu lần đầu
+            loadData();
+            
+            // Bắt đầu tự động cập nhật
+            startAutoUpdate();
+        }
+        
+        // Cập nhật thời gian hiện tại
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN');
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        
+        // Bắt đầu đếm ngược
+        function startCountdown() {
+            countdownSeconds = AUTO_UPDATE_INTERVAL / 1000;
+            
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
             }
             
-            // Đảm bảo value là số
-            const numValue = typeof value === 'number' ? value : parseFloat(value);
-            
-            if (isNaN(numValue)) {
-                return '0 ₫';
-            }
-            
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(numValue);
-        }
-        
-        // Xử lý số từ Google Sheet (hỗ trợ định dạng 1.000.000)
-        function parseSheetNumber(value) {
-            if (!value && value !== 0) return 0;
-            
-            // Nếu là số, trả về luôn
-            if (typeof value === 'number') return value;
-            
-            // Nếu là chuỗi
-            if (typeof value === 'string') {
-                // Xóa tất cả dấu chấm phân cách nghìn
-                let cleanValue = value.replace(/\./g, '');
-                // Thay dấu phẩy thập phân thành dấu chấm
-                cleanValue = cleanValue.replace(',', '.');
-                // Xóa ký tự không phải số, dấu chấm, dấu trừ
-                cleanValue = cleanValue.replace(/[^\d.-]/g, '');
+            countdownTimer = setInterval(() => {
+                countdownSeconds--;
                 
-                // Nếu chuỗi rỗng sau khi xử lý, trả về 0
-                if (cleanValue === '' || cleanValue === '-') return 0;
+                // Cập nhật hiển thị
+                const minutes = Math.floor(countdownSeconds / 60);
+                const seconds = countdownSeconds % 60;
                 
-                const num = parseFloat(cleanValue);
-                return isNaN(num) ? 0 : num;
-            }
-            
-            return 0;
-        }
-        
-        // Hiển thị/ẩn chi tiết
-        function showDetail() {
-            document.getElementById('detailSection').style.display = 'block';
-            loadDetailData();
-        }
-        
-        function hideDetail() {
-            document.getElementById('detailSection').style.display = 'none';
-        }
-        
-        // Tải dữ liệu từ Google Sheet với phương pháp mới
-        async function loadDetailData() {
-            try {
-                // Hiển thị loading
-                document.getElementById('loadingDetail').style.display = 'block';
-                document.getElementById('detailContent').innerHTML = '';
-                document.getElementById('debugInfo').style.display = 'block';
-                document.getElementById('debugInfo').innerHTML = '🔄 Đang tải dữ liệu từ Google Sheet...';
+                document.getElementById('countdownTimer').textContent = countdownSeconds;
+                document.getElementById('nextUpdate').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 
-                // Sử dụng Google Sheets API v4 với API key public
-                // Lưu ý: Cần chia sẻ Google Sheet public
-                const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=AIzaSyB3hVdHiStUP3h81FeAqS1gD57E5nC09N4`;
-                
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) {
-                    throw new Error(`Lỗi HTTP: ${response.status}`);
+                // Khi hết giờ
+                if (countdownSeconds <= 0) {
+                    clearInterval(countdownTimer);
+                    loadData(); // Tải dữ liệu mới
+                    startCountdown(); // Khởi động lại countdown
                 }
-                
-                const data = await response.json();
-                const rows = data.values || [];
-                
-                document.getElementById('debugInfo').innerHTML = `✅ Đã tải ${rows.length} hàng từ Google Sheet`;
-                
-                if (rows.length < START_ROW) {
-                    showError('Google Sheet không có đủ dữ liệu (ít hơn 3 hàng)');
-                    return;
-                }
-                
-                // Tính tổng từ hàng START_ROW đến END_ROW
-                calculateTotalsFromRange(rows);
-                
-                // Hiển thị bảng chi tiết
-                displayDetailTableFromRange(rows);
-                
-                // Cập nhật thời gian
-                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('vi-VN');
-                
-                // Ẩn loading
-                document.getElementById('loadingDetail').style.display = 'none';
-                
-            } catch (error) {
-                console.error('Lỗi khi tải dữ liệu:', error);
-                
-                // Thử phương pháp CSV nếu API không hoạt động
-                document.getElementById('debugInfo').innerHTML = '🔄 API không hoạt động, thử phương pháp CSV...';
-                loadDataViaCSV();
-            }
+            }, 1000);
         }
         
-        // Phương pháp dự phòng: Tải qua CSV
-        async function loadDataViaCSV() {
+        // Bắt đầu tự động cập nhật
+        function startAutoUpdate() {
+            if (autoUpdateTimer) {
+                clearInterval(autoUpdateTimer);
+            }
+            
+            autoUpdateTimer = setInterval(() => {
+                loadData();
+            }, AUTO_UPDATE_INTERVAL);
+            
+            document.getElementById('autoUpdateStatus').textContent = '🟢';
+            document.getElementById('autoUpdateStatus').style.color = '#4CAF50';
+        }
+        
+        // ============================
+        // XỬ LÝ DỮ LIỆU
+        // ============================
+        
+        // Tải dữ liệu từ Google Sheet
+        async function loadData() {
             try {
+                // Cập nhật trạng thái
+                document.getElementById('connectionStatus').textContent = '🔄 Đang tải dữ liệu...';
+                document.getElementById('connectionStatus').style.color = '#FF9800';
+                
+                // Sử dụng phương pháp CSV (ổn định nhất)
                 const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
                 const response = await fetch(csvUrl);
                 
                 if (!response.ok) {
-                    throw new Error(`Lỗi CSV: ${response.status}`);
+                    throw new Error(`Lỗi kết nối: ${response.status}`);
                 }
                 
                 const csvText = await response.text();
-                const rows = parseCSVAdvanced(csvText);
+                const rows = parseCSV(csvText);
                 
-                document.getElementById('debugInfo').innerHTML = `✅ Đã tải ${rows.length} hàng qua CSV`;
+                // Cập nhật thông tin hệ thống
+                updateCount++;
+                lastUpdateTime = new Date();
                 
-                if (rows.length < START_ROW) {
-                    showError('Google Sheet không có đủ dữ liệu');
-                    return;
+                document.getElementById('totalRows').textContent = rows.length;
+                document.getElementById('updateCount').textContent = updateCount;
+                document.getElementById('lastUpdateTime').textContent = 
+                    lastUpdateTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                
+                // Tính tổng và hiển thị
+                calculateAndDisplayTotals(rows);
+                
+                // Cập nhật trạng thái thành công
+                document.getElementById('connectionStatus').textContent = `✅ Kết nối thành công (${rows.length} hàng)`;
+                document.getElementById('connectionStatus').style.color = '#4CAF50';
+                
+                // Cập nhật thời gian cuối
+                document.getElementById('lastUpdate').textContent = 
+                    lastUpdateTime.toLocaleString('vi-VN', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                
+                // Nếu đang xem chi tiết, cập nhật bảng
+                if (isDetailVisible) {
+                    displayDetailTable(rows);
                 }
                 
-                // Tính tổng từ hàng START_ROW đến END_ROW
-                calculateTotalsFromRange(rows);
-                
-                // Hiển thị bảng chi tiết
-                displayDetailTableFromRange(rows);
-                
-                // Cập nhật thời gian
-                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('vi-VN');
-                
-                // Ẩn loading
-                document.getElementById('loadingDetail').style.display = 'none';
+                console.log(`✅ Đã cập nhật dữ liệu lần thứ ${updateCount} (${rows.length} hàng)`);
                 
             } catch (error) {
-                console.error('Lỗi CSV:', error);
-                showError(`Không thể tải dữ liệu. Vui lòng kiểm tra:<br>
-                    1. Google Sheet đã chia sẻ public<br>
-                    2. Sheet name đúng "SR2526"<br>
-                    3. <a href="https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit" target="_blank">Kiểm tra Google Sheet</a>`);
+                console.error('Lỗi khi tải dữ liệu:', error);
+                
+                document.getElementById('connectionStatus').textContent = '❌ Lỗi kết nối';
+                document.getElementById('connectionStatus').style.color = '#f44336';
+                
+                // Thử lại sau 30 giây nếu có lỗi
+                setTimeout(loadData, 30000);
             }
         }
         
-        // Phân tích CSV nâng cao
-        function parseCSVAdvanced(csvText) {
+        // Phân tích CSV
+        function parseCSV(csvText) {
             const rows = [];
             let currentRow = [];
             let currentField = '';
@@ -486,7 +682,7 @@
             }
             
             // Thêm dòng cuối
-            if (currentField !== '' || currentRow.length > 0) {
+            if (currentField || currentRow.length > 0) {
                 currentRow.push(currentField);
                 rows.push(currentRow);
             }
@@ -494,8 +690,41 @@
             return rows;
         }
         
-        // Tính tổng từ phạm vi cụ thể (hàng START_ROW đến END_ROW)
-        function calculateTotalsFromRange(rows) {
+        // Định dạng tiền Việt Nam
+        function formatCurrency(value) {
+            if (value === null || value === undefined || isNaN(value)) {
+                return '0 ₫';
+            }
+            
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+        
+        // Chuyển đổi số từ Google Sheet
+        function parseSheetNumber(value) {
+            if (!value && value !== 0) return 0;
+            
+            if (typeof value === 'string') {
+                // Xóa dấu chấm phân cách nghìn
+                let cleanValue = value.replace(/\./g, '');
+                // Thay dấu phẩy thập phân thành dấu chấm
+                cleanValue = cleanValue.replace(',', '.');
+                // Xóa ký tự không phải số
+                cleanValue = cleanValue.replace(/[^\d.-]/g, '');
+                
+                const num = parseFloat(cleanValue);
+                return isNaN(num) ? 0 : num;
+            }
+            
+            return parseFloat(value) || 0;
+        }
+        
+        // Tính tổng và hiển thị
+        function calculateAndDisplayTotals(rows) {
             let totalVatTu = 0;
             let totalTienCong = 0;
             let totalTrieu = 0;
@@ -503,49 +732,41 @@
             let totalThien = 0;
             let totalThuan = 0;
             
-            let actualEndRow = Math.min(END_ROW, rows.length);
-            let count = 0;
+            let dataRowsCount = 0;
             
-            document.getElementById('debugInfo').innerHTML += `<br>📊 Tính tổng từ hàng ${START_ROW} đến ${actualEndRow}`;
-            
-            for (let i = START_ROW - 1; i < actualEndRow; i++) {
+            // Bắt đầu từ hàng START_ROW (index START_ROW-1) đến hàng cuối cùng
+            for (let i = START_ROW - 1; i < rows.length; i++) {
                 const row = rows[i];
-                count++;
+                dataRowsCount++;
                 
                 // Cột D (index 3): Phí vật tư
                 if (row[3]) {
-                    const value = parseSheetNumber(row[3]);
-                    totalVatTu += value;
+                    totalVatTu += parseSheetNumber(row[3]);
                 }
                 
                 // Cột E (index 4): Tiền công
                 if (row[4]) {
-                    const value = parseSheetNumber(row[4]);
-                    totalTienCong += value;
+                    totalTienCong += parseSheetNumber(row[4]);
                 }
                 
                 // Cột G (index 6): Triều
                 if (row[6]) {
-                    const value = parseSheetNumber(row[6]);
-                    totalTrieu += value;
+                    totalTrieu += parseSheetNumber(row[6]);
                 }
                 
                 // Cột H (index 7): Tèo
                 if (row[7]) {
-                    const value = parseSheetNumber(row[7]);
-                    totalTeo += value;
+                    totalTeo += parseSheetNumber(row[7]);
                 }
                 
                 // Cột I (index 8): Thiện
                 if (row[8]) {
-                    const value = parseSheetNumber(row[8]);
-                    totalThien += value;
+                    totalThien += parseSheetNumber(row[8]);
                 }
                 
                 // Cột J (index 9): Thuận
                 if (row[9]) {
-                    const value = parseSheetNumber(row[9]);
-                    totalThuan += value;
+                    totalThuan += parseSheetNumber(row[9]);
                 }
             }
             
@@ -560,27 +781,83 @@
             document.getElementById('totalThien').textContent = formatCurrency(totalThien);
             document.getElementById('totalThuan').textContent = formatCurrency(totalThuan);
             
-            // Hiển thị thông tin debug
-            document.getElementById('debugInfo').innerHTML += `<br>✅ Đã xử lý ${count} hàng`;
-            document.getElementById('debugInfo').innerHTML += `<br>📈 Tổng phí vật tư: ${formatCurrency(totalVatTu)} (Mong đợi: 25.950.000)`;
-            document.getElementById('rowCountInfo').textContent = `Đã xử lý ${count} hàng dữ liệu từ ${START_ROW} đến ${actualEndRow}`;
+            // Cập nhật thống kê
+            document.getElementById('dataRows').textContent = dataRowsCount;
             
-            // Kiểm tra tổng phí vật tư
-            if (Math.abs(totalVatTu - 25950000) < 100) {
-                document.getElementById('debugInfo').innerHTML += '<br>🎉 Tổng phí vật tư CHÍNH XÁC!';
+            console.log('Tổng kết:', {
+                'Tổng hàng dữ liệu': dataRowsCount,
+                'Phí vật tư': formatCurrency(totalVatTu),
+                'Tiền công': formatCurrency(totalTienCong),
+                'Tổng chi phí': formatCurrency(totalChiPhi)
+            });
+        }
+        
+        // ============================
+        // HIỂN THỊ CHI TIẾT
+        // ============================
+        
+        // Hiển thị/ẩn chi tiết
+        function toggleDetail() {
+            const detailSection = document.getElementById('detailSection');
+            const detailButton = document.getElementById('detailButtonText');
+            
+            isDetailVisible = !isDetailVisible;
+            
+            if (isDetailVisible) {
+                detailSection.style.display = 'block';
+                detailButton.textContent = 'Ẩn chi tiết';
+                
+                // Tải và hiển thị dữ liệu chi tiết
+                loadDetailData();
             } else {
-                document.getElementById('debugInfo').innerHTML += `<br>⚠️ Chênh lệch: ${formatCurrency(totalVatTu - 25950000)}`;
+                detailSection.style.display = 'none';
+                detailButton.textContent = 'Xem chi tiết dữ liệu';
             }
         }
         
-        // Hiển thị bảng chi tiết từ phạm vi
-        function displayDetailTableFromRange(rows) {
+        // Tải dữ liệu chi tiết
+        async function loadDetailData() {
+            try {
+                document.getElementById('loadingDetail').style.display = 'block';
+                document.getElementById('detailContent').innerHTML = '';
+                
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(csvUrl);
+                
+                if (!response.ok) {
+                    throw new Error('Lỗi tải dữ liệu');
+                }
+                
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                
+                displayDetailTable(rows);
+                
+                document.getElementById('loadingDetail').style.display = 'none';
+                
+            } catch (error) {
+                console.error('Lỗi tải chi tiết:', error);
+                document.getElementById('detailContent').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #f44336;">
+                        <h3>❌ Không thể tải dữ liệu chi tiết</h3>
+                        <p>Vui lòng thử lại sau</p>
+                        <button onclick="loadDetailData()" style="margin-top: 20px; padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            Thử lại
+                        </button>
+                    </div>
+                `;
+                document.getElementById('loadingDetail').style.display = 'none';
+            }
+        }
+        
+        // Hiển thị bảng chi tiết
+        function displayDetailTable(rows) {
             let html = `
                 <div style="overflow-x: auto;">
                     <table>
                         <thead>
                             <tr>
-                                <th>Hàng</th>
+                                <th>#</th>
                                 <th>ID</th>
                                 <th>Ngày</th>
                                 <th>Nội dung</th>
@@ -595,14 +872,13 @@
                         <tbody>
             `;
             
-            let actualEndRow = Math.min(END_ROW, rows.length);
             let displayedCount = 0;
             
-            for (let i = START_ROW - 1; i < actualEndRow; i++) {
+            // Bắt đầu từ hàng START_ROW
+            for (let i = START_ROW - 1; i < rows.length; i++) {
                 const row = rows[i];
                 const rowNumber = i + 1;
                 
-                // Kiểm tra nếu hàng có ít nhất 5 cột
                 if (row && row.length >= 5) {
                     html += `
                         <tr>
@@ -625,12 +901,11 @@
             html += `
                         </tbody>
                     </table>
-                    <div class="data-info" style="margin-top: 20px;">
-                        <p><strong>📊 Thống kê dữ liệu:</strong></p>
-                        <p>Tổng số hàng trong sheet: ${rows.length}</p>
-                        <p>Phạm vi tính tổng: Hàng ${START_ROW} đến ${actualEndRow}</p>
-                        <p>Số hàng hiển thị: ${displayedCount}</p>
-                        <p>Thời gian: ${new Date().toLocaleTimeString('vi-VN')}</p>
+                    <div class="data-info" style="margin-top: 25px;">
+                        <p><strong>📈 Thống kê chi tiết:</strong></p>
+                        <p>Tổng số hàng dữ liệu: ${displayedCount} (từ hàng ${START_ROW} đến ${rows.length})</p>
+                        <p>Thời gian cập nhật: ${new Date().toLocaleTimeString('vi-VN')}</p>
+                        <p>Lần cập nhật thứ: ${updateCount}</p>
                     </div>
                 </div>
             `;
@@ -638,27 +913,18 @@
             document.getElementById('detailContent').innerHTML = html;
         }
         
-        // Hiển thị lỗi
-        function showError(message) {
-            document.getElementById('loadingDetail').style.display = 'none';
-            document.getElementById('detailContent').innerHTML = `
-                <div class="error-box">
-                    <h3>❌ Lỗi kết nối</h3>
-                    <p>${message}</p>
-                    <button onclick="loadDetailData()" style="margin-top: 15px; padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        Thử lại
-                    </button>
-                </div>
-            `;
-        }
+        // ============================
+        // KHỞI CHẠY HỆ THỐNG
+        // ============================
+        window.onload = initSystem;
         
-        // Tự động tải dữ liệu khi trang được mở
-        window.onload = function() {
-            loadDetailData();
-            
-            // Tự động cập nhật mỗi 5 phút
-            setInterval(loadDetailData, 5 * 60 * 1000);
-        };
+        // Cho phép refresh thủ công bằng phím F5
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'F5') {
+                event.preventDefault();
+                loadData();
+            }
+        });
     </script>
 </body>
 </html>
