@@ -134,7 +134,7 @@
                                         <th>Nội dung</th>
                                         <th>Phí vật tư</th>
                                         <th>Tiền công</th>
-                                        <th>Triệu</th>
+                                        <th>Triều</th>
                                         <th>Tèo</th>
                                         <th>Thiện</th>
                                         <th>Thuận</th>
@@ -221,7 +221,7 @@
                     <div class="row">
                         <div class="col-md-3 col-6 mb-3">
                             <div class="text-center p-3 border rounded bg-light">
-                                <h6 class="mb-1">Triệu</h6>
+                                <h6 class="mb-1">Triều</h6>
                                 <h5 class="money mb-0" id="detailTrieu">0 đ</h5>
                             </div>
                         </div>
@@ -261,16 +261,16 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     
     <script>
-        // Dữ liệu mẫu (đã sửa: tiền công lưu dưới dạng số nguyên)
+        // Dữ liệu mẫu (đã sửa: lưu dưới dạng số nguyên, không có "đ" và thêm dòng thứ 3 từ ảnh)
         const data = [
             { 
                 id: "001", 
                 date: "06/06/2025", 
                 content: "xít thuoc sau", 
                 material: 0, 
-                wage: 300000, 
-                Trieu: 200, 
-                Teo: 100, 
+                wage: 300000,  // 300.000 đ
+                Trieu: 200000,  // 200.000 đ
+                Teo: 100000,    // 100.000 đ
                 Thien: 0, 
                 Thuan: 0 
             },
@@ -279,22 +279,28 @@
                 date: "06/06/2025", 
                 content: "sua moter bom nuoc xít thuoc", 
                 material: 0, 
-                wage: 550000, 
+                wage: 550000,  // 550.000 đ
                 Trieu: 0, 
                 Teo: 0, 
                 Thien: 0, 
-                Thuan: 550 
+                Thuan: 550000   // 550.000 đ
+            },
+            { 
+                id: "003", 
+                date: "16/06/2025", 
+                content: "mau 1 chay hopyang nha ty", 
+                material: 140000,  // 140.000 đ
+                wage: 0, 
+                Trieu: 0, 
+                Teo: 0, 
+                Thien: 0, 
+                Thuan: 0 
             }
         ];
 
         // Hàm định dạng số tiền với dấu phân cách hàng nghìn
         function formatMoney(amount) {
             return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
-        }
-
-        // Hàm chuyển đổi chuỗi tiền thành số
-        function parseMoney(moneyString) {
-            return parseInt(moneyString.replace(/\./g, '').replace(' đ', ''));
         }
 
         // Hiển thị dữ liệu vào bảng
@@ -372,7 +378,7 @@
         // Xuất file Excel
         function exportToExcel() {
             const wsData = [
-                ["#", "ID", "Ngày", "Nội dung", "Phí vật tư", "Tiền công", "Triệu", "Tèo", "Thiện", "Thuận"]
+                ["#", "ID", "Ngày", "Nội dung", "Phí vật tư", "Tiền công", "Triều", "Tèo", "Thiện", "Thuận"]
             ];
             
             data.forEach((item, index) => {
