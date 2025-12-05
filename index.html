@@ -3,17 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi phí làm vườn - Quản lý thông minh</title>
-    <!-- Chart.js cho biểu đồ -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- SheetJS cho xuất Excel -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- jsPDF cho xuất PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <!-- EmailJS cho gửi email -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    
+    <title>Chi phí làm vườn - Tự động cập nhật</title>
     <style>
         * {
             margin: 0;
@@ -23,22 +13,22 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #f0f7f0;
             color: #333;
             line-height: 1.6;
             padding: 20px;
             min-height: 100vh;
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
+            background: white;
+            border-radius: 20px;
             padding: 35px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
         }
         
         header {
@@ -62,388 +52,14 @@
         h1 {
             color: #2d5c2a;
             margin-bottom: 10px;
-            font-size: 3em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            background: linear-gradient(45deg, #2d5c2a, #4CAF50);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2.8em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         
         .subtitle {
             color: #666;
-            font-size: 1.3em;
+            font-size: 1.2em;
             margin-bottom: 15px;
-        }
-        
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-        
-        .tab-btn {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1.1em;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .tab-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(106, 17, 203, 0.6);
-        }
-        
-        .tab-btn.active {
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-        }
-        
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Summary Cards */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-        
-        .card {
-            background: linear-gradient(145deg, #ffffff, #f8fff8);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            border: 2px solid #4CAF50;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
-        }
-        
-        .card:hover {
-            transform: translateY(-15px) scale(1.03);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        
-        /* Charts Section */
-        .charts-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
-        }
-        
-        .chart-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid #e0e0e0;
-        }
-        
-        /* Search and Filter */
-        .search-filter-container {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-            border-radius: 20px;
-            padding: 25px;
-            margin: 30px 0;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        }
-        
-        .search-box {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .search-input {
-            flex: 1;
-            min-width: 200px;
-            padding: 15px 20px;
-            border: 2px solid #4CAF50;
-            border-radius: 12px;
-            font-size: 1.1em;
-            transition: all 0.3s;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
-        }
-        
-        .filter-options {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        
-        .filter-btn {
-            padding: 12px 25px;
-            background: white;
-            border: 2px solid #4CAF50;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .filter-btn:hover, .filter-btn.active {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        /* Export Section */
-        .export-section {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 40px 0;
-            text-align: center;
-        }
-        
-        .export-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-        
-        .export-btn {
-            padding: 18px 35px;
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1.2em;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s;
-            box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
-        }
-        
-        .export-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(33, 150, 243, 0.6);
-        }
-        
-        .export-btn.pdf {
-            background: linear-gradient(135deg, #f44336, #d32f2f);
-            box-shadow: 0 6px 15px rgba(244, 67, 54, 0.4);
-        }
-        
-        .export-btn.excel {
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
-            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
-        }
-        
-        /* Email Notification */
-        .email-section {
-            background: linear-gradient(135deg, #fff3e0, #ffecb3);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 40px 0;
-        }
-        
-        .email-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .email-input {
-            padding: 15px 20px;
-            border: 2px solid #FF9800;
-            border-radius: 12px;
-            font-size: 1.1em;
-        }
-        
-        .email-btn {
-            padding: 18px;
-            background: linear-gradient(135deg, #FF9800, #F57C00);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .email-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4);
-        }
-        
-        /* Table Styling */
-        .data-table-container {
-            overflow-x: auto;
-            margin: 30px 0;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-        }
-        
-        th {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            padding: 20px 15px;
-            text-align: left;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        td {
-            border-bottom: 1px solid #eee;
-            padding: 18px 15px;
-            text-align: left;
-        }
-        
-        tr:hover {
-            background-color: #f5f9f5;
-            transition: background-color 0.2s;
-        }
-        
-        /* System Info */
-        .system-info {
-            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            border-radius: 20px;
-            padding: 25px;
-            margin: 30px 0;
-            border-left: 5px solid #4CAF50;
-        }
-        
-        /* Footer */
-        footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 2px solid #eee;
-            color: #666;
-            font-size: 0.95em;
-        }
-        
-        /* Loading Animation */
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #666;
-            font-style: italic;
-            font-size: 1.2em;
-        }
-        
-        .loading::after {
-            content: '...';
-            animation: dots 1.5s infinite;
-        }
-        
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
-        }
-        
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 20px 30px;
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 1000;
-            animation: slideIn 0.5s ease, fadeOut 0.5s ease 4.5s forwards;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            max-width: 400px;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes fadeOut {
-            to { opacity: 0; transform: translateX(100%); }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .charts-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-card {
-                min-width: 100%;
-            }
-            
-            .tab-btn {
-                padding: 12px 20px;
-                font-size: 1em;
-            }
-            
-            .export-buttons {
-                flex-direction: column;
-            }
-            
-            h1 {
-                font-size: 2.2em;
-            }
         }
         
         .update-info {
@@ -469,13 +85,493 @@
             font-weight: bold;
             margin-top: 5px;
         }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #ffffff, #f8fff8);
+            border-radius: 18px;
+            padding: 28px;
+            text-align: center;
+            border: 2px solid #4CAF50;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+        }
+        
+        .card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .card h3 {
+            color: #2d5c2a;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .card-icon {
+            font-size: 1.6em;
+        }
+        
+        .amount {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 25px 0;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .note {
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 50px 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .action-button {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.2em;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .action-button:hover {
+            background: linear-gradient(135deg, #45a049, #1B5E20);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .action-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .action-button.secondary {
+            background: linear-gradient(135deg, #2196F3, #0D47A1);
+        }
+        
+        .action-button.secondary:hover {
+            background: linear-gradient(135deg, #1976D2, #0D47A1);
+        }
+        
+        .action-button.tertiary {
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+        }
+        
+        .action-button.tertiary:hover {
+            background: linear-gradient(135deg, #7B1FA2, #4A148C);
+        }
+        
+        .detail-section, .chart-section, .search-section {
+            background: #f9f9f9;
+            border-radius: 18px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 2px solid #e0e0e0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .chart-section.active, .search-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .detail-header, .chart-header, .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        th {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td {
+            border-bottom: 1px solid #eee;
+            padding: 16px 15px;
+            text-align: left;
+        }
+        
+        tr:hover {
+            background-color: #f5f9f5;
+            transition: background-color 0.2s;
+        }
+        
+        .data-info {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+            color: #777;
+            font-size: 0.95em;
+        }
+        
+        .auto-update {
+            background: #e3f2fd;
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(33, 150, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        /* Styles for charts */
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            border: 2px solid #e0e0e0;
+        }
+        
+        /* Search and filter styles */
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            min-width: 200px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .search-results-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .reset-button {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .reset-button:hover {
+            background: #f57c00;
+        }
+        
+        .highlight {
+            background-color: #ffff99 !important;
+            font-weight: bold;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #f44336;
+            font-size: 1.2em;
+        }
+        
+        .chart-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .chart-type-btn {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .chart-type-btn.active {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .chart-type-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .chart-type-btn.active:hover {
+            background: #45a049;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .amount {
+                font-size: 2em;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            table {
+                font-size: 0.9em;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+        
+        .currency {
+            font-size: 0.8em;
+            color: #888;
+            margin-left: 5px;
+        }
+        
+        .last-updated {
+            background: #fff3e0;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
     </style>
+    <!-- Chart.js library for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🌿 CHI PHÍ LÀM VƯỜN - QUẢN LÝ THÔNG MINH</h1>
-            <p class="subtitle">Hệ thống quản lý chi phí làm vườn với biểu đồ trực quan và tự động hóa</p>
+            <h1>🌿 CHI PHÍ LÀM VƯỜN</h1>
+            <p class="subtitle">Hệ thống quản lý chi phí làm vườn tự động</p>
             
             <div class="update-info">
                 <div class="update-item">
@@ -489,202 +585,216 @@
                     <div>hàng</div>
                 </div>
                 <div class="update-item">
-                    <div>📧 Email thông báo</div>
-                    <div class="update-value">✅</div>
-                    <div>phongvumobie79@gmail.com</div>
+                    <div>🔄 Lần cập nhật cuối</div>
+                    <div class="update-value" id="lastUpdateTime">--:--</div>
+                    <div>giờ</div>
                 </div>
             </div>
         </header>
         
-        <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('dashboard')">
-                <span>📊</span> Tổng quan
-            </button>
-            <button class="tab-btn" onclick="switchTab('charts')">
-                <span>📈</span> Biểu đồ
-            </button>
-            <button class="tab-btn" onclick="switchTab('search')">
-                <span>🔍</span> Tìm kiếm
-            </button>
-            <button class="tab-btn" onclick="switchTab('export')">
-                <span>💾</span> Xuất file
-            </button>
-            <button class="tab-btn" onclick="switchTab('email')">
-                <span>📧</span> Thông báo
-            </button>
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="dataRows">0</div>
+                <div class="stat-label">Hàng dữ liệu</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="dataColumns">10</div>
+                <div class="stat-label">Cột dữ liệu</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="updateCount">0</div>
+                <div class="stat-label">Lần cập nhật</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="autoUpdateStatus">🟢</div>
+                <div class="stat-label">Tự động cập nhật</div>
+            </div>
         </div>
         
-        <!-- Dashboard Tab -->
-        <div id="dashboard-tab" class="tab-content active">
-            <div id="summary" class="summary-grid">
-                <!-- Cards will be populated by JavaScript -->
+        <div id="summary" class="summary-grid">
+            <div class="card">
+                <h3><span class="card-icon">💰</span> Tổng chi phí làm vườn</h3>
+                <div class="amount" id="totalChiPhi">0 ₫</div>
+                <div class="note">Tự động tính đến hàng cuối cùng trong sheet</div>
             </div>
             
-            <div class="data-table-container">
-                <h2 style="color: #2d5c2a; margin-bottom: 20px; text-align: center;">📋 Chi tiết dữ liệu</h2>
-                <div class="loading" id="tableLoading">Đang tải dữ liệu...</div>
-                <div id="detailContent"></div>
-            </div>
-        </div>
-        
-        <!-- Charts Tab -->
-        <div id="charts-tab" class="tab-content">
-            <div class="charts-container">
-                <div class="chart-card">
-                    <h3 style="color: #2d5c2a; margin-bottom: 20px;">📊 Phân bổ chi phí</h3>
-                    <canvas id="costDistributionChart"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3 style="color: #2d5c2a; margin-bottom: 20px;">📈 Chi phí theo tháng</h3>
-                    <canvas id="monthlyCostChart"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3 style="color: #2d5c2a; margin-bottom: 20px;">👨 Phân bổ tiền công</h3>
-                    <canvas id="personCostChart"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3 style="color: #2d5c2a; margin-bottom: 20px;">📊 So sánh phí vật tư vs tiền công</h3>
-                    <canvas id="comparisonChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Search Tab -->
-        <div id="search-tab" class="tab-content">
-            <div class="search-filter-container">
-                <h2 style="color: #2d5c2a; margin-bottom: 25px;">🔍 Tìm kiếm & Lọc dữ liệu</h2>
-                
-                <div class="search-box">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm theo nội dung, ID, ngày...">
-                    <input type="number" id="minAmount" class="search-input" placeholder="Số tiền tối thiểu">
-                    <input type="number" id="maxAmount" class="search-input" placeholder="Số tiền tối đa">
-                    <input type="date" id="dateFrom" class="search-input">
-                    <input type="date" id="dateTo" class="search-input">
-                    <button onclick="performSearch()" class="filter-btn active" style="background: #4CAF50; color: white;">
-                        🔍 Tìm kiếm
-                    </button>
-                    <button onclick="resetSearch()" class="filter-btn">
-                        ↻ Đặt lại
-                    </button>
-                </div>
-                
-                <div class="filter-options">
-                    <button class="filter-btn" onclick="filterByColumn('vatTu')">🛠️ Phí vật tư</button>
-                    <button class="filter-btn" onclick="filterByColumn('tienCong')">👷 Tiền công</button>
-                    <button class="filter-btn" onclick="filterByColumn('trieu')">👨 Triều</button>
-                    <button class="filter-btn" onclick="filterByColumn('teo')">👨 Tèo</button>
-                    <button class="filter-btn" onclick="filterByColumn('thien')">👨 Thiện</button>
-                    <button class="filter-btn" onclick="filterByColumn('thuan')">👨 Thuận</button>
-                    <button class="filter-btn" onclick="sortByDate()">📅 Sắp xếp theo ngày</button>
-                    <button class="filter-btn" onclick="sortByAmount()">💰 Sắp xếp theo số tiền</button>
-                </div>
-                
-                <div id="searchResults" style="margin-top: 30px;">
-                    <div class="loading" id="searchLoading">Nhập từ khóa để tìm kiếm...</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Export Tab -->
-        <div id="export-tab" class="tab-content">
-            <div class="export-section">
-                <h2 style="color: #2d5c2a; margin-bottom: 20px;">💾 Xuất dữ liệu ra file</h2>
-                <p style="color: #666; margin-bottom: 25px; font-size: 1.1em;">
-                    Xuất toàn bộ dữ liệu chi phí làm vườn ra file Excel hoặc PDF
-                </p>
-                
-                <div class="export-buttons">
-                    <button class="export-btn excel" onclick="exportToExcel()">
-                        <span>📗</span> Xuất Excel (.xlsx)
-                    </button>
-                    <button class="export-btn pdf" onclick="exportToPDF()">
-                        <span>📕</span> Xuất PDF (.pdf)
-                    </button>
-                    <button class="export-btn" onclick="exportToCSV()">
-                        <span>📘</span> Xuất CSV (.csv)
-                    </button>
-                </div>
-                
-                <div id="exportStatus" style="margin-top: 25px; padding: 15px; border-radius: 10px; display: none;"></div>
+            <div class="card">
+                <h3><span class="card-icon">🛠️</span> Tổng phí vật tư</h3>
+                <div class="amount" id="totalVatTu">0 ₫</div>
+                <div class="note">SUM(D3:D) - Tự động đến hàng cuối</div>
             </div>
             
-            <div class="system-info">
-                <h3 style="color: #2d5c2a; margin-bottom: 15px;">📊 Tổng kết dữ liệu xuất</h3>
-                <div id="exportSummary">
-                    <!-- Export summary will be populated here -->
-                </div>
+            <div class="card">
+                <h3><span class="card-icon">👷</span> Tổng tiền công</h3>
+                <div class="amount" id="totalTienCong">0 ₫</div>
+                <div class="note">SUM(E3:E) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👨</span> Triều</h3>
+                <div class="amount" id="totalTrieu">0 ₫</div>
+                <div class="note">SUM(G3:G) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👨</span> Tèo</h3>
+                <div class="amount" id="totalTeo">0 ₫</div>
+                <div class="note">SUM(H3:H) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👨</span> Thiện</h3>
+                <div class="amount" id="totalThien">0 ₫</div>
+                <div class="note">SUM(I3:I) - Tự động đến hàng cuối</div>
+            </div>
+            
+            <div class="card">
+                <h3><span class="card-icon">👨</span> Thuận</h3>
+                <div class="amount" id="totalThuan">0 ₫</div>
+                <div class="note">SUM(J3:J) - Tự động đến hàng cuối</div>
             </div>
         </div>
         
-        <!-- Email Tab -->
-        <div id="email-tab" class="tab-content">
-            <div class="email-section">
-                <h2 style="color: #2d5c2a; margin-bottom: 20px;">📧 Thiết lập thông báo email</h2>
-                <p style="color: #666; margin-bottom: 25px; font-size: 1.1em;">
-                    Nhận thông báo tự động khi có thay đổi dữ liệu. Hệ thống sẽ gửi email tổng kết đầy đủ.
-                </p>
-                
-                <div class="email-form">
-                    <input type="email" id="emailInput" class="email-input" 
-                           value="phongvumobie79@gmail.com" placeholder="Nhập email nhận thông báo">
-                    
-                    <select id="emailFrequency" class="email-input">
-                        <option value="3">Mỗi 3 phút</option>
-                        <option value="5">Mỗi 5 phút</option>
-                        <option value="10">Mỗi 10 phút</option>
-                        <option value="30">Mỗi 30 phút</option>
-                        <option value="60">Mỗi giờ</option>
-                        <option value="change">Khi có thay đổi</option>
-                    </select>
-                    
-                    <button class="email-btn" onclick="setupEmailNotification()">
-                        <span>✅</span> Thiết lập thông báo
-                    </button>
-                    
-                    <button class="email-btn" onclick="sendTestEmail()" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
-                        <span>📤</span> Gửi email kiểm tra
-                    </button>
-                    
-                    <button class="email-btn" onclick="sendSummaryEmail()" style="background: linear-gradient(135deg, #2196F3, #1976D2);">
-                        <span>📊</span> Gửi tổng kết ngay
-                    </button>
-                </div>
-                
-                <div id="emailStatus" style="margin-top: 25px; padding: 20px; border-radius: 12px; background: white; display: none;"></div>
-                
-                <div class="system-info" style="margin-top: 30px;">
-                    <h3 style="color: #2d5c2a; margin-bottom: 15px;">📋 Nội dung email thông báo:</h3>
-                    <div id="emailContentPreview">
-                        <p>📊 <strong>Tổng chi phí làm vườn:</strong> <span id="previewTotal">0 ₫</span></p>
-                        <p>🛠️ <strong>Tổng phí vật tư:</strong> <span id="previewVatTu">0 ₫</span></p>
-                        <p>👷 <strong>Tổng tiền công:</strong> <span id="previewTienCong">0 ₫</span></p>
-                        <p>👨 <strong>Triều:</strong> <span id="previewTrieu">0 ₫</span></p>
-                        <p>👨 <strong>Tèo:</strong> <span id="previewTeo">0 ₫</span></p>
-                        <p>👨 <strong>Thiện:</strong> <span id="previewThien">0 ₫</span></p>
-                        <p>👨 <strong>Thuận:</strong> <span id="previewThuan">0 ₫</span></p>
-                        <p>📅 <strong>Thời gian cập nhật:</strong> <span id="previewTime">--:--</span></p>
-                        <p>📈 <strong>Tổng số giao dịch:</strong> <span id="previewTransactions">0</span></p>
+        <div class="button-container">
+            <button class="action-button" onclick="toggleDetail()">
+                <span>📋</span>
+                <span id="detailButtonText">Xem chi tiết dữ liệu</span>
+            </button>
+            
+            <button class="action-button secondary" onclick="toggleChartSection()">
+                <span>📊</span>
+                <span id="chartButtonText">Xem biểu đồ</span>
+            </button>
+            
+            <button class="action-button tertiary" onclick="toggleSearchSection()">
+                <span>🔍</span>
+                <span id="searchButtonText">Tìm kiếm & Lọc</span>
+            </button>
+        </div>
+        
+        <div id="detailSection" class="detail-section">
+            <div class="detail-header">
+                <h2 style="color: #2d5c2a; margin: 0;">📊 Chi tiết các khoản chi</h2>
+                <button class="action-button" onclick="toggleDetail()" style="background: linear-gradient(135deg, #666, #444); padding: 12px 25px;">
+                    <span>✕</span> Đóng
+                </button>
+            </div>
+            
+            <div class="loading" id="loadingDetail">Đang tải dữ liệu từ Google Sheet</div>
+            <div id="detailContent"></div>
+        </div>
+        
+        <div id="chartSection" class="chart-section">
+            <div class="chart-header">
+                <h2 style="color: #2d5c2a; margin: 0;">📊 Biểu đồ trực quan hóa dữ liệu</h2>
+                <button class="action-button" onclick="toggleChartSection()" style="background: linear-gradient(135deg, #666, #444); padding: 12px 25px;">
+                    <span>✕</span> Đóng
+                </button>
+            </div>
+            
+            <div class="chart-type-selector">
+                <button class="chart-type-btn active" onclick="changeChartType('pie')">Biểu đồ tròn</button>
+                <button class="chart-type-btn" onclick="changeChartType('bar')">Biểu đồ cột</button>
+                <button class="chart-type-btn" onclick="changeChartType('line')">Biểu đồ đường</button>
+                <button class="chart-type-btn" onclick="changeChartType('doughnut')">Biểu đồ vành khuyên</button>
+            </div>
+            
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3 style="color: #2d5c2a; margin-bottom: 15px; text-align: center;">Phân bổ chi phí làm vườn</h3>
+                    <div class="chart-container">
+                        <canvas id="costDistributionChart"></canvas>
                     </div>
+                    <div class="chart-legend" id="costChartLegend"></div>
+                </div>
+                
+                <div class="chart-card">
+                    <h3 style="color: #2d5c2a; margin-bottom: 15px; text-align: center;">Tiền công theo công nhân</h3>
+                    <div class="chart-container">
+                        <canvas id="workerChart"></canvas>
+                    </div>
+                    <div class="chart-legend" id="workerChartLegend"></div>
+                </div>
+            </div>
+            
+            <div class="chart-card" style="margin-top: 30px;">
+                <h3 style="color: #2d5c2a; margin-bottom: 15px; text-align: center;">Xu hướng chi phí theo thời gian</h3>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div style="text-align: center; margin-top: 20px; font-size: 0.9em; color: #666;">
+                    <p>Biểu đồ thể hiện tổng chi phí vật tư và tiền công theo thời gian</p>
                 </div>
             </div>
         </div>
         
-        <div class="system-info">
+        <div id="searchSection" class="search-section">
+            <div class="search-header">
+                <h2 style="color: #2d5c2a; margin: 0;">🔍 Tìm kiếm & Lọc dữ liệu</h2>
+                <button class="action-button" onclick="toggleSearchSection()" style="background: linear-gradient(135deg, #666, #444); padding: 12px 25px;">
+                    <span>✕</span> Đóng
+                </button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm theo nội dung, ID, ngày..." onkeyup="filterTable()">
+                <button onclick="clearSearch()" class="reset-button">Xóa tìm kiếm</button>
+            </div>
+            
+            <div class="filter-controls">
+                <select id="categoryFilter" class="filter-select" onchange="filterTable()">
+                    <option value="">Tất cả danh mục</option>
+                    <option value="vat_tu">Phí vật tư</option>
+                    <option value="tien_cong">Tiền công</option>
+                </select>
+                
+                <select id="workerFilter" class="filter-select" onchange="filterTable()">
+                    <option value="">Tất cả công nhân</option>
+                    <option value="Triều">Triều</option>
+                    <option value="Tèo">Tèo</option>
+                    <option value="Thiện">Thiện</option>
+                    <option value="Thuận">Thuận</option>
+                </select>
+                
+                <select id="amountFilter" class="filter-select" onchange="filterTable()">
+                    <option value="">Mọi mức chi phí</option>
+                    <option value="0-500000">Dưới 500,000 ₫</option>
+                    <option value="500000-1000000">500,000 - 1,000,000 ₫</option>
+                    <option value="1000000-5000000">1,000,000 - 5,000,000 ₫</option>
+                    <option value="5000000+">Trên 5,000,000 ₫</option>
+                </select>
+            </div>
+            
+            <div id="searchResultsInfo" class="search-results-info" style="display: none;">
+                <span id="resultsCount">0 kết quả</span>
+                <button onclick="clearAllFilters()" class="reset-button">Xóa tất cả bộ lọc</button>
+            </div>
+            
+            <div id="searchResults" style="overflow-x: auto;">
+                <!-- Search results will be displayed here -->
+            </div>
+        </div>
+        
+        <div class="data-info">
             <h3 style="color: #2d5c2a; margin-bottom: 15px;">ℹ️ Thông tin hệ thống</h3>
             <p><strong>Google Sheet ID:</strong> 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
             <p><strong>Sheet name:</strong> SR2526</p>
-            <p><strong>Email thông báo:</strong> phongvumobie79@gmail.com</p>
+            <p><strong>Tính tổng:</strong> Tự động đến hàng cuối cùng trong sheet</p>
             <p><strong>Tự động cập nhật:</strong> Mỗi 3 phút</p>
             <p><strong>Trạng thái:</strong> <span id="connectionStatus" style="color: #4CAF50;">✅ Đang kết nối...</span></p>
+            
+            <div class="auto-update">
+                <span>🔄</span>
+                <span>Tự động cập nhật sau: <span id="countdownTimer">180</span> giây</span>
+            </div>
         </div>
         
         <footer>
-            <p>Hệ thống quản lý chi phí làm vườn thông minh - Phiên bản nâng cao</p>
-            <p>© 2025 | Cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></p>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #888;">
-                Tính năng: Biểu đồ • Tìm kiếm • Xuất file • Thông báo email
-            </p>
+            <p>Hệ thống quản lý chi phí làm vườn - Tự động đồng bộ với Google Sheet</p>
+            <p>© 2025 - <span id="currentYear"></span> | Cập nhật lần cuối: <span id="lastUpdate">Đang tải...</span></p>
+            <div class="last-updated">
+                ⏱️ Thời gian thực: <span id="currentTime">--:--:--</span>
+            </div>
         </footer>
     </div>
 
@@ -694,35 +804,37 @@
         // ============================
         const SHEET_ID = '1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4';
         const SHEET_NAME = 'SR2526';
-        const AUTO_UPDATE_INTERVAL = 3 * 60 * 1000; // 3 phút
-        const START_ROW = 3;
-        const EMAILJS_CONFIG = {
-            serviceId: 'service_0bwn16h',
-            templateId: 'template_5j3m8e9',
-            publicKey: 'GG5ID3V8_oCDmFCyA'
-        };
+        const AUTO_UPDATE_INTERVAL = 3 * 60 * 1000; // 3 phút (đổi thành mili giây)
+        const START_ROW = 3; // Bắt đầu tính từ hàng 3
         
         // Biến hệ thống
-        let currentData = [];
-        let filteredData = [];
-        let charts = {};
         let updateCount = 0;
         let lastUpdateTime = null;
         let autoUpdateTimer = null;
         let countdownTimer = null;
         let countdownSeconds = AUTO_UPDATE_INTERVAL / 1000;
-        let emailNotificationInterval = null;
-        let lastEmailData = null;
+        let isDetailVisible = false;
+        let isChartVisible = false;
+        let isSearchVisible = false;
+        let currentChartType = 'pie';
+        
+        // Dữ liệu và biểu đồ
+        let currentRows = [];
+        let costChart = null;
+        let workerChart = null;
+        let trendChart = null;
+        let currentFilteredRows = [];
         
         // ============================
         // KHỞI TẠO HỆ THỐNG
         // ============================
         
+        // Khởi tạo thời gian
         function initSystem() {
-            // Khởi tạo EmailJS
-            emailjs.init(EMAILJS_CONFIG.publicKey);
+            // Cài đặt năm hiện tại
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // Cài đặt thời gian
+            // Cài đặt thời gian thực
             updateCurrentTime();
             setInterval(updateCurrentTime, 1000);
             
@@ -734,125 +846,98 @@
             
             // Bắt đầu tự động cập nhật
             startAutoUpdate();
-            
-            // Khởi tạo biểu đồ
-            initCharts();
-            
-            // Cập nhật preview email
-            updateEmailPreview();
         }
         
+        // Cập nhật thời gian hiện tại
         function updateCurrentTime() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('vi-VN');
-            document.getElementById('currentTime')?.textContent = timeString;
+            document.getElementById('currentTime').textContent = timeString;
         }
         
+        // Bắt đầu đếm ngược
         function startCountdown() {
             countdownSeconds = AUTO_UPDATE_INTERVAL / 1000;
             
-            if (countdownTimer) clearInterval(countdownTimer);
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
             
             countdownTimer = setInterval(() => {
                 countdownSeconds--;
                 
+                // Cập nhật hiển thị
                 const minutes = Math.floor(countdownSeconds / 60);
                 const seconds = countdownSeconds % 60;
                 
-                const nextUpdateEl = document.getElementById('nextUpdate');
-                if (nextUpdateEl) {
-                    nextUpdateEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
+                document.getElementById('countdownTimer').textContent = countdownSeconds;
+                document.getElementById('nextUpdate').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 
+                // Khi hết giờ
                 if (countdownSeconds <= 0) {
                     clearInterval(countdownTimer);
-                    loadData();
-                    startCountdown();
+                    loadData(); // Tải dữ liệu mới
+                    startCountdown(); // Khởi động lại countdown
                 }
             }, 1000);
         }
         
+        // Bắt đầu tự động cập nhật
         function startAutoUpdate() {
-            if (autoUpdateTimer) clearInterval(autoUpdateTimer);
+            if (autoUpdateTimer) {
+                clearInterval(autoUpdateTimer);
+            }
             
             autoUpdateTimer = setInterval(() => {
                 loadData();
             }, AUTO_UPDATE_INTERVAL);
+            
+            document.getElementById('autoUpdateStatus').textContent = '🟢';
+            document.getElementById('autoUpdateStatus').style.color = '#4CAF50';
         }
         
         // ============================
-        // TAB MANAGEMENT
+        // XỬ LÝ DỮ LIỆU
         // ============================
         
-        function switchTab(tabName) {
-            // Ẩn tất cả tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Xóa active từ tất cả buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Hiển thị tab được chọn
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-            
-            // Thêm active cho button
-            event.target.classList.add('active');
-            
-            // Nếu là tab biểu đồ, cập nhật biểu đồ
-            if (tabName === 'charts') {
-                setTimeout(() => {
-                    updateCharts();
-                }, 100);
-            }
-            
-            // Nếu là tab export, cập nhật summary
-            if (tabName === 'export') {
-                updateExportSummary();
-            }
-        }
-        
-        // ============================
-        // DATA LOADING & PROCESSING
-        // ============================
-        
+        // Tải dữ liệu từ Google Sheet
         async function loadData() {
             try {
-                updateConnectionStatus('🔄 Đang tải dữ liệu...', '#FF9800');
+                // Cập nhật trạng thái
+                document.getElementById('connectionStatus').textContent = '🔄 Đang tải dữ liệu...';
+                document.getElementById('connectionStatus').style.color = '#FF9800';
                 
+                // Sử dụng phương pháp CSV (ổn định nhất)
                 const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
                 const response = await fetch(csvUrl);
                 
-                if (!response.ok) throw new Error(`Lỗi kết nối: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`Lỗi kết nối: ${response.status}`);
+                }
                 
                 const csvText = await response.text();
-                const rows = parseCSV(csvText);
+                currentRows = parseCSV(csvText);
                 
                 // Cập nhật thông tin hệ thống
                 updateCount++;
                 lastUpdateTime = new Date();
                 
-                document.getElementById('totalRows').textContent = rows.length;
-                document.getElementById('updateCount')?.textContent = updateCount;
-                document.getElementById('lastUpdateTime')?.textContent = 
+                document.getElementById('totalRows').textContent = currentRows.length;
+                document.getElementById('updateCount').textContent = updateCount;
+                document.getElementById('lastUpdateTime').textContent = 
                     lastUpdateTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
                 
-                // Lưu dữ liệu
-                currentData = rows;
-                filteredData = [...rows];
+                // Tính tổng và hiển thị
+                calculateAndDisplayTotals(currentRows);
                 
-                // Xử lý và hiển thị dữ liệu
-                processAndDisplayData(rows);
-                
-                // Cập nhật trạng thái
-                updateConnectionStatus(`✅ Kết nối thành công (${rows.length} hàng)`, '#4CAF50');
+                // Cập nhật trạng thái thành công
+                document.getElementById('connectionStatus').textContent = `✅ Kết nối thành công (${currentRows.length} hàng)`;
+                document.getElementById('connectionStatus').style.color = '#4CAF50';
                 
                 // Cập nhật thời gian cuối
-                const lastUpdateEl = document.getElementById('lastUpdate');
-                if (lastUpdateEl) {
-                    lastUpdateEl.textContent = lastUpdateTime.toLocaleString('vi-VN', {
+                document.getElementById('lastUpdate').textContent = 
+                    lastUpdateTime.toLocaleString('vi-VN', {
                         hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit',
@@ -860,28 +945,36 @@
                         month: '2-digit',
                         year: 'numeric'
                     });
+                
+                // Nếu đang xem chi tiết, cập nhật bảng
+                if (isDetailVisible) {
+                    displayDetailTable(currentRows);
                 }
                 
-                // Kiểm tra thay đổi và gửi email nếu có
-                checkForChangesAndNotify();
+                // Nếu đang xem biểu đồ, cập nhật biểu đồ
+                if (isChartVisible) {
+                    updateCharts(currentRows);
+                }
                 
-                console.log(`✅ Đã cập nhật dữ liệu lần thứ ${updateCount}`);
+                // Nếu đang xem tìm kiếm, cập nhật kết quả
+                if (isSearchVisible) {
+                    filterTable();
+                }
+                
+                console.log(`✅ Đã cập nhật dữ liệu lần thứ ${updateCount} (${currentRows.length} hàng)`);
                 
             } catch (error) {
                 console.error('Lỗi khi tải dữ liệu:', error);
-                updateConnectionStatus('❌ Lỗi kết nối', '#f44336');
+                
+                document.getElementById('connectionStatus').textContent = '❌ Lỗi kết nối';
+                document.getElementById('connectionStatus').style.color = '#f44336';
+                
+                // Thử lại sau 30 giây nếu có lỗi
                 setTimeout(loadData, 30000);
             }
         }
         
-        function updateConnectionStatus(message, color) {
-            const statusEl = document.getElementById('connectionStatus');
-            if (statusEl) {
-                statusEl.textContent = message;
-                statusEl.style.color = color;
-            }
-        }
-        
+        // Phân tích CSV
         function parseCSV(csvText) {
             const rows = [];
             let currentRow = [];
@@ -908,6 +1001,7 @@
                 }
             }
             
+            // Thêm dòng cuối
             if (currentField || currentRow.length > 0) {
                 currentRow.push(currentField);
                 rows.push(currentRow);
@@ -916,58 +1010,69 @@
             return rows;
         }
         
-        function processAndDisplayData(rows) {
-            // Tính tổng và hiển thị
-            const totals = calculateTotals(rows);
-            displaySummaryCards(totals);
-            displayDetailTable(rows);
-            
-            // Cập nhật biểu đồ
-            updateCharts();
-            
-            // Cập nhật preview email
-            updateEmailPreview();
-            
-            // Cập nhật export summary
-            updateExportSummary();
-        }
-        
-        function calculateTotals(rows) {
-            let totalVatTu = 0, totalTienCong = 0, totalTrieu = 0, totalTeo = 0, totalThien = 0, totalThuan = 0;
-            let dataRowsCount = 0;
-            
-            for (let i = START_ROW - 1; i < rows.length; i++) {
-                const row = rows[i];
-                dataRowsCount++;
-                
-                if (row[3]) totalVatTu += parseSheetNumber(row[3]);
-                if (row[4]) totalTienCong += parseSheetNumber(row[4]);
-                if (row[6]) totalTrieu += parseSheetNumber(row[6]);
-                if (row[7]) totalTeo += parseSheetNumber(row[7]);
-                if (row[8]) totalThien += parseSheetNumber(row[8]);
-                if (row[9]) totalThuan += parseSheetNumber(row[9]);
+        // Định dạng tiền Việt Nam (cho tổng)
+        function formatCurrency(value) {
+            if (value === null || value === undefined || isNaN(value)) {
+                return '0 ₫';
             }
             
-            const totalChiPhi = totalVatTu + totalTienCong;
-            
-            return {
-                totalChiPhi,
-                totalVatTu,
-                totalTienCong,
-                totalTrieu,
-                totalTeo,
-                totalThien,
-                totalThuan,
-                dataRowsCount
-            };
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
         }
         
+        // Hiển thị số tiền đúng định dạng (cho bảng chi tiết - GIỮ NGUYÊN DẤU CHẤM)
+        function displayAmount(value) {
+            if (!value && value !== 0) return '0 ₫';
+            
+            // Nếu đã là chuỗi rỗng hoặc "0"
+            if (value === '' || value === '0') return '0 ₫';
+            
+            // Nếu đã có định dạng tiền (có dấu . phân cách nghìn)
+            if (typeof value === 'string') {
+                // Kiểm tra nếu đã có dấu chấm phân cách nghìn (ví dụ: 300.000, 1.500.000)
+                if (value.includes('.') && value.split('.').length > 1) {
+                    // Giữ nguyên và thêm ký hiệu tiền nếu chưa có
+                    if (!value.includes('₫') && !value.includes('đ')) {
+                        return value + ' ₫';
+                    }
+                    return value;
+                }
+                
+                // Nếu là số nguyên không có dấu chấm (ví dụ: 300000)
+                if (/^\d+$/.test(value)) {
+                    // Thêm dấu chấm phân cách nghìn
+                    return parseInt(value).toLocaleString('vi-VN') + ' ₫';
+                }
+                
+                // Giữ nguyên và thêm ký hiệu tiền nếu chưa có
+                if (!value.includes('₫') && !value.includes('đ')) {
+                    return value + ' ₫';
+                }
+                return value;
+            }
+            
+            // Nếu là số, định dạng lại
+            if (typeof value === 'number') {
+                return value.toLocaleString('vi-VN') + ' ₫';
+            }
+            
+            return '0 ₫';
+        }
+        
+        // Chuyển đổi số từ Google Sheet (cho tính toán)
         function parseSheetNumber(value) {
             if (!value && value !== 0) return 0;
             
             if (typeof value === 'string') {
+                // Xóa tất cả dấu chấm phân cách nghìn
                 let cleanValue = value.replace(/\./g, '');
+                // Thay dấu phẩy thập phân thành dấu chấm
                 cleanValue = cleanValue.replace(',', '.');
+                // Xóa ký tự không phải số
                 cleanValue = cleanValue.replace(/[^\d.-]/g, '');
                 
                 const num = parseFloat(cleanValue);
@@ -977,100 +1082,158 @@
             return parseFloat(value) || 0;
         }
         
-        // ============================
-        // DISPLAY FUNCTIONS
-        // ============================
-        
-        function displaySummaryCards(totals) {
-            const summaryGrid = document.getElementById('summary');
-            if (!summaryGrid) return;
+        // Tính tổng và hiển thị
+        function calculateAndDisplayTotals(rows) {
+            let totalVatTu = 0;
+            let totalTienCong = 0;
+            let totalTrieu = 0;
+            let totalTeo = 0;
+            let totalThien = 0;
+            let totalThuan = 0;
             
-            const cards = [
-                { 
-                    title: "💰 Tổng chi phí làm vườn", 
-                    value: totals.totalChiPhi, 
-                    icon: "💰",
-                    note: "Tự động tính đến hàng cuối cùng" 
-                },
-                { 
-                    title: "🛠️ Tổng phí vật tư", 
-                    value: totals.totalVatTu, 
-                    icon: "🛠️",
-                    note: "SUM(D3:D) - Tự động đến hàng cuối" 
-                },
-                { 
-                    title: "👷 Tổng tiền công", 
-                    value: totals.totalTienCong, 
-                    icon: "👷",
-                    note: "SUM(E3:E) - Tự động đến hàng cuối" 
-                },
-                { 
-                    title: "👨 Triều", 
-                    value: totals.totalTrieu, 
-                    icon: "👨",
-                    note: "SUM(G3:G) - Tự động đến hàng cuối" 
-                },
-                { 
-                    title: "👨 Tèo", 
-                    value: totals.totalTeo, 
-                    icon: "👨",
-                    note: "SUM(H3:H) - Tự động đến hàng cuối" 
-                },
-                { 
-                    title: "👨 Thiện", 
-                    value: totals.totalThien, 
-                    icon: "👨",
-                    note: "SUM(I3:I) - Tự động đến hàng cuối" 
-                },
-                { 
-                    title: "👨 Thuận", 
-                    value: totals.totalThuan, 
-                    icon: "👨",
-                    note: "SUM(J3:J) - Tự động đến hàng cuối" 
+            let dataRowsCount = 0;
+            
+            // Bắt đầu từ hàng START_ROW (index START_ROW-1) đến hàng cuối cùng
+            for (let i = START_ROW - 1; i < rows.length; i++) {
+                const row = rows[i];
+                dataRowsCount++;
+                
+                // Cột D (index 3): Phí vật tư
+                if (row[3]) {
+                    totalVatTu += parseSheetNumber(row[3]);
                 }
-            ];
+                
+                // Cột E (index 4): Tiền công
+                if (row[4]) {
+                    totalTienCong += parseSheetNumber(row[4]);
+                }
+                
+                // Cột G (index 6): Triều
+                if (row[6]) {
+                    totalTrieu += parseSheetNumber(row[6]);
+                }
+                
+                // Cột H (index 7): Tèo
+                if (row[7]) {
+                    totalTeo += parseSheetNumber(row[7]);
+                }
+                
+                // Cột I (index 8): Thiện
+                if (row[8]) {
+                    totalThien += parseSheetNumber(row[8]);
+                }
+                
+                // Cột J (index 9): Thuận
+                if (row[9]) {
+                    totalThuan += parseSheetNumber(row[9]);
+                }
+            }
             
-            let html = '';
-            cards.forEach(card => {
-                html += `
-                    <div class="card">
-                        <h3><span class="card-icon">${card.icon}</span> ${card.title}</h3>
-                        <div class="amount">${formatCurrency(card.value)}</div>
-                        <div class="note">${card.note}</div>
-                    </div>
-                `;
+            const totalChiPhi = totalVatTu + totalTienCong;
+            
+            // Hiển thị kết quả
+            document.getElementById('totalChiPhi').textContent = formatCurrency(totalChiPhi);
+            document.getElementById('totalVatTu').textContent = formatCurrency(totalVatTu);
+            document.getElementById('totalTienCong').textContent = formatCurrency(totalTienCong);
+            document.getElementById('totalTrieu').textContent = formatCurrency(totalTrieu);
+            document.getElementById('totalTeo').textContent = formatCurrency(totalTeo);
+            document.getElementById('totalThien').textContent = formatCurrency(totalThien);
+            document.getElementById('totalThuan').textContent = formatCurrency(totalThuan);
+            
+            // Cập nhật thống kê
+            document.getElementById('dataRows').textContent = dataRowsCount;
+            
+            console.log('Tổng kết:', {
+                'Tổng hàng dữ liệu': dataRowsCount,
+                'Phí vật tư': formatCurrency(totalVatTu),
+                'Tiền công': formatCurrency(totalTienCong),
+                'Tổng chi phí': formatCurrency(totalChiPhi)
             });
-            
-            summaryGrid.innerHTML = html;
         }
         
+        // ============================
+        // HIỂN THỊ CHI TIẾT
+        // ============================
+        
+        // Hiển thị/ẩn chi tiết
+        function toggleDetail() {
+            const detailSection = document.getElementById('detailSection');
+            const detailButton = document.getElementById('detailButtonText');
+            
+            isDetailVisible = !isDetailVisible;
+            
+            if (isDetailVisible) {
+                detailSection.style.display = 'block';
+                detailButton.textContent = 'Ẩn chi tiết';
+                
+                // Tải và hiển thị dữ liệu chi tiết
+                loadDetailData();
+            } else {
+                detailSection.style.display = 'none';
+                detailButton.textContent = 'Xem chi tiết dữ liệu';
+            }
+        }
+        
+        // Tải dữ liệu chi tiết
+        async function loadDetailData() {
+            try {
+                document.getElementById('loadingDetail').style.display = 'block';
+                document.getElementById('detailContent').innerHTML = '';
+                
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+                const response = await fetch(csvUrl);
+                
+                if (!response.ok) {
+                    throw new Error('Lỗi tải dữ liệu');
+                }
+                
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+                
+                displayDetailTable(rows);
+                
+                document.getElementById('loadingDetail').style.display = 'none';
+                
+            } catch (error) {
+                console.error('Lỗi tải chi tiết:', error);
+                document.getElementById('detailContent').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #f44336;">
+                        <h3>❌ Không thể tải dữ liệu chi tiết</h3>
+                        <p>Vui lòng thử lại sau</p>
+                        <button onclick="loadDetailData()" style="margin-top: 20px; padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            Thử lại
+                        </button>
+                    </div>
+                `;
+                document.getElementById('loadingDetail').style.display = 'none';
+            }
+        }
+        
+        // Hiển thị bảng chi tiết
         function displayDetailTable(rows) {
-            const detailContent = document.getElementById('detailContent');
-            if (!detailContent) return;
-            
-            document.getElementById('tableLoading').style.display = 'none';
-            
             let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>ID</th>
-                            <th>Ngày</th>
-                            <th>Nội dung</th>
-                            <th>Phí vật tư</th>
-                            <th>Tiền công</th>
-                            <th>Triều</th>
-                            <th>Tèo</th>
-                            <th>Thiện</th>
-                            <th>Thuận</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ID</th>
+                                <th>Ngày</th>
+                                <th>Nội dung</th>
+                                <th>Phí vật tư</th>
+                                <th>Tiền công</th>
+                                <th>Triều</th>
+                                <th>Tèo</th>
+                                <th>Thiện</th>
+                                <th>Thuận</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
             
             let displayedCount = 0;
             
+            // Bắt đầu từ hàng START_ROW
             for (let i = START_ROW - 1; i < rows.length; i++) {
                 const row = rows[i];
                 const rowNumber = i + 1;
@@ -1095,340 +1258,500 @@
             }
             
             html += `
-                    </tbody>
-                </table>
-                <div style="margin-top: 20px; padding: 15px; background: #f5f9f5; border-radius: 10px;">
-                    <p><strong>📊 Tổng số hàng dữ liệu:</strong> ${displayedCount}</p>
-                    <p><strong>📅 Cập nhật lúc:</strong> ${new Date().toLocaleTimeString('vi-VN')}</p>
+                        </tbody>
+                    </table>
+                    <div class="data-info" style="margin-top: 25px;">
+                        <p><strong>📈 Thống kê chi tiết:</strong></p>
+                        <p>Tổng số hàng dữ liệu: ${displayedCount} (từ hàng ${START_ROW} đến ${rows.length})</p>
+                        <p>Thời gian cập nhật: ${new Date().toLocaleTimeString('vi-VN')}</p>
+                        <p>Lần cập nhật thứ: ${updateCount}</p>
+                    </div>
                 </div>
             `;
             
-            detailContent.innerHTML = html;
-        }
-        
-        function formatCurrency(value) {
-            if (value === null || value === undefined || isNaN(value)) {
-                return '0 ₫';
-            }
-            
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(value);
-        }
-        
-        function displayAmount(value) {
-            if (!value && value !== 0) return '0 ₫';
-            if (value === '' || value === '0') return '0 ₫';
-            
-            if (typeof value === 'string') {
-                if (value.includes('.') && value.split('.').length > 1) {
-                    if (!value.includes('₫') && !value.includes('đ')) {
-                        return value + ' ₫';
-                    }
-                    return value;
-                }
-                
-                if (/^\d+$/.test(value)) {
-                    return parseInt(value).toLocaleString('vi-VN') + ' ₫';
-                }
-                
-                if (!value.includes('₫') && !value.includes('đ')) {
-                    return value + ' ₫';
-                }
-                return value;
-            }
-            
-            if (typeof value === 'number') {
-                return value.toLocaleString('vi-VN') + ' ₫';
-            }
-            
-            return '0 ₫';
+            document.getElementById('detailContent').innerHTML = html;
         }
         
         // ============================
-        // CHARTS FUNCTIONS
+        // BIỂU ĐỒ TRỰC QUAN
         // ============================
         
-        function initCharts() {
-            // Khởi tạo các biểu đồ
-            const chartConfigs = [
-                { id: 'costDistributionChart', type: 'doughnut', label: 'Phân bổ chi phí' },
-                { id: 'monthlyCostChart', type: 'bar', label: 'Chi phí theo tháng' },
-                { id: 'personCostChart', type: 'pie', label: 'Phân bổ tiền công' },
-                { id: 'comparisonChart', type: 'bar', label: 'So sánh phí vật tư vs tiền công' }
-            ];
+        // Hiển thị/ẩn biểu đồ
+        function toggleChartSection() {
+            const chartSection = document.getElementById('chartSection');
+            const chartButton = document.getElementById('chartButtonText');
             
-            chartConfigs.forEach(config => {
-                const ctx = document.getElementById(config.id).getContext('2d');
-                charts[config.id] = new Chart(ctx, {
-                    type: config.type,
-                    data: { labels: [], datasets: [] },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: true,
-                        plugins: {
-                            legend: { position: 'top' },
-                            title: { display: true, text: config.label }
-                        }
-                    }
-                });
+            isChartVisible = !isChartVisible;
+            
+            if (isChartVisible) {
+                chartSection.classList.add('active');
+                chartButton.textContent = 'Ẩn biểu đồ';
+                
+                // Cập nhật biểu đồ với dữ liệu hiện tại
+                if (currentRows.length > 0) {
+                    updateCharts(currentRows);
+                } else {
+                    loadData();
+                }
+            } else {
+                chartSection.classList.remove('active');
+                chartButton.textContent = 'Xem biểu đồ';
+            }
+        }
+        
+        // Thay đổi loại biểu đồ
+        function changeChartType(type) {
+            currentChartType = type;
+            
+            // Cập nhật trạng thái nút
+            document.querySelectorAll('.chart-type-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
+            event.target.classList.add('active');
+            
+            // Cập nhật biểu đồ
+            if (currentRows.length > 0) {
+                updateCharts(currentRows);
+            }
         }
         
-        function updateCharts() {
-            if (!currentData.length) return;
+        // Cập nhật tất cả biểu đồ
+        function updateCharts(rows) {
+            // Xóa biểu đồ cũ nếu tồn tại
+            if (costChart) {
+                costChart.destroy();
+            }
+            if (workerChart) {
+                workerChart.destroy();
+            }
+            if (trendChart) {
+                trendChart.destroy();
+            }
             
-            const totals = calculateTotals(currentData);
-            
-            // 1. Biểu đồ phân bổ chi phí
-            updateCostDistributionChart(totals);
-            
-            // 2. Biểu đồ chi phí theo tháng
-            updateMonthlyCostChart();
-            
-            // 3. Biểu đồ phân bổ tiền công
-            updatePersonCostChart(totals);
-            
-            // 4. Biểu đồ so sánh
-            updateComparisonChart(totals);
+            // Tạo biểu đồ mới
+            createCostDistributionChart(rows);
+            createWorkerChart(rows);
+            createTrendChart(rows);
         }
         
-        function updateCostDistributionChart(totals) {
-            const chart = charts.costDistributionChart;
-            chart.data = {
+        // Tạo biểu đồ phân bổ chi phí
+        function createCostDistributionChart(rows) {
+            const ctx = document.getElementById('costDistributionChart').getContext('2d');
+            
+            let totalVatTu = 0;
+            let totalTienCong = 0;
+            
+            for (let i = START_ROW - 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (row[3]) totalVatTu += parseSheetNumber(row[3]);
+                if (row[4]) totalTienCong += parseSheetNumber(row[4]);
+            }
+            
+            const data = {
                 labels: ['Phí vật tư', 'Tiền công'],
                 datasets: [{
-                    data: [totals.totalVatTu, totals.totalTienCong],
-                    backgroundColor: ['#4CAF50', '#2196F3'],
-                    borderColor: ['#388E3C', '#1976D2'],
+                    data: [totalVatTu, totalTienCong],
+                    backgroundColor: [
+                        'rgba(76, 175, 80, 0.8)',
+                        'rgba(33, 150, 243, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(76, 175, 80, 1)',
+                        'rgba(33, 150, 243, 1)'
+                    ],
                     borderWidth: 2
                 }]
             };
-            chart.update();
+            
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 14
+                            },
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += formatCurrency(context.raw);
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            costChart = new Chart(ctx, {
+                type: currentChartType,
+                data: data,
+                options: options
+            });
+            
+            // Tạo legend
+            const legendHtml = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: rgba(76, 175, 80, 0.8);"></div>
+                    <span>Phí vật tư: ${formatCurrency(totalVatTu)}</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: rgba(33, 150, 243, 0.8);"></div>
+                    <span>Tiền công: ${formatCurrency(totalTienCong)}</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: rgba(156, 39, 176, 0.8);"></div>
+                    <span>Tổng: ${formatCurrency(totalVatTu + totalTienCong)}</span>
+                </div>
+            `;
+            
+            document.getElementById('costChartLegend').innerHTML = legendHtml;
         }
         
-        function updateMonthlyCostChart() {
-            // Phân tích dữ liệu theo tháng
+        // Tạo biểu đồ tiền công theo công nhân
+        function createWorkerChart(rows) {
+            const ctx = document.getElementById('workerChart').getContext('2d');
+            
+            let workerTotals = {
+                'Triều': 0,
+                'Tèo': 0,
+                'Thiện': 0,
+                'Thuận': 0
+            };
+            
+            for (let i = START_ROW - 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (row[6]) workerTotals['Triều'] += parseSheetNumber(row[6]);
+                if (row[7]) workerTotals['Tèo'] += parseSheetNumber(row[7]);
+                if (row[8]) workerTotals['Thiện'] += parseSheetNumber(row[8]);
+                if (row[9]) workerTotals['Thuận'] += parseSheetNumber(row[9]);
+            }
+            
+            const workerColors = [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)'
+            ];
+            
+            const data = {
+                labels: Object.keys(workerTotals),
+                datasets: [{
+                    label: 'Tiền công',
+                    data: Object.values(workerTotals),
+                    backgroundColor: workerColors,
+                    borderColor: workerColors.map(color => color.replace('0.8', '1')),
+                    borderWidth: 2
+                }]
+            };
+            
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 14
+                            },
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += formatCurrency(context.raw);
+                                return label;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            workerChart = new Chart(ctx, {
+                type: currentChartType === 'line' ? 'bar' : currentChartType,
+                data: data,
+                options: options
+            });
+            
+            // Tạo legend
+            let legendHtml = '';
+            let index = 0;
+            for (const [worker, total] of Object.entries(workerTotals)) {
+                legendHtml += `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: ${workerColors[index]}"></div>
+                        <span>${worker}: ${formatCurrency(total)}</span>
+                    </div>
+                `;
+                index++;
+            }
+            
+            document.getElementById('workerChartLegend').innerHTML = legendHtml;
+        }
+        
+        // Tạo biểu đồ xu hướng theo thời gian
+        function createTrendChart(rows) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            // Nhóm dữ liệu theo ngày/tháng
             const monthlyData = {};
             
-            for (let i = START_ROW - 1; i < currentData.length; i++) {
-                const row = currentData[i];
-                const dateStr = row[1];
-                if (!dateStr) continue;
+            for (let i = START_ROW - 1; i < rows.length; i++) {
+                const row = rows[i];
+                const dateStr = row[1] || '';
+                const vatTu = parseSheetNumber(row[3]);
+                const tienCong = parseSheetNumber(row[4]);
                 
-                // Trích xuất tháng từ ngày (định dạng dd/mm/yyyy)
-                const dateParts = dateStr.split('/');
-                if (dateParts.length >= 2) {
-                    const month = parseInt(dateParts[1]);
-                    const year = parseInt(dateParts[2]) || new Date().getFullYear();
-                    const monthYear = `Tháng ${month}/${year}`;
-                    
-                    const vatTu = parseSheetNumber(row[3]) || 0;
-                    const tienCong = parseSheetNumber(row[4]) || 0;
-                    
-                    if (!monthlyData[monthYear]) {
-                        monthlyData[monthYear] = { vatTu: 0, tienCong: 0 };
+                if (dateStr) {
+                    // Tách tháng/năm từ ngày
+                    const dateParts = dateStr.split('/');
+                    if (dateParts.length >= 2) {
+                        const month = parseInt(dateParts[1]);
+                        const year = dateParts.length === 3 ? parseInt(dateParts[2]) : new Date().getFullYear();
+                        const key = `${month}/${year}`;
+                        
+                        if (!monthlyData[key]) {
+                            monthlyData[key] = {
+                                vatTu: 0,
+                                tienCong: 0
+                            };
+                        }
+                        
+                        monthlyData[key].vatTu += vatTu;
+                        monthlyData[key].tienCong += tienCong;
                     }
-                    
-                    monthlyData[monthYear].vatTu += vatTu;
-                    monthlyData[monthYear].tienCong += tienCong;
                 }
             }
             
-            const months = Object.keys(monthlyData).slice(-6); // Lấy 6 tháng gần nhất
-            const vatTuData = months.map(m => monthlyData[m].vatTu);
-            const tienCongData = months.map(m => monthlyData[m].tienCong);
+            // Sắp xếp theo thời gian
+            const sortedKeys = Object.keys(monthlyData).sort((a, b) => {
+                const [aMonth, aYear] = a.split('/').map(Number);
+                const [bMonth, bYear] = b.split('/').map(Number);
+                
+                if (aYear !== bYear) return aYear - bYear;
+                return aMonth - bMonth;
+            });
             
-            const chart = charts.monthlyCostChart;
-            chart.data = {
-                labels: months,
+            const labels = sortedKeys;
+            const vatTuData = sortedKeys.map(key => monthlyData[key].vatTu);
+            const tienCongData = sortedKeys.map(key => monthlyData[key].tienCong);
+            
+            const data = {
+                labels: labels,
                 datasets: [
                     {
                         label: 'Phí vật tư',
                         data: vatTuData,
-                        backgroundColor: '#4CAF50',
-                        borderColor: '#388E3C',
-                        borderWidth: 1
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                        borderColor: 'rgba(76, 175, 80, 1)',
+                        borderWidth: 3,
+                        tension: 0.1,
+                        fill: true
                     },
                     {
                         label: 'Tiền công',
                         data: tienCongData,
-                        backgroundColor: '#2196F3',
-                        borderColor: '#1976D2',
-                        borderWidth: 1
+                        backgroundColor: 'rgba(33, 150, 243, 0.2)',
+                        borderColor: 'rgba(33, 150, 243, 1)',
+                        borderWidth: 3,
+                        tension: 0.1,
+                        fill: true
                     }
                 ]
             };
-            chart.update();
-        }
-        
-        function updatePersonCostChart(totals) {
-            const chart = charts.personCostChart;
-            chart.data = {
-                labels: ['Triều', 'Tèo', 'Thiện', 'Thuận'],
-                datasets: [{
-                    data: [totals.totalTrieu, totals.totalTeo, totals.totalThien, totals.totalThuan],
-                    backgroundColor: ['#FF9800', '#9C27B0', '#00BCD4', '#795548'],
-                    borderColor: ['#F57C00', '#7B1FA2', '#0097A7', '#5D4037'],
-                    borderWidth: 2
-                }]
-            };
-            chart.update();
-        }
-        
-        function updateComparisonChart(totals) {
-            const chart = charts.comparisonChart;
-            chart.data = {
-                labels: ['So sánh'],
-                datasets: [
-                    {
-                        label: 'Phí vật tư',
-                        data: [totals.totalVatTu],
-                        backgroundColor: '#4CAF50'
-                    },
-                    {
-                        label: 'Tiền công',
-                        data: [totals.totalTienCong],
-                        backgroundColor: '#2196F3'
-                    }
-                ]
-            };
-            chart.update();
-        }
-        
-        // ============================
-        // SEARCH & FILTER FUNCTIONS
-        // ============================
-        
-        function performSearch() {
-            const searchText = document.getElementById('searchInput').value.toLowerCase();
-            const minAmount = parseFloat(document.getElementById('minAmount').value) || 0;
-            const maxAmount = parseFloat(document.getElementById('maxAmount').value) || Infinity;
-            const dateFrom = document.getElementById('dateFrom').value;
-            const dateTo = document.getElementById('dateTo').value;
             
-            filteredData = currentData.filter((row, index) => {
-                if (index < START_ROW - 1) return false;
-                
-                // Tìm kiếm theo text
-                const matchesText = !searchText || 
-                    row.some(cell => cell && cell.toString().toLowerCase().includes(searchText));
-                
-                // Lọc theo số tiền (cột 3 và 4)
-                const vatTu = parseSheetNumber(row[3]) || 0;
-                const tienCong = parseSheetNumber(row[4]) || 0;
-                const matchesAmount = (vatTu >= minAmount && vatTu <= maxAmount) ||
-                                     (tienCong >= minAmount && tienCong <= maxAmount);
-                
-                // Lọc theo ngày
-                let matchesDate = true;
-                if (dateFrom || dateTo) {
-                    const dateStr = row[1];
-                    if (dateStr) {
-                        const [day, month, year] = dateStr.split('/').map(Number);
-                        const rowDate = new Date(year, month - 1, day);
-                        
-                        if (dateFrom) {
-                            const fromDate = new Date(dateFrom);
-                            matchesDate = matchesDate && rowDate >= fromDate;
+            const options = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14
+                            },
+                            padding: 20
                         }
-                        
-                        if (dateTo) {
-                            const toDate = new Date(dateTo);
-                            toDate.setHours(23, 59, 59, 999);
-                            matchesDate = matchesDate && rowDate <= toDate;
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += formatCurrency(context.raw);
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                if (value >= 1000000) {
+                                    return (value / 1000000).toFixed(1) + 'tr';
+                                }
+                                if (value >= 1000) {
+                                    return (value / 1000).toFixed(0) + 'k';
+                                }
+                                return value;
+                            }
                         }
                     }
                 }
-                
-                return matchesText && matchesAmount && matchesDate;
-            });
-            
-            displaySearchResults(filteredData);
-        }
-        
-        function resetSearch() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('minAmount').value = '';
-            document.getElementById('maxAmount').value = '';
-            document.getElementById('dateFrom').value = '';
-            document.getElementById('dateTo').value = '';
-            
-            filteredData = [...currentData];
-            displaySearchResults(filteredData);
-        }
-        
-        function filterByColumn(columnType) {
-            const columnMap = {
-                'vatTu': 3,
-                'tienCong': 4,
-                'trieu': 6,
-                'teo': 7,
-                'thien': 8,
-                'thuan': 9
             };
             
-            const columnIndex = columnMap[columnType];
-            if (columnIndex === undefined) return;
-            
-            filteredData.sort((a, b) => {
-                const valA = parseSheetNumber(a[columnIndex]) || 0;
-                const valB = parseSheetNumber(b[columnIndex]) || 0;
-                return valB - valA; // Giảm dần
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: options
             });
-            
-            displaySearchResults(filteredData);
         }
         
-        function sortByDate() {
-            filteredData.sort((a, b) => {
-                const dateA = parseDate(a[1]);
-                const dateB = parseDate(b[1]);
-                return dateB - dateA; // Mới nhất trước
-            });
+        // ============================
+        // TÌM KIẾM & LỌC DỮ LIỆU
+        // ============================
+        
+        // Hiển thị/ẩn phần tìm kiếm
+        function toggleSearchSection() {
+            const searchSection = document.getElementById('searchSection');
+            const searchButton = document.getElementById('searchButtonText');
             
-            displaySearchResults(filteredData);
+            isSearchVisible = !isSearchVisible;
+            
+            if (isSearchVisible) {
+                searchSection.classList.add('active');
+                searchButton.textContent = 'Ẩn tìm kiếm';
+                
+                // Hiển thị kết quả tìm kiếm
+                filterTable();
+            } else {
+                searchSection.classList.remove('active');
+                searchButton.textContent = 'Tìm kiếm & Lọc';
+            }
         }
         
-        function sortByAmount() {
-            filteredData.sort((a, b) => {
-                const totalA = (parseSheetNumber(a[3]) || 0) + (parseSheetNumber(a[4]) || 0);
-                const totalB = (parseSheetNumber(b[3]) || 0) + (parseSheetNumber(b[4]) || 0);
-                return totalB - totalA; // Lớn nhất trước
-            });
+        // Lọc và hiển thị bảng theo tiêu chí tìm kiếm
+        function filterTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const workerFilter = document.getElementById('workerFilter').value;
+            const amountFilter = document.getElementById('amountFilter').value;
             
-            displaySearchResults(filteredData);
+            let filteredRows = [];
+            let matchedRows = 0;
+            
+            // Lọc dữ liệu
+            for (let i = START_ROW - 1; i < currentRows.length; i++) {
+                const row = currentRows[i];
+                const rowNumber = i + 1;
+                
+                if (row && row.length >= 5) {
+                    let match = true;
+                    
+                    // Lọc theo từ khóa tìm kiếm
+                    if (searchInput) {
+                        const searchText = `${row[0] || ''} ${row[1] || ''} ${row[2] || ''}`.toLowerCase();
+                        if (!searchText.includes(searchInput)) {
+                            match = false;
+                        }
+                    }
+                    
+                    // Lọc theo danh mục
+                    if (match && categoryFilter) {
+                        if (categoryFilter === 'vat_tu') {
+                            if (!row[3] || parseSheetNumber(row[3]) === 0) {
+                                match = false;
+                            }
+                        } else if (categoryFilter === 'tien_cong') {
+                            if (!row[4] || parseSheetNumber(row[4]) === 0) {
+                                match = false;
+                            }
+                        }
+                    }
+                    
+                    // Lọc theo công nhân
+                    if (match && workerFilter) {
+                        let workerAmount = 0;
+                        if (workerFilter === 'Triều' && row[6]) workerAmount = parseSheetNumber(row[6]);
+                        if (workerFilter === 'Tèo' && row[7]) workerAmount = parseSheetNumber(row[7]);
+                        if (workerFilter === 'Thiện' && row[8]) workerAmount = parseSheetNumber(row[8]);
+                        if (workerFilter === 'Thuận' && row[9]) workerAmount = parseSheetNumber(row[9]);
+                        
+                        if (workerAmount === 0) {
+                            match = false;
+                        }
+                    }
+                    
+                    // Lọc theo mức chi phí
+                    if (match && amountFilter) {
+                        const vatTu = parseSheetNumber(row[3]);
+                        const tienCong = parseSheetNumber(row[4]);
+                        const totalRow = vatTu + tienCong;
+                        
+                        if (amountFilter === '0-500000' && totalRow >= 500000) match = false;
+                        if (amountFilter === '500000-1000000' && (totalRow < 500000 || totalRow >= 1000000)) match = false;
+                        if (amountFilter === '1000000-5000000' && (totalRow < 1000000 || totalRow >= 5000000)) match = false;
+                        if (amountFilter === '5000000+' && totalRow < 5000000) match = false;
+                    }
+                    
+                    if (match) {
+                        filteredRows.push({ index: i, row: row });
+                        matchedRows++;
+                    }
+                }
+            }
+            
+            // Lưu lại kết quả lọc
+            currentFilteredRows = filteredRows;
+            
+            // Hiển thị kết quả
+            displaySearchResults(filteredRows);
+            
+            // Hiển thị thông tin kết quả
+            const resultsInfo = document.getElementById('searchResultsInfo');
+            const resultsCount = document.getElementById('resultsCount');
+            
+            if (searchInput || categoryFilter || workerFilter || amountFilter) {
+                resultsInfo.style.display = 'flex';
+                resultsCount.textContent = `${matchedRows} kết quả`;
+            } else {
+                resultsInfo.style.display = 'none';
+            }
         }
         
-        function parseDate(dateStr) {
-            if (!dateStr) return new Date(0);
-            const [day, month, year] = dateStr.split('/').map(Number);
-            return new Date(year, month - 1, day);
-        }
-        
-        function displaySearchResults(data) {
-            const resultsDiv = document.getElementById('searchResults');
-            const searchLoading = document.getElementById('searchLoading');
+        // Hiển thị kết quả tìm kiếm
+        function displaySearchResults(filteredRows) {
+            const searchResults = document.getElementById('searchResults');
             
-            searchLoading.style.display = 'none';
-            
-            if (!data.length || data.length <= START_ROW - 1) {
-                resultsDiv.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <h3>🔍 Không tìm thấy kết quả</h3>
-                        <p>Thử với từ khóa khác hoặc bộ lọc khác</p>
+            if (filteredRows.length === 0) {
+                searchResults.innerHTML = `
+                    <div class="no-results">
+                        <h3>Không tìm thấy kết quả phù hợp</h3>
+                        <p>Hãy thử lại với từ khóa hoặc bộ lọc khác</p>
                     </div>
                 `;
                 return;
             }
             
             let html = `
-                <div style="margin-bottom: 20px;">
-                    <p><strong>📊 Kết quả tìm kiếm:</strong> ${data.length - START_ROW + 1} bản ghi</p>
-                </div>
                 <div style="overflow-x: auto;">
                     <table>
                         <thead>
@@ -1443,428 +1766,115 @@
                                 <th>Tèo</th>
                                 <th>Thiện</th>
                                 <th>Thuận</th>
+                                <th>Tổng</th>
                             </tr>
                         </thead>
                         <tbody>
             `;
             
-            for (let i = START_ROW - 1; i < Math.min(data.length, START_ROW + 49); i++) {
-                const row = data[i];
-                const rowNumber = i + 1;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            
+            filteredRows.forEach(({ index, row }) => {
+                const rowNumber = index + 1;
+                const vatTu = parseSheetNumber(row[3]);
+                const tienCong = parseSheetNumber(row[4]);
+                const totalRow = vatTu + tienCong;
                 
-                if (row && row.length >= 5) {
-                    html += `
-                        <tr>
-                            <td>${rowNumber}</td>
-                            <td>${row[0] || ''}</td>
-                            <td>${row[1] || ''}</td>
-                            <td>${row[2] || ''}</td>
-                            <td>${displayAmount(row[3])}</td>
-                            <td>${displayAmount(row[4])}</td>
-                            <td>${displayAmount(row[6])}</td>
-                            <td>${displayAmount(row[7])}</td>
-                            <td>${displayAmount(row[8])}</td>
-                            <td>${displayAmount(row[9])}</td>
-                        </tr>
-                    `;
-                }
-            }
+                // Tạo các ô với highlight nếu phù hợp
+                const highlightCell = (value, isSearchable = false) => {
+                    if (isSearchable && searchInput && value.toLowerCase().includes(searchInput)) {
+                        return `<span class="highlight">${value}</span>`;
+                    }
+                    return value;
+                };
+                
+                html += `
+                    <tr>
+                        <td>${rowNumber}</td>
+                        <td>${highlightCell(row[0] || '', true)}</td>
+                        <td>${highlightCell(row[1] || '', true)}</td>
+                        <td>${highlightCell(row[2] || '', true)}</td>
+                        <td>${displayAmount(row[3])}</td>
+                        <td>${displayAmount(row[4])}</td>
+                        <td>${displayAmount(row[6])}</td>
+                        <td>${displayAmount(row[7])}</td>
+                        <td>${displayAmount(row[8])}</td>
+                        <td>${displayAmount(row[9])}</td>
+                        <td><strong>${formatCurrency(totalRow)}</strong></td>
+                    </tr>
+                `;
+            });
+            
+            // Tính tổng cho các hàng đã lọc
+            let filteredVatTu = 0;
+            let filteredTienCong = 0;
+            let filteredTrieu = 0;
+            let filteredTeo = 0;
+            let filteredThien = 0;
+            let filteredThuan = 0;
+            
+            filteredRows.forEach(({ row }) => {
+                filteredVatTu += parseSheetNumber(row[3]);
+                filteredTienCong += parseSheetNumber(row[4]);
+                filteredTrieu += parseSheetNumber(row[6]);
+                filteredTeo += parseSheetNumber(row[7]);
+                filteredThien += parseSheetNumber(row[8]);
+                filteredThuan += parseSheetNumber(row[9]);
+            });
+            
+            const filteredTotal = filteredVatTu + filteredTienCong;
             
             html += `
                         </tbody>
+                        <tfoot style="background-color: #f0f0f0; font-weight: bold;">
+                            <tr>
+                                <td colspan="4" style="text-align: right;">Tổng kết (${filteredRows.length} hàng):</td>
+                                <td>${formatCurrency(filteredVatTu)}</td>
+                                <td>${formatCurrency(filteredTienCong)}</td>
+                                <td>${formatCurrency(filteredTrieu)}</td>
+                                <td>${formatCurrency(filteredTeo)}</td>
+                                <td>${formatCurrency(filteredThien)}</td>
+                                <td>${formatCurrency(filteredThuan)}</td>
+                                <td>${formatCurrency(filteredTotal)}</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
-                ${data.length > START_ROW + 50 ? 
-                    `<p style="margin-top: 15px; color: #666;">Đang hiển thị 50/${data.length - START_ROW + 1} bản ghi</p>` : ''}
+                
+                <div class="data-info" style="margin-top: 25px;">
+                    <p><strong>📊 Thống kê kết quả tìm kiếm:</strong></p>
+                    <p>Tổng số hàng: ${filteredRows.length} / ${currentRows.length - START_ROW + 1}</p>
+                    <p>Tổng chi phí: ${formatCurrency(filteredTotal)}</p>
+                    <p>Chi phí trung bình mỗi hàng: ${formatCurrency(filteredRows.length > 0 ? filteredTotal / filteredRows.length : 0)}</p>
+                    <p>Thời gian tìm kiếm: ${new Date().toLocaleTimeString('vi-VN')}</p>
+                </div>
             `;
             
-            resultsDiv.innerHTML = html;
+            searchResults.innerHTML = html;
+        }
+        
+        // Xóa tìm kiếm
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filterTable();
+        }
+        
+        // Xóa tất cả bộ lọc
+        function clearAllFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('workerFilter').value = '';
+            document.getElementById('amountFilter').value = '';
+            filterTable();
         }
         
         // ============================
-        // EXPORT FUNCTIONS
-        // ============================
-        
-        function exportToExcel() {
-            try {
-                const data = prepareExportData();
-                const ws = XLSX.utils.json_to_sheet(data);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "ChiPhiLamVuon");
-                
-                // Thêm sheet tổng kết
-                const summaryData = prepareSummaryData();
-                const ws2 = XLSX.utils.json_to_sheet(summaryData);
-                XLSX.utils.book_append_sheet(wb, ws2, "TongKet");
-                
-                XLSX.writeFile(wb, `chi-phi-lam-vuon_${getCurrentDateTime()}.xlsx`);
-                
-                showNotification('✅ Xuất Excel thành công!', 'success');
-            } catch (error) {
-                console.error('Lỗi xuất Excel:', error);
-                showNotification('❌ Lỗi xuất Excel', 'error');
-            }
-        }
-        
-        function exportToPDF() {
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                
-                // Tiêu đề
-                doc.setFontSize(20);
-                doc.text('BÁO CÁO CHI PHÍ LÀM VƯỜN', 105, 20, { align: 'center' });
-                doc.setFontSize(12);
-                doc.text(`Ngày xuất: ${new Date().toLocaleDateString('vi-VN')}`, 105, 30, { align: 'center' });
-                
-                // Tổng kết
-                const totals = calculateTotals(currentData);
-                const summaryY = 45;
-                
-                doc.setFontSize(14);
-                doc.text('TỔNG KẾT CHI PHÍ', 20, summaryY);
-                doc.setFontSize(11);
-                
-                const summaryItems = [
-                    `Tổng chi phí làm vườn: ${formatCurrency(totals.totalChiPhi)}`,
-                    `Tổng phí vật tư: ${formatCurrency(totals.totalVatTu)}`,
-                    `Tổng tiền công: ${formatCurrency(totals.totalTienCong)}`,
-                    `Triều: ${formatCurrency(totals.totalTrieu)}`,
-                    `Tèo: ${formatCurrency(totals.totalTeo)}`,
-                    `Thiện: ${formatCurrency(totals.totalThien)}`,
-                    `Thuận: ${formatCurrency(totals.totalThuan)}`,
-                    `Tổng số giao dịch: ${totals.dataRowsCount}`
-                ];
-                
-                summaryItems.forEach((item, index) => {
-                    doc.text(item, 30, summaryY + 15 + (index * 7));
-                });
-                
-                // Bảng dữ liệu
-                const data = prepareExportData();
-                const tableY = summaryY + 15 + (summaryItems.length * 7) + 10;
-                
-                doc.autoTable({
-                    head: [['ID', 'Ngày', 'Nội dung', 'Phí vật tư', 'Tiền công', 'Triều', 'Tèo', 'Thiện', 'Thuận']],
-                    body: data.map(row => [
-                        row.ID,
-                        row.Ngay,
-                        row.NoiDung,
-                        row['Phí vật tư'],
-                        row['Tiền công'],
-                        row.Triều,
-                        row.Tèo,
-                        row.Thiện,
-                        row.Thuận
-                    ]),
-                    startY: tableY,
-                    theme: 'grid',
-                    styles: { fontSize: 8 },
-                    headStyles: { fillColor: [76, 175, 80] }
-                });
-                
-                doc.save(`chi-phi-lam-vuon_${getCurrentDateTime()}.pdf`);
-                
-                showNotification('✅ Xuất PDF thành công!', 'success');
-            } catch (error) {
-                console.error('Lỗi xuất PDF:', error);
-                showNotification('❌ Lỗi xuất PDF', 'error');
-            }
-        }
-        
-        function exportToCSV() {
-            try {
-                const data = prepareExportData();
-                const csvContent = convertToCSV(data);
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                
-                link.href = URL.createObjectURL(blob);
-                link.download = `chi-phi-lam-vuon_${getCurrentDateTime()}.csv`;
-                link.click();
-                
-                showNotification('✅ Xuất CSV thành công!', 'success');
-            } catch (error) {
-                console.error('Lỗi xuất CSV:', error);
-                showNotification('❌ Lỗi xuất CSV', 'error');
-            }
-        }
-        
-        function prepareExportData() {
-            const data = [];
-            
-            for (let i = START_ROW - 1; i < currentData.length; i++) {
-                const row = currentData[i];
-                if (row && row.length >= 5) {
-                    data.push({
-                        ID: row[0] || '',
-                        Ngay: row[1] || '',
-                        NoiDung: row[2] || '',
-                        'Phí vật tư': displayAmount(row[3]),
-                        'Tiền công': displayAmount(row[4]),
-                        'Triều': displayAmount(row[6]),
-                        'Tèo': displayAmount(row[7]),
-                        'Thiện': displayAmount(row[8]),
-                        'Thuận': displayAmount(row[9])
-                    });
-                }
-            }
-            
-            return data;
-        }
-        
-        function prepareSummaryData() {
-            const totals = calculateTotals(currentData);
-            return [{
-                'Chỉ số': 'Giá trị',
-                'Tổng chi phí làm vườn': formatCurrency(totals.totalChiPhi),
-                'Tổng phí vật tư': formatCurrency(totals.totalVatTu),
-                'Tổng tiền công': formatCurrency(totals.totalTienCong),
-                'Triều': formatCurrency(totals.totalTrieu),
-                'Tèo': formatCurrency(totals.totalTeo),
-                'Thiện': formatCurrency(totals.totalThien),
-                'Thuận': formatCurrency(totals.totalThuan),
-                'Tổng số giao dịch': totals.dataRowsCount,
-                'Ngày xuất báo cáo': new Date().toLocaleDateString('vi-VN'),
-                'Thời gian xuất': new Date().toLocaleTimeString('vi-VN')
-            }];
-        }
-        
-        function convertToCSV(data) {
-            const headers = Object.keys(data[0]);
-            const csvRows = [
-                headers.join(','),
-                ...data.map(row => 
-                    headers.map(header => {
-                        const cell = row[header];
-                        return typeof cell === 'string' && cell.includes(',') ? 
-                               `"${cell}"` : cell;
-                    }).join(',')
-                )
-            ];
-            return csvRows.join('\n');
-        }
-        
-        function getCurrentDateTime() {
-            const now = new Date();
-            return now.toISOString().slice(0, 19).replace(/[:T]/g, '-');
-        }
-        
-        function updateExportSummary() {
-            const totals = calculateTotals(currentData);
-            const summaryDiv = document.getElementById('exportSummary');
-            
-            if (summaryDiv) {
-                summaryDiv.innerHTML = `
-                    <p>📊 <strong>Tổng chi phí làm vườn:</strong> ${formatCurrency(totals.totalChiPhi)}</p>
-                    <p>🛠️ <strong>Tổng phí vật tư:</strong> ${formatCurrency(totals.totalVatTu)}</p>
-                    <p>👷 <strong>Tổng tiền công:</strong> ${formatCurrency(totals.totalTienCong)}</p>
-                    <p>👨 <strong>Triều:</strong> ${formatCurrency(totals.totalTrieu)}</p>
-                    <p>👨 <strong>Tèo:</strong> ${formatCurrency(totals.totalTeo)}</p>
-                    <p>👨 <strong>Thiện:</strong> ${formatCurrency(totals.totalThien)}</p>
-                    <p>👨 <strong>Thuận:</strong> ${formatCurrency(totals.totalThuan)}</p>
-                    <p>📈 <strong>Tổng số giao dịch:</strong> ${totals.dataRowsCount}</p>
-                    <p>📅 <strong>Dữ liệu từ:</strong> Hàng ${START_ROW} đến ${currentData.length}</p>
-                `;
-            }
-        }
-        
-        // ============================
-        // EMAIL NOTIFICATION FUNCTIONS
-        // ============================
-        
-        function setupEmailNotification() {
-            const email = document.getElementById('emailInput').value;
-            const frequency = document.getElementById('emailFrequency').value;
-            
-            if (!validateEmail(email)) {
-                showEmailStatus('⚠️ Email không hợp lệ', 'warning');
-                return;
-            }
-            
-            // Xóa interval cũ nếu có
-            if (emailNotificationInterval) {
-                clearInterval(emailNotificationInterval);
-            }
-            
-            // Thiết lập interval mới
-            if (frequency !== 'change') {
-                const minutes = parseInt(frequency);
-                emailNotificationInterval = setInterval(() => {
-                    sendSummaryEmail();
-                }, minutes * 60 * 1000);
-            }
-            
-            showEmailStatus(`✅ Đã thiết lập thông báo email cho ${email} (${getFrequencyText(frequency)})`, 'success');
-            showNotification('✅ Đã thiết lập thông báo email!', 'success');
-        }
-        
-        function sendTestEmail() {
-            const email = document.getElementById('emailInput').value;
-            
-            if (!validateEmail(email)) {
-                showEmailStatus('⚠️ Email không hợp lệ', 'warning');
-                return;
-            }
-            
-            showEmailStatus('🔄 Đang gửi email kiểm tra...', 'loading');
-            
-            const templateParams = {
-                to_email: email,
-                subject: '📧 Kiểm tra thông báo - Chi phí làm vườn',
-                message: 'Đây là email kiểm tra từ hệ thống quản lý chi phí làm vườn. Nếu bạn nhận được email này, hệ thống thông báo đã hoạt động!',
-                total_chi_phi: 'Kiểm tra thành công',
-                total_vat_tu: 'Hệ thống đang hoạt động',
-                total_tien_cong: 'Bạn sẽ nhận được thông báo',
-                trieu: 'khi có thay đổi',
-                teo: 'hoặc theo lịch',
-                thien: 'đã thiết lập',
-                thuan: '',
-                update_time: new Date().toLocaleString('vi-VN'),
-                transaction_count: '1'
-            };
-            
-            emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams)
-                .then(() => {
-                    showEmailStatus('✅ Đã gửi email kiểm tra thành công!', 'success');
-                    showNotification('✅ Đã gửi email kiểm tra!', 'success');
-                })
-                .catch(error => {
-                    console.error('Lỗi gửi email:', error);
-                    showEmailStatus('❌ Lỗi gửi email: ' + error.text, 'error');
-                });
-        }
-        
-        function sendSummaryEmail() {
-            const email = document.getElementById('emailInput').value;
-            const totals = calculateTotals(currentData);
-            
-            if (!validateEmail(email)) {
-                showEmailStatus('⚠️ Email không hợp lệ', 'warning');
-                return;
-            }
-            
-            showEmailStatus('🔄 Đang gửi tổng kết qua email...', 'loading');
-            
-            const templateParams = {
-                to_email: email,
-                subject: `📊 Tổng kết chi phí làm vườn - ${new Date().toLocaleDateString('vi-VN')}`,
-                message: 'Báo cáo tổng kết chi phí làm vườn tự động từ hệ thống:',
-                total_chi_phi: formatCurrency(totals.totalChiPhi),
-                total_vat_tu: formatCurrency(totals.totalVatTu),
-                total_tien_cong: formatCurrency(totals.totalTienCong),
-                trieu: formatCurrency(totals.totalTrieu),
-                teo: formatCurrency(totals.totalTeo),
-                thien: formatCurrency(totals.totalThien),
-                thuan: formatCurrency(totals.totalThuan),
-                update_time: new Date().toLocaleString('vi-VN'),
-                transaction_count: totals.dataRowsCount
-            };
-            
-            emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams)
-                .then(() => {
-                    showEmailStatus('✅ Đã gửi tổng kết qua email thành công!', 'success');
-                    showNotification('✅ Đã gửi email tổng kết!', 'success');
-                    lastEmailData = JSON.stringify(totals);
-                })
-                .catch(error => {
-                    console.error('Lỗi gửi email:', error);
-                    showEmailStatus('❌ Lỗi gửi email: ' + error.text, 'error');
-                });
-        }
-        
-        function checkForChangesAndNotify() {
-            const totals = calculateTotals(currentData);
-            const currentDataStr = JSON.stringify(totals);
-            
-            // Nếu có dữ liệu cũ và có thay đổi
-            if (lastEmailData && lastEmailData !== currentDataStr) {
-                const email = document.getElementById('emailInput').value;
-                if (validateEmail(email)) {
-                    sendSummaryEmail();
-                }
-            }
-            
-            lastEmailData = currentDataStr;
-        }
-        
-        function updateEmailPreview() {
-            const totals = calculateTotals(currentData);
-            
-            document.getElementById('previewTotal').textContent = formatCurrency(totals.totalChiPhi);
-            document.getElementById('previewVatTu').textContent = formatCurrency(totals.totalVatTu);
-            document.getElementById('previewTienCong').textContent = formatCurrency(totals.totalTienCong);
-            document.getElementById('previewTrieu').textContent = formatCurrency(totals.totalTrieu);
-            document.getElementById('previewTeo').textContent = formatCurrency(totals.totalTeo);
-            document.getElementById('previewThien').textContent = formatCurrency(totals.totalThien);
-            document.getElementById('previewThuan').textContent = formatCurrency(totals.totalThuan);
-            document.getElementById('previewTime').textContent = new Date().toLocaleTimeString('vi-VN');
-            document.getElementById('previewTransactions').textContent = totals.dataRowsCount;
-        }
-        
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-        
-        function getFrequencyText(frequency) {
-            const texts = {
-                '3': 'mỗi 3 phút',
-                '5': 'mỗi 5 phút',
-                '10': 'mỗi 10 phút',
-                '30': 'mỗi 30 phút',
-                '60': 'mỗi giờ',
-                'change': 'khi có thay đổi'
-            };
-            return texts[frequency] || frequency;
-        }
-        
-        function showEmailStatus(message, type) {
-            const statusDiv = document.getElementById('emailStatus');
-            statusDiv.textContent = message;
-            statusDiv.style.display = 'block';
-            statusDiv.style.background = type === 'success' ? '#e8f5e9' : 
-                                        type === 'error' ? '#ffebee' : 
-                                        type === 'warning' ? '#fff3e0' : '#e3f2fd';
-            statusDiv.style.color = type === 'success' ? '#2e7d32' : 
-                                   type === 'error' ? '#c62828' : 
-                                   type === 'warning' ? '#ef6c00' : '#1565c0';
-            
-            setTimeout(() => {
-                statusDiv.style.display = 'none';
-            }, 5000);
-        }
-        
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.innerHTML = `
-                <span style="font-size: 1.5em;">${type === 'success' ? '✅' : '❌'}</span>
-                <span>${message}</span>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 5000);
-        }
-        
-        // ============================
-        // INITIALIZE SYSTEM
+        // KHỞI CHẠY HỆ THỐNG
         // ============================
         window.onload = initSystem;
         
-        // Phím tắt
+        // Cho phép refresh thủ công bằng phím F5
         document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey && event.key === 'e') {
-                event.preventDefault();
-                exportToExcel();
-            }
-            if (event.ctrlKey && event.key === 'p') {
-                event.preventDefault();
-                exportToPDF();
-            }
             if (event.key === 'F5') {
                 event.preventDefault();
                 loadData();
