@@ -208,7 +208,15 @@
             background: linear-gradient(135deg, #7B1FA2, #4A148C);
         }
         
-        .detail-section, .chart-section, .search-section {
+        .action-button.export {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+        }
+        
+        .action-button.export:hover {
+            background: linear-gradient(135deg, #F57C00, #E65100);
+        }
+        
+        .detail-section, .chart-section, .search-section, .export-section {
             background: #f9f9f9;
             border-radius: 18px;
             padding: 30px;
@@ -218,7 +226,7 @@
             animation: fadeIn 0.5s ease;
         }
         
-        .chart-section.active, .search-section.active {
+        .chart-section.active, .search-section.active, .export-section.active {
             display: block;
         }
         
@@ -227,7 +235,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .detail-header, .chart-header, .search-header {
+        .detail-header, .chart-header, .search-header, .export-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -503,6 +511,150 @@
             background: #45a049;
         }
         
+        /* Export section styles */
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .export-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+        
+        .export-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+        }
+        
+        .export-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .export-card h3 {
+            color: #2d5c2a;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .export-description {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .export-button {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .export-button.excel {
+            background: linear-gradient(135deg, #0d7a3e, #0a5c2e);
+        }
+        
+        .export-button.excel:hover {
+            background: linear-gradient(135deg, #0a5c2e, #083e1f);
+        }
+        
+        .export-button.pdf {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+        }
+        
+        .export-button.pdf:hover {
+            background: linear-gradient(135deg, #b71c1c, #8b0000);
+        }
+        
+        .export-button.summary {
+            background: linear-gradient(135deg, #2196F3, #0D47A1);
+        }
+        
+        .export-button.summary:hover {
+            background: linear-gradient(135deg, #1976D2, #0D47A1);
+        }
+        
+        .export-preview {
+            margin-top: 40px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .export-preview h3 {
+            color: #2d5c2a;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        
+        .preview-table th {
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .preview-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .preview-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .export-progress {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
@@ -547,6 +699,10 @@
                 max-width: 300px;
                 justify-content: center;
             }
+            
+            .export-options {
+                grid-template-columns: 1fr;
+            }
         }
         
         .currency {
@@ -566,6 +722,12 @@
     </style>
     <!-- Chart.js library for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas for HTML to PDF conversion -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -669,6 +831,11 @@
             <button class="action-button tertiary" onclick="toggleSearchSection()">
                 <span>🔍</span>
                 <span id="searchButtonText">Tìm kiếm & Lọc</span>
+            </button>
+            
+            <button class="action-button export" onclick="toggleExportSection()">
+                <span>📤</span>
+                <span id="exportButtonText">Xuất file</span>
             </button>
         </div>
         
@@ -775,6 +942,77 @@
             </div>
         </div>
         
+        <div id="exportSection" class="export-section">
+            <div class="export-header">
+                <h2 style="color: #2d5c2a; margin: 0;">📤 Xuất dữ liệu ra file</h2>
+                <button class="action-button" onclick="toggleExportSection()" style="background: linear-gradient(135deg, #666, #444); padding: 12px 25px;">
+                    <span>✕</span> Đóng
+                </button>
+            </div>
+            
+            <div class="export-options">
+                <div class="export-card">
+                    <span class="export-icon">📊</span>
+                    <h3>Xuất toàn bộ dữ liệu</h3>
+                    <p class="export-description">Xuất tất cả dữ liệu chi phí làm vườn từ Google Sheet ra file Excel (.xlsx) với đầy đủ thông tin.</p>
+                    <button class="export-button excel" onclick="exportAllData()">
+                        <span>📥</span> Xuất Excel
+                    </button>
+                </div>
+                
+                <div class="export-card">
+                    <span class="export-icon">📈</span>
+                    <h3>Xuất tổng kết báo cáo</h3>
+                    <p class="export-description">Xuất báo cáo tổng kết với các biểu đồ và thống kê chi tiết ra file PDF.</p>
+                    <button class="export-button pdf" onclick="exportSummaryReport()">
+                        <span>📥</span> Xuất PDF
+                    </button>
+                </div>
+                
+                <div class="export-card">
+                    <span class="export-icon">🔍</span>
+                    <h3>Xuất kết quả tìm kiếm</h3>
+                    <p class="export-description">Xuất kết quả tìm kiếm hiện tại (nếu có) ra file Excel để phân tích thêm.</p>
+                    <button class="export-button summary" onclick="exportSearchResults()">
+                        <span>📥</span> Xuất kết quả
+                    </button>
+                </div>
+            </div>
+            
+            <div class="export-preview">
+                <h3>👁️ Xem trước dữ liệu sẽ xuất</h3>
+                <div style="overflow-x: auto; max-height: 300px;">
+                    <table class="preview-table" id="exportPreviewTable">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>ID</th>
+                                <th>Ngày</th>
+                                <th>Nội dung</th>
+                                <th>Phí vật tư</th>
+                                <th>Tiền công</th>
+                                <th>Tổng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="exportPreviewBody">
+                            <!-- Preview rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+                <p style="text-align: center; margin-top: 15px; color: #666; font-size: 0.9em;">
+                    Hiển thị 5 dòng đầu tiên của dữ liệu. Tổng cộng có <span id="totalPreviewRows">0</span> dòng dữ liệu.
+                </p>
+            </div>
+            
+            <div class="export-progress" id="exportProgress">
+                <h3>⏳ Đang xuất file...</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="progressText">Đang chuẩn bị dữ liệu...</p>
+            </div>
+        </div>
+        
         <div class="data-info">
             <h3 style="color: #2d5c2a; margin-bottom: 15px;">ℹ️ Thông tin hệ thống</h3>
             <p><strong>Google Sheet ID:</strong> 1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</p>
@@ -816,6 +1054,7 @@
         let isDetailVisible = false;
         let isChartVisible = false;
         let isSearchVisible = false;
+        let isExportVisible = false;
         let currentChartType = 'pie';
         
         // Dữ liệu và biểu đồ
@@ -959,6 +1198,11 @@
                 // Nếu đang xem tìm kiếm, cập nhật kết quả
                 if (isSearchVisible) {
                     filterTable();
+                }
+                
+                // Nếu đang xem xuất file, cập nhật preview
+                if (isExportVisible) {
+                    updateExportPreview();
                 }
                 
                 console.log(`✅ Đã cập nhật dữ liệu lần thứ ${updateCount} (${currentRows.length} hàng)`);
@@ -1735,6 +1979,9 @@
             } else {
                 resultsInfo.style.display = 'none';
             }
+            
+            // Cập nhật preview xuất file
+            updateExportPreview();
         }
         
         // Hiển thị kết quả tìm kiếm
@@ -1866,6 +2113,527 @@
             document.getElementById('workerFilter').value = '';
             document.getElementById('amountFilter').value = '';
             filterTable();
+        }
+        
+        // ============================
+        // XUẤT FILE EXCEL VÀ PDF
+        // ============================
+        
+        // Hiển thị/ẩn phần xuất file
+        function toggleExportSection() {
+            const exportSection = document.getElementById('exportSection');
+            const exportButton = document.getElementById('exportButtonText');
+            
+            isExportVisible = !isExportVisible;
+            
+            if (isExportVisible) {
+                exportSection.classList.add('active');
+                exportButton.textContent = 'Ẩn xuất file';
+                
+                // Cập nhật preview
+                updateExportPreview();
+            } else {
+                exportSection.classList.remove('active');
+                exportButton.textContent = 'Xuất file';
+            }
+        }
+        
+        // Cập nhật xem trước dữ liệu xuất
+        function updateExportPreview() {
+            const previewBody = document.getElementById('exportPreviewBody');
+            const totalRowsElement = document.getElementById('totalPreviewRows');
+            
+            // Xác định dữ liệu nào sẽ xuất (toàn bộ hoặc đã lọc)
+            let rowsToPreview = [];
+            let totalRows = 0;
+            
+            // Kiểm tra nếu có kết quả tìm kiếm đang hiển thị
+            const searchInput = document.getElementById('searchInput').value;
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const workerFilter = document.getElementById('workerFilter').value;
+            const amountFilter = document.getElementById('amountFilter').value;
+            
+            const hasFilters = searchInput || categoryFilter || workerFilter || amountFilter;
+            
+            if (hasFilters && currentFilteredRows.length > 0) {
+                // Sử dụng dữ liệu đã lọc
+                rowsToPreview = currentFilteredRows.slice(0, 5); // Lấy 5 dòng đầu
+                totalRows = currentFilteredRows.length;
+            } else {
+                // Sử dụng toàn bộ dữ liệu
+                rowsToPreview = currentRows.slice(START_ROW - 1, START_ROW + 4); // Lấy 5 dòng từ START_ROW
+                totalRows = Math.max(0, currentRows.length - START_ROW + 1);
+            }
+            
+            // Cập nhật số dòng
+            totalRowsElement.textContent = totalRows;
+            
+            // Xây dựng HTML preview
+            let html = '';
+            
+            if (rowsToPreview.length === 0) {
+                html = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 20px;">
+                            Không có dữ liệu để hiển thị
+                        </td>
+                    </tr>
+                `;
+            } else {
+                rowsToPreview.forEach((item, index) => {
+                    const row = Array.isArray(item) ? item : item.row;
+                    const rowNumber = Array.isArray(item) ? (START_ROW + index) : (item.index + 1);
+                    const vatTu = parseSheetNumber(row[3]);
+                    const tienCong = parseSheetNumber(row[4]);
+                    const total = vatTu + tienCong;
+                    
+                    html += `
+                        <tr>
+                            <td>${rowNumber}</td>
+                            <td>${row[0] || ''}</td>
+                            <td>${row[1] || ''}</td>
+                            <td>${row[2] || ''}</td>
+                            <td>${formatCurrency(vatTu)}</td>
+                            <td>${formatCurrency(tienCong)}</td>
+                            <td>${formatCurrency(total)}</td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            previewBody.innerHTML = html;
+        }
+        
+        // Hiển thị thanh tiến trình
+        function showExportProgress() {
+            const progressElement = document.getElementById('exportProgress');
+            progressElement.style.display = 'block';
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('progressText').textContent = 'Đang chuẩn bị dữ liệu...';
+        }
+        
+        // Cập nhật thanh tiến trình
+        function updateExportProgress(percent, message) {
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressText').textContent = message;
+        }
+        
+        // Ẩn thanh tiến trình
+        function hideExportProgress() {
+            setTimeout(() => {
+                document.getElementById('exportProgress').style.display = 'none';
+            }, 1000);
+        }
+        
+        // Xuất toàn bộ dữ liệu ra Excel
+        async function exportAllData() {
+            try {
+                showExportProgress();
+                updateExportProgress(10, 'Đang chuẩn bị dữ liệu...');
+                
+                // Lấy dữ liệu hiện tại
+                const rows = currentRows;
+                
+                updateExportProgress(30, 'Đang tạo file Excel...');
+                
+                // Tạo workbook
+                const wb = XLSX.utils.book_new();
+                
+                // Tạo worksheet với dữ liệu chi tiết
+                const wsData = [
+                    ['BÁO CÁO CHI PHÍ LÀM VƯỜN', '', '', '', '', '', '', '', '', ''],
+                    ['Ngày xuất:', new Date().toLocaleDateString('vi-VN'), '', '', '', '', '', '', '', ''],
+                    ['Tổng số hàng:', rows.length - START_ROW + 1, '', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', '', '', ''],
+                    ['STT', 'ID', 'Ngày', 'Nội dung', 'Phí vật tư', 'Tiền công', 'Triều', 'Tèo', 'Thiện', 'Thuận', 'Tổng']
+                ];
+                
+                // Thêm dữ liệu từ START_ROW
+                let rowIndex = 0;
+                for (let i = START_ROW - 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row && row.length >= 5) {
+                        rowIndex++;
+                        const vatTu = parseSheetNumber(row[3]);
+                        const tienCong = parseSheetNumber(row[4]);
+                        const total = vatTu + tienCong;
+                        
+                        wsData.push([
+                            rowIndex,
+                            row[0] || '',
+                            row[1] || '',
+                            row[2] || '',
+                            vatTu,
+                            tienCong,
+                            parseSheetNumber(row[6]),
+                            parseSheetNumber(row[7]),
+                            parseSheetNumber(row[8]),
+                            parseSheetNumber(row[9]),
+                            total
+                        ]);
+                    }
+                    
+                    // Cập nhật tiến trình
+                    if (i % 10 === 0) {
+                        const progress = 30 + Math.floor((i / rows.length) * 40);
+                        updateExportProgress(progress, `Đang xử lý dòng ${i + 1}/${rows.length}...`);
+                    }
+                }
+                
+                // Thêm tổng kết
+                wsData.push(['', '', '', '', '', '', '', '', '', '', '']);
+                wsData.push(['TỔNG KẾT', '', '', '', '', '', '', '', '', '', '']);
+                
+                // Tính tổng
+                let totalVatTu = 0, totalTienCong = 0, totalAll = 0;
+                let totalTrieu = 0, totalTeo = 0, totalThien = 0, totalThuan = 0;
+                
+                for (let i = START_ROW - 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row && row.length >= 5) {
+                        totalVatTu += parseSheetNumber(row[3]);
+                        totalTienCong += parseSheetNumber(row[4]);
+                        totalTrieu += parseSheetNumber(row[6]);
+                        totalTeo += parseSheetNumber(row[7]);
+                        totalThien += parseSheetNumber(row[8]);
+                        totalThuan += parseSheetNumber(row[9]);
+                    }
+                }
+                
+                totalAll = totalVatTu + totalTienCong;
+                
+                wsData.push(['Tổng phí vật tư:', '', '', '', totalVatTu, '', '', '', '', '', '']);
+                wsData.push(['Tổng tiền công:', '', '', '', '', totalTienCong, '', '', '', '', '']);
+                wsData.push(['Tổng chi phí:', '', '', '', '', '', '', '', '', '', totalAll]);
+                wsData.push(['', '', '', '', '', '', '', '', '', '', '']);
+                wsData.push(['Tiền công Triều:', '', '', '', '', '', totalTrieu, '', '', '', '']);
+                wsData.push(['Tiền công Tèo:', '', '', '', '', '', '', totalTeo, '', '', '']);
+                wsData.push(['Tiền công Thiện:', '', '', '', '', '', '', '', totalThien, '', '']);
+                wsData.push(['Tiền công Thuận:', '', '', '', '', '', '', '', '', totalThuan, '']);
+                
+                updateExportProgress(80, 'Đang định dạng file...');
+                
+                // Tạo worksheet
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+                
+                // Định dạng cột
+                const wscols = [
+                    {wch: 5},  // STT
+                    {wch: 10}, // ID
+                    {wch: 12}, // Ngày
+                    {wch: 40}, // Nội dung
+                    {wch: 15}, // Phí vật tư
+                    {wch: 15}, // Tiền công
+                    {wch: 15}, // Triều
+                    {wch: 15}, // Tèo
+                    {wch: 15}, // Thiện
+                    {wch: 15}, // Thuận
+                    {wch: 15}  // Tổng
+                ];
+                ws['!cols'] = wscols;
+                
+                // Thêm worksheet vào workbook
+                XLSX.utils.book_append_sheet(wb, ws, "Chi phí làm vườn");
+                
+                updateExportProgress(95, 'Đang tải file xuống...');
+                
+                // Xuất file
+                const fileName = `Chi_phi_lam_vuon_${new Date().toISOString().slice(0,10)}.xlsx`;
+                XLSX.writeFile(wb, fileName);
+                
+                updateExportProgress(100, 'Xuất file thành công!');
+                hideExportProgress();
+                
+                console.log(`✅ Đã xuất file Excel: ${fileName}`);
+                
+            } catch (error) {
+                console.error('Lỗi khi xuất Excel:', error);
+                alert('Có lỗi xảy ra khi xuất file Excel. Vui lòng thử lại.');
+                hideExportProgress();
+            }
+        }
+        
+        // Xuất báo cáo tổng kết ra PDF
+        async function exportSummaryReport() {
+            try {
+                showExportProgress();
+                updateExportProgress(10, 'Đang chuẩn bị dữ liệu...');
+                
+                // Lấy dữ liệu hiện tại
+                const rows = currentRows;
+                
+                updateExportProgress(30, 'Đang tạo nội dung báo cáo...');
+                
+                // Tạo nội dung HTML cho PDF
+                const reportDate = new Date().toLocaleDateString('vi-VN');
+                const reportTime = new Date().toLocaleTimeString('vi-VN');
+                
+                // Tính tổng
+                let totalVatTu = 0, totalTienCong = 0, totalAll = 0;
+                let totalTrieu = 0, totalTeo = 0, totalThien = 0, totalThuan = 0;
+                let dataRowsCount = 0;
+                
+                for (let i = START_ROW - 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row && row.length >= 5) {
+                        dataRowsCount++;
+                        totalVatTu += parseSheetNumber(row[3]);
+                        totalTienCong += parseSheetNumber(row[4]);
+                        totalTrieu += parseSheetNumber(row[6]);
+                        totalTeo += parseSheetNumber(row[7]);
+                        totalThien += parseSheetNumber(row[8]);
+                        totalThuan += parseSheetNumber(row[9]);
+                    }
+                }
+                
+                totalAll = totalVatTu + totalTienCong;
+                
+                updateExportProgress(50, 'Đang tạo PDF...');
+                
+                // Tạo PDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // Tiêu đề
+                doc.setFontSize(20);
+                doc.setTextColor(45, 92, 42); // Màu xanh lá đậm
+                doc.text('BÁO CÁO CHI PHÍ LÀM VƯỜN', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Ngày xuất: ${reportDate} ${reportTime}`, 105, 30, { align: 'center' });
+                
+                // Thông tin tổng quát
+                doc.setFontSize(14);
+                doc.setTextColor(0, 0, 0);
+                doc.text('TỔNG QUAN CHI PHÍ', 20, 45);
+                
+                doc.setFontSize(11);
+                doc.text(`Tổng số hạng mục: ${dataRowsCount}`, 20, 55);
+                doc.text(`Tổng chi phí: ${formatCurrency(totalAll)}`, 20, 62);
+                doc.text(`Phí vật tư: ${formatCurrency(totalVatTu)}`, 20, 69);
+                doc.text(`Tiền công: ${formatCurrency(totalTienCong)}`, 20, 76);
+                
+                // Tiền công theo công nhân
+                doc.setFontSize(14);
+                doc.text('TIỀN CÔNG THEO CÔNG NHÂN', 20, 90);
+                
+                doc.setFontSize(11);
+                doc.text(`Triều: ${formatCurrency(totalTrieu)}`, 20, 100);
+                doc.text(`Tèo: ${formatCurrency(totalTeo)}`, 20, 107);
+                doc.text(`Thiện: ${formatCurrency(totalThien)}`, 20, 114);
+                doc.text(`Thuận: ${formatCurrency(totalThuan)}`, 20, 121);
+                
+                // Tỷ lệ phần trăm
+                const vatTuPercent = totalAll > 0 ? ((totalVatTu / totalAll) * 100).toFixed(1) : 0;
+                const tienCongPercent = totalAll > 0 ? ((totalTienCong / totalAll) * 100).toFixed(1) : 0;
+                
+                // Thêm trang thứ 2 với biểu đồ mô tả
+                doc.addPage();
+                doc.setFontSize(16);
+                doc.setTextColor(45, 92, 42);
+                doc.text('PHÂN TÍCH CHI PHÍ', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text('Phân bổ chi phí:', 20, 40);
+                
+                // Vẽ biểu đồ đơn giản (sử dụng hình chữ nhật)
+                const chartX = 20;
+                const chartY = 50;
+                const chartWidth = 170;
+                const chartHeight = 20;
+                
+                // Phí vật tư
+                doc.setFillColor(76, 175, 80);
+                const vatTuWidth = (vatTuPercent / 100) * chartWidth;
+                doc.rect(chartX, chartY, vatTuWidth, chartHeight, 'F');
+                
+                // Tiền công
+                doc.setFillColor(33, 150, 243);
+                doc.rect(chartX + vatTuWidth, chartY, chartWidth - vatTuWidth, chartHeight, 'F');
+                
+                // Chú thích
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Phí vật tư: ${vatTuPercent}%`, 20, 80);
+                doc.text(`Tiền công: ${tienCongPercent}%`, 100, 80);
+                
+                // Thêm thông tin hệ thống
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Google Sheet: ${SHEET_ID}`, 20, 150);
+                doc.text(`Sheet: ${SHEET_NAME}`, 20, 157);
+                doc.text(`Hàng bắt đầu: ${START_ROW}`, 20, 164);
+                doc.text(`Lần cập nhật cuối: ${lastUpdateTime ? lastUpdateTime.toLocaleString('vi-VN') : 'N/A'}`, 20, 171);
+                
+                updateExportProgress(80, 'Đang lưu file PDF...');
+                
+                // Lưu file
+                const fileName = `Bao_cao_chi_phi_${new Date().toISOString().slice(0,10)}.pdf`;
+                doc.save(fileName);
+                
+                updateExportProgress(100, 'Xuất file PDF thành công!');
+                hideExportProgress();
+                
+                console.log(`✅ Đã xuất file PDF: ${fileName}`);
+                
+            } catch (error) {
+                console.error('Lỗi khi xuất PDF:', error);
+                alert('Có lỗi xảy ra khi xuất file PDF. Vui lòng thử lại.');
+                hideExportProgress();
+            }
+        }
+        
+        // Xuất kết quả tìm kiếm
+        async function exportSearchResults() {
+            try {
+                // Kiểm tra xem có kết quả tìm kiếm không
+                const searchInput = document.getElementById('searchInput').value;
+                const categoryFilter = document.getElementById('categoryFilter').value;
+                const workerFilter = document.getElementById('workerFilter').value;
+                const amountFilter = document.getElementById('amountFilter').value;
+                
+                const hasFilters = searchInput || categoryFilter || workerFilter || amountFilter;
+                
+                if (!hasFilters || currentFilteredRows.length === 0) {
+                    alert('Không có kết quả tìm kiếm để xuất. Vui lòng sử dụng chức năng tìm kiếm trước.');
+                    return;
+                }
+                
+                showExportProgress();
+                updateExportProgress(10, 'Đang chuẩn bị dữ liệu tìm kiếm...');
+                
+                updateExportProgress(30, 'Đang tạo file Excel...');
+                
+                // Tạo workbook
+                const wb = XLSX.utils.book_new();
+                
+                // Tạo worksheet với dữ liệu tìm kiếm
+                const wsData = [
+                    ['KẾT QUẢ TÌM KIẾM CHI PHÍ LÀM VƯỜN', '', '', '', '', '', '', '', '', ''],
+                    ['Ngày xuất:', new Date().toLocaleDateString('vi-VN'), '', '', '', '', '', '', '', ''],
+                    ['Điều kiện tìm kiếm:', '', '', '', '', '', '', '', '', ''],
+                    ['- Từ khóa:', searchInput || 'Không có', '', '', '', '', '', '', '', ''],
+                    ['- Danh mục:', getCategoryFilterText(categoryFilter), '', '', '', '', '', '', '', ''],
+                    ['- Công nhân:', workerFilter || 'Tất cả', '', '', '', '', '', '', '', ''],
+                    ['- Mức chi phí:', getAmountFilterText(amountFilter), '', '', '', '', '', '', '', ''],
+                    ['Tổng số kết quả:', currentFilteredRows.length, '', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', '', '', ''],
+                    ['STT', 'ID', 'Ngày', 'Nội dung', 'Phí vật tư', 'Tiền công', 'Triều', 'Tèo', 'Thiện', 'Thuận', 'Tổng']
+                ];
+                
+                // Thêm dữ liệu tìm kiếm
+                let filteredVatTu = 0, filteredTienCong = 0, filteredTotal = 0;
+                let filteredTrieu = 0, filteredTeo = 0, filteredThien = 0, filteredThuan = 0;
+                
+                currentFilteredRows.forEach((item, index) => {
+                    const row = item.row;
+                    const vatTu = parseSheetNumber(row[3]);
+                    const tienCong = parseSheetNumber(row[4]);
+                    const total = vatTu + tienCong;
+                    
+                    wsData.push([
+                        index + 1,
+                        row[0] || '',
+                        row[1] || '',
+                        row[2] || '',
+                        vatTu,
+                        tienCong,
+                        parseSheetNumber(row[6]),
+                        parseSheetNumber(row[7]),
+                        parseSheetNumber(row[8]),
+                        parseSheetNumber(row[9]),
+                        total
+                    ]);
+                    
+                    // Tính tổng
+                    filteredVatTu += vatTu;
+                    filteredTienCong += tienCong;
+                    filteredTotal += total;
+                    filteredTrieu += parseSheetNumber(row[6]);
+                    filteredTeo += parseSheetNumber(row[7]);
+                    filteredThien += parseSheetNumber(row[8]);
+                    filteredThuan += parseSheetNumber(row[9]);
+                    
+                    // Cập nhật tiến trình
+                    if (index % 10 === 0) {
+                        const progress = 30 + Math.floor((index / currentFilteredRows.length) * 40);
+                        updateExportProgress(progress, `Đang xử lý kết quả ${index + 1}/${currentFilteredRows.length}...`);
+                    }
+                });
+                
+                // Thêm tổng kết
+                wsData.push(['', '', '', '', '', '', '', '', '', '', '']);
+                wsData.push(['TỔNG KẾT KẾT QUẢ TÌM KIẾM', '', '', '', '', '', '', '', '', '', '']);
+                wsData.push(['Tổng phí vật tư:', '', '', '', filteredVatTu, '', '', '', '', '', '']);
+                wsData.push(['Tổng tiền công:', '', '', '', '', filteredTienCong, '', '', '', '', '']);
+                wsData.push(['Tổng chi phí:', '', '', '', '', '', '', '', '', '', filteredTotal]);
+                wsData.push(['', '', '', '', '', '', '', '', '', '', '']);
+                wsData.push(['Tiền công Triều:', '', '', '', '', '', filteredTrieu, '', '', '', '']);
+                wsData.push(['Tiền công Tèo:', '', '', '', '', '', '', filteredTeo, '', '', '']);
+                wsData.push(['Tiền công Thiện:', '', '', '', '', '', '', '', filteredThien, '', '']);
+                wsData.push(['Tiền công Thuận:', '', '', '', '', '', '', '', '', filteredThuan, '']);
+                
+                updateExportProgress(80, 'Đang định dạng file...');
+                
+                // Tạo worksheet
+                const ws = XLSX.utils.aoa_to_sheet(wsData);
+                
+                // Định dạng cột
+                const wscols = [
+                    {wch: 5},  // STT
+                    {wch: 10}, // ID
+                    {wch: 12}, // Ngày
+                    {wch: 40}, // Nội dung
+                    {wch: 15}, // Phí vật tư
+                    {wch: 15}, // Tiền công
+                    {wch: 15}, // Triều
+                    {wch: 15}, // Tèo
+                    {wch: 15}, // Thiện
+                    {wch: 15}, // Thuận
+                    {wch: 15}  // Tổng
+                ];
+                ws['!cols'] = wscols;
+                
+                // Thêm worksheet vào workbook
+                XLSX.utils.book_append_sheet(wb, ws, "Kết quả tìm kiếm");
+                
+                updateExportProgress(95, 'Đang tải file xuống...');
+                
+                // Xuất file
+                const fileName = `Ket_qua_tim_kiem_${new Date().toISOString().slice(0,10)}.xlsx`;
+                XLSX.writeFile(wb, fileName);
+                
+                updateExportProgress(100, 'Xuất file thành công!');
+                hideExportProgress();
+                
+                console.log(`✅ Đã xuất kết quả tìm kiếm: ${fileName}`);
+                
+            } catch (error) {
+                console.error('Lỗi khi xuất kết quả tìm kiếm:', error);
+                alert('Có lỗi xảy ra khi xuất kết quả tìm kiếm. Vui lòng thử lại.');
+                hideExportProgress();
+            }
+        }
+        
+        // Hàm hỗ trợ để lấy tên bộ lọc
+        function getCategoryFilterText(value) {
+            switch(value) {
+                case 'vat_tu': return 'Phí vật tư';
+                case 'tien_cong': return 'Tiền công';
+                default: return 'Tất cả';
+            }
+        }
+        
+        function getAmountFilterText(value) {
+            switch(value) {
+                case '0-500000': return 'Dưới 500,000 ₫';
+                case '500000-1000000': return '500,000 - 1,000,000 ₫';
+                case '1000000-5000000': return '1,000,000 - 5,000,000 ₫';
+                case '5000000+': return 'Trên 5,000,000 ₫';
+                default: return 'Mọi mức chi phí';
+            }
         }
         
         // ============================
