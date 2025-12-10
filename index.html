@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi phí làm vườn - Tự động cập nhật</title>
     <style>
+        /* Các style giữ nguyên từ code trước */
         * {
             margin: 0;
             padding: 0;
@@ -25,7 +26,6 @@
             margin: 0 auto;
         }
 
-        /* Header Styles */
         header {
             text-align: center;
             margin-bottom: 30px;
@@ -48,7 +48,6 @@
             margin-bottom: 15px;
         }
 
-        /* System Info Styles */
         .system-info {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -83,7 +82,6 @@
             font-size: 1rem;
         }
 
-        /* Summary Section */
         .summary-section {
             background: white;
             border-radius: 15px;
@@ -134,7 +132,6 @@
             color: #2e7d32;
         }
 
-        /* Action Buttons */
         .action-buttons {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -182,121 +179,94 @@
             color: white;
         }
 
-        /* Collapsible Sections */
-        .collapsible-section {
-            background: white;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
+        /* Thêm style cho form nhập liệu */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .section-header {
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+            color: white;
             padding: 20px 30px;
-            background: linear-gradient(to right, #f8f9fa, #e9ecef);
-            cursor: pointer;
+            border-radius: 15px 15px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #e0e0e0;
         }
 
-        .section-header h3 {
-            color: #2e7d32;
-            font-size: 1.4rem;
+        .modal-header h3 {
+            font-size: 1.5rem;
+            margin: 0;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .section-content {
-            padding: 30px;
-            display: none;
-        }
-
-        .section-content.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Table Styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        table th {
-            background: linear-gradient(to right, #4caf50, #66bb6a);
+        .close-modal {
+            background: none;
+            border: none;
             color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
         }
 
-        table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #e0e0e0;
+        .modal-body {
+            padding: 30px;
         }
 
-        table tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        /* Chart Container */
-        .chart-container {
-            position: relative;
-            height: 400px;
-            margin: 20px 0;
-        }
-
-        .chart-wrapper {
+        .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .chart-box {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .chart-box h4 {
-            color: #2e7d32;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        /* Search and Filter */
-        .search-filters {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
-        .filter-group {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
+        .form-group {
+            margin-bottom: 20px;
         }
 
-        .filter-group h4 {
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
             color: #2e7d32;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
         }
 
         .form-control {
@@ -313,61 +283,96 @@
             border-color: #4caf50;
         }
 
-        /* Export Section */
-        .export-options {
+        .form-control:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn-small {
+            padding: 10px 25px;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
         }
 
-        .export-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .export-card:hover {
-            border-color: #4caf50;
-            transform: translateY(-5px);
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #4caf50;
         }
 
-        .export-card h4 {
+        .amount-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .amount-input .form-control {
+            flex: 1;
+        }
+
+        .amount-input span {
+            margin-left: 10px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .form-section h4 {
             color: #2e7d32;
             margin-bottom: 15px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Progress Bar */
-        .progress-container {
-            display: none;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin: 30px 0;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        .debug-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            color: #856404;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(to right, #4caf50, #8bc34a);
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        /* Footer */
         footer {
             text-align: center;
             margin-top: 50px;
@@ -377,7 +382,6 @@
             border-top: 1px solid #e0e0e0;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -397,77 +401,7 @@
                 font-size: 2rem;
             }
         }
-
-        /* Utility Classes */
-        .highlight {
-            background-color: #fff9c4;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            font-style: italic;
-        }
-
-        .data-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border-left: 4px solid #4caf50;
-        }
-
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 20px;
-            justify-content: center;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 15px;
-            background: #f8f9fa;
-            border-radius: 20px;
-        }
-
-        .legend-color {
-            width: 15px;
-            height: 15px;
-            border-radius: 3px;
-        }
-
-        /* Debug Info */
-        .debug-info {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 0.9rem;
-            color: #856404;
-        }
     </style>
-    <!-- Chart.js library for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- SheetJS for Excel export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- jsPDF for PDF export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- html2canvas for PDF export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -476,7 +410,7 @@
             <p class="subtitle">Hệ thống quản lý và theo dõi chi phí tự động cập nhật</p>
             <div style="margin-top: 15px; font-size: 0.9rem; opacity: 0.9;">
                 <span>⏰ Thời gian hiện tại: <span id="currentTime">--:--:--</span></span>
-                <span style="margin-left: 20px;">📅 Năm: <span id="currentYear">2024</span></span>
+                <span style="margin-left: 20px;">📅 Năm: <span id="currentYear">2025</span></span>
             </div>
         </header>
 
@@ -487,7 +421,7 @@
                 <p><strong>Kết nối Google Sheet:</strong> <span id="connectionStatus">🔄 Đang khởi tạo...</span></p>
                 <p><strong>Tổng số hàng:</strong> <span id="totalRows">0</span></p>
                 <p><strong>Số hàng dữ liệu:</strong> <span id="dataRows">0</span></p>
-                <div class="debug-info" id="debugInfo" style="display: none; margin-top: 10px;">
+                <div class="debug-info" id="debugInfo" style="display: none;">
                     <small>Thông tin debug sẽ hiển thị ở đây</small>
                 </div>
             </div>
@@ -545,7 +479,7 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Action Buttons - THÊM NÚT NHẬP LIỆU MỚI -->
         <div class="action-buttons">
             <button class="btn btn-primary" onclick="toggleDetail()">
                 <span id="detailButtonText">📋 Xem chi tiết dữ liệu</span>
@@ -553,15 +487,162 @@
             <button class="btn btn-success" onclick="toggleChartSection()">
                 <span id="chartButtonText">📊 Xem biểu đồ</span>
             </button>
-            <button class="btn btn-warning" onclick="toggleSearchSection()">
-                <span id="searchButtonText">🔍 Tìm kiếm & Lọc</span>
+            <!-- NÚT THÊM MỚI -->
+            <button class="btn btn-primary" onclick="showInputForm()" 
+                    style="background: linear-gradient(to right, #9c27b0, #ba68c8);">
+                ✨ Thêm mới
             </button>
-            <button class="btn btn-danger" onclick="toggleExportSection()">
-                <span id="exportButtonText">📁 Xuất file</span>
-            </button>
-            <button class="btn btn-primary" onclick="loadData()" style="background: linear-gradient(to right, #9c27b0, #ba68c8);">
+            <button class="btn btn-primary" onclick="loadData()" 
+                    style="background: linear-gradient(to right, #2196f3, #21cbf3);">
                 🔄 Cập nhật ngay
             </button>
+        </div>
+
+        <!-- FORM NHẬP LIỆU MỚI -->
+        <div class="modal-overlay" id="inputFormModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>➕ Thêm dữ liệu mới</h3>
+                    <button class="close-modal" onclick="hideInputForm()">×</button>
+                </div>
+                <div class="modal-body">
+                    <form id="dataInputForm" onsubmit="return false;">
+                        <div class="form-section">
+                            <h4>📝 Thông tin cơ bản</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="inputId">ID <span style="color: #666; font-size: 0.9rem;">(tự động)</span></label>
+                                    <input type="text" id="inputId" class="form-control" disabled>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="inputNgay">Ngày *</label>
+                                    <input type="date" id="inputNgay" class="form-control" required>
+                                    <div class="error-message" id="errorNgay">Vui lòng nhập ngày</div>
+                                </div>
+                                
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label for="inputNoiDung">Nội dung công việc *</label>
+                                    <input type="text" id="inputNoiDung" class="form-control" placeholder="Nhập nội dung công việc..." required>
+                                    <div class="error-message" id="errorNoiDung">Vui lòng nhập nội dung</div>
+                                </div>
+                                
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label for="inputGhiChu">Ghi chú</label>
+                                    <textarea id="inputGhiChu" class="form-control" rows="3" placeholder="Nhập ghi chú nếu có..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h4>💰 Chi phí</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="inputPhiVatTu">Phí vật tư</label>
+                                    <div class="amount-input">
+                                        <input type="number" id="inputPhiVatTu" class="form-control" 
+                                               placeholder="0" min="0" step="1000" value="0">
+                                        <span>₫</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="inputTienCong">Tiền công</label>
+                                    <div class="amount-input">
+                                        <input type="number" id="inputTienCong" class="form-control" 
+                                               placeholder="0" min="0" step="1000" value="0">
+                                        <span>₫</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="inputTongCong">Tổng cộng <span style="color: #666; font-size: 0.9rem;">(tự động)</span></label>
+                                    <div class="amount-input">
+                                        <input type="text" id="inputTongCong" class="form-control" disabled value="0 ₫">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h4>👷 Phân bổ tiền công</h4>
+                            <p style="margin-bottom: 15px; color: #666; font-size: 0.9rem;">
+                                Chọn công nhân tham gia và nhập số tiền công cho từng người:
+                            </p>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="checkTrieu" onchange="toggleWorkerInput('Trieu')">
+                                        <label for="checkTrieu" style="color: #2e7d32; font-weight: bold;">Triều</label>
+                                    </div>
+                                    <div class="amount-input" style="margin-top: 10px;">
+                                        <input type="number" id="inputTrieu" class="form-control worker-input" 
+                                               placeholder="0" min="0" step="1000" value="0" disabled>
+                                        <span>₫</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="checkTeo" onchange="toggleWorkerInput('Teo')">
+                                        <label for="checkTeo" style="color: #2196F3; font-weight: bold;">Tèo</label>
+                                    </div>
+                                    <div class="amount-input" style="margin-top: 10px;">
+                                        <input type="number" id="inputTeo" class="form-control worker-input" 
+                                               placeholder="0" min="0" step="1000" value="0" disabled>
+                                        <span>₫</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="checkThien" onchange="toggleWorkerInput('Thien')">
+                                        <label for="checkThien" style="color: #FF9800; font-weight: bold;">Thiện</label>
+                                    </div>
+                                    <div class="amount-input" style="margin-top: 10px;">
+                                        <input type="number" id="inputThien" class="form-control worker-input" 
+                                               placeholder="0" min="0" step="1000" value="0" disabled>
+                                        <span>₫</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="checkThuan" onchange="toggleWorkerInput('Thuan')">
+                                        <label for="checkThuan" style="color: #9C27B0; font-weight: bold;">Thuận</label>
+                                    </div>
+                                    <div class="amount-input" style="margin-top: 10px;">
+                                        <input type="number" id="inputThuan" class="form-control worker-input" 
+                                               placeholder="0" min="0" step="1000" value="0" disabled>
+                                        <span>₫</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Tổng tiền công đã phân bổ: <span id="totalWorkerAmount">0 ₫</span></label>
+                                <div class="error-message" id="errorWorkerAmount" style="display: none;">
+                                    Tổng tiền công phân bổ phải bằng với tổng tiền công
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-small" onclick="hideInputForm()" 
+                                    style="background: #f0f0f0; color: #333;">
+                                Hủy
+                            </button>
+                            <button type="button" class="btn btn-small" onclick="clearForm()" 
+                                    style="background: #ff9800; color: white;">
+                                Xóa form
+                            </button>
+                            <button type="button" class="btn btn-small btn-success" onclick="saveData()">
+                                💾 Lưu dữ liệu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Detail Section -->
@@ -577,193 +658,11 @@
             </div>
         </div>
 
-        <!-- Chart Section -->
-        <div class="collapsible-section" id="chartSection">
-            <div class="section-header" onclick="toggleChartSection()">
-                <h3>📊 Biểu đồ trực quan</h3>
-                <span>▼</span>
-            </div>
-            <div class="section-content">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <button class="btn" onclick="changeChartType('pie')" style="padding: 8px 15px; margin: 0 5px; background: #f0f0f0;">Pie Chart</button>
-                    <button class="btn" onclick="changeChartType('bar')" style="padding: 8px 15px; margin: 0 5px; background: #f0f0f0;">Bar Chart</button>
-                    <button class="btn" onclick="changeChartType('line')" style="padding: 8px 15px; margin: 0 5px; background: #f0f0f0;">Line Chart</button>
-                </div>
-                
-                <div class="chart-wrapper">
-                    <div class="chart-box">
-                        <h4>📈 Phân bổ chi phí</h4>
-                        <div class="chart-container">
-                            <canvas id="costDistributionChart"></canvas>
-                        </div>
-                        <div class="legend" id="costChartLegend"></div>
-                    </div>
-                    
-                    <div class="chart-box">
-                        <h4>👷 Tiền công theo công nhân</h4>
-                        <div class="chart-container">
-                            <canvas id="workerChart"></canvas>
-                        </div>
-                        <div class="legend" id="workerChartLegend"></div>
-                    </div>
-                </div>
-                
-                <div class="chart-box" style="margin-top: 30px;">
-                    <h4>📅 Xu hướng chi phí theo thời gian</h4>
-                    <div class="chart-container" style="height: 300px;">
-                        <canvas id="trendChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Search Section -->
-        <div class="collapsible-section" id="searchSection">
-            <div class="section-header" onclick="toggleSearchSection()">
-                <h3>🔍 Tìm kiếm & Lọc dữ liệu</h3>
-                <span>▼</span>
-            </div>
-            <div class="section-content">
-                <div class="search-filters">
-                    <div class="filter-group">
-                        <h4>Từ khóa tìm kiếm</h4>
-                        <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa..." oninput="filterTable()">
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h4>Danh mục</h4>
-                        <select id="categoryFilter" class="form-control" onchange="filterTable()">
-                            <option value="">Tất cả danh mục</option>
-                            <option value="vat_tu">Chỉ phí vật tư</option>
-                            <option value="tien_cong">Chỉ tiền công</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h4>Công nhân</h4>
-                        <select id="workerFilter" class="form-control" onchange="filterTable()">
-                            <option value="">Tất cả công nhân</option>
-                            <option value="Triều">Triều</option>
-                            <option value="Tèo">Tèo</option>
-                            <option value="Thiện">Thiện</option>
-                            <option value="Thuận">Thuận</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h4>Mức chi phí</h4>
-                        <select id="amountFilter" class="form-control" onchange="filterTable()">
-                            <option value="">Mọi mức chi phí</option>
-                            <option value="0-500000">Dưới 500,000 ₫</option>
-                            <option value="500000-1000000">500,000 - 1,000,000 ₫</option>
-                            <option value="1000000-5000000">1,000,000 - 5,000,000 ₫</option>
-                            <option value="5000000+">Trên 5,000,000 ₫</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin: 20px 0;">
-                    <button class="btn" onclick="clearAllFilters()" style="background: #f0f0f0; color: #333; margin-right: 10px;">
-                        🗑️ Xóa tất cả bộ lọc
-                    </button>
-                    <button class="btn" onclick="exportSearchResults()" style="background: linear-gradient(to right, #2196f3, #21cbf3); color: white;">
-                        📥 Xuất kết quả tìm kiếm
-                    </button>
-                </div>
-                
-                <div id="searchResultsInfo" style="display: none; justify-content: space-between; align-items: center; margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                    <div>
-                        <strong>📊 Kết quả tìm kiếm:</strong>
-                        <span id="resultsCount" style="margin-left: 10px; color: #2e7d32; font-weight: bold;">0 kết quả</span>
-                    </div>
-                    <button class="btn" onclick="clearSearch()" style="padding: 8px 15px; background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        Xóa tìm kiếm
-                    </button>
-                </div>
-                
-                <div id="searchResults">
-                    <div class="loading">
-                        <p>Sử dụng các bộ lọc để tìm kiếm dữ liệu...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Export Section -->
-        <div class="collapsible-section" id="exportSection">
-            <div class="section-header" onclick="toggleExportSection()">
-                <h3>📁 Xuất file báo cáo</h3>
-                <span>▼</span>
-            </div>
-            <div class="section-content">
-                <div class="export-options">
-                    <div class="export-card">
-                        <h4>📊 Xuất toàn bộ dữ liệu</h4>
-                        <p>Xuất tất cả dữ liệu sang file Excel</p>
-                        <button class="btn" onclick="exportAllData()" style="margin-top: 15px; background: linear-gradient(to right, #4caf50, #8bc34a); color: white; width: 100%;">
-                            📥 Xuất Excel
-                        </button>
-                    </div>
-                    
-                    <div class="export-card">
-                        <h4>📄 Báo cáo tổng kết</h4>
-                        <p>Báo cáo PDF với biểu đồ và phân tích</p>
-                        <button class="btn" onclick="exportSummaryReport()" style="margin-top: 15px; background: linear-gradient(to right, #f44336, #ef5350); color: white; width: 100%;">
-                            📥 Xuất PDF
-                        </button>
-                    </div>
-                    
-                    <div class="export-card">
-                        <h4>🔍 Xuất kết quả tìm kiếm</h4>
-                        <p>Xuất kết quả tìm kiếm hiện tại</p>
-                        <button class="btn" onclick="exportSearchResults()" style="margin-top: 15px; background: linear-gradient(to right, #2196f3, #21cbf3); color: white; width: 100%;">
-                            📥 Xuất Excel
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="progress-container" id="exportProgress">
-                    <h4>🔄 Đang xuất file...</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                    <p id="progressText">Đang chuẩn bị dữ liệu...</p>
-                </div>
-                
-                <div class="data-info">
-                    <h4>👁️ Xem trước dữ liệu sẽ xuất</h4>
-                    <p>Tổng số dòng: <span id="totalPreviewRows">0</span></p>
-                    
-                    <div style="overflow-x: auto; margin-top: 20px;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>ID</th>
-                                    <th>Ngày</th>
-                                    <th>Nội dung</th>
-                                    <th>Phí vật tư</th>
-                                    <th>Tiền công</th>
-                                    <th>Tổng</th>
-                                </tr>
-                            </thead>
-                            <tbody id="exportPreviewBody">
-                                <tr>
-                                    <td colspan="7" style="text-align: center;">Chưa có dữ liệu</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Footer -->
         <footer>
-            <p>Hệ thống quản lý chi phí làm vườn &copy; <span id="currentYearFooter">2024</span></p>
+            <p>Hệ thống quản lý chi phí làm vườn &copy; <span id="currentYearFooter">2025</span></p>
             <p style="margin-top: 10px; font-size: 0.8rem; color: #888;">
-                Google Sheet ID: <code id="sheetIdDisplay">1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</code> | 
-                Sheet: <code>SR2526</code> | 
+                Chế độ: <span id="dataMode">Dữ liệu mẫu</span> | 
                 Tự động cập nhật mỗi 3 phút
             </p>
         </footer>
@@ -777,7 +676,6 @@
         const SHEET_NAME = 'SR2526';
         const AUTO_UPDATE_INTERVAL = 3 * 60 * 1000; // 3 phút
         const START_ROW = 3; // Bắt đầu từ hàng 3
-        const API_KEY = 'AIzaSyC9Jw2CTp7pdnc2j6nO3h0zY3lK6U2B1Y0'; // API Key công khai (chỉ đọc)
         
         // Biến hệ thống
         let updateCount = 0;
@@ -786,17 +684,298 @@
         let countdownTimer = null;
         let countdownSeconds = AUTO_UPDATE_INTERVAL / 1000;
         let isDetailVisible = false;
-        let isChartVisible = false;
-        let isSearchVisible = false;
-        let isExportVisible = false;
-        let currentChartType = 'pie';
         
-        // Dữ liệu và biểu đồ
+        // Dữ liệu
         let currentRows = [];
-        let costChart = null;
-        let workerChart = null;
-        let trendChart = null;
-        let currentFilteredRows = [];
+        
+        // ============================
+        // CHỨC NĂNG NHẬP LIỆU MỚI
+        // ============================
+        
+        // Hiển thị form nhập liệu
+        function showInputForm() {
+            // Đặt ngày mặc định là hôm nay
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('inputNgay').value = today;
+            
+            // Tạo ID mới
+            generateNewId();
+            
+            // Hiển thị modal
+            document.getElementById('inputFormModal').classList.add('active');
+            
+            // Tính tổng cộng ban đầu
+            calculateTotalAmount();
+            
+            // Đặt focus vào ô nội dung
+            setTimeout(() => {
+                document.getElementById('inputNoiDung').focus();
+            }, 300);
+        }
+        
+        // Ẩn form nhập liệu
+        function hideInputForm() {
+            document.getElementById('inputFormModal').classList.remove('active');
+        }
+        
+        // Tạo ID mới (tự động tăng)
+        function generateNewId() {
+            if (!currentRows || currentRows.length === 0) {
+                document.getElementById('inputId').value = "1";
+                return;
+            }
+            
+            // Tìm ID lớn nhất hiện có
+            let maxId = 0;
+            for (let i = Math.max(START_ROW - 1, 0); i < currentRows.length; i++) {
+                const row = currentRows[i];
+                if (row && row.length > 0 && row[0]) {
+                    const id = parseInt(row[0]);
+                    if (!isNaN(id) && id > maxId) {
+                        maxId = id;
+                    }
+                }
+            }
+            
+            document.getElementById('inputId').value = (maxId + 1).toString();
+        }
+        
+        // Bật/tắt ô nhập liệu cho công nhân
+        function toggleWorkerInput(worker) {
+            const checkbox = document.getElementById(`check${worker}`);
+            const input = document.getElementById(`input${worker}`);
+            
+            if (checkbox.checked) {
+                input.disabled = false;
+                input.value = '';
+                input.focus();
+            } else {
+                input.disabled = true;
+                input.value = '0';
+            }
+            
+            calculateWorkerTotal();
+        }
+        
+        // Tính tổng tiền công đã phân bổ
+        function calculateWorkerTotal() {
+            const workers = ['Trieu', 'Teo', 'Thien', 'Thuan'];
+            let total = 0;
+            
+            workers.forEach(worker => {
+                const checkbox = document.getElementById(`check${worker}`);
+                if (checkbox.checked) {
+                    const input = document.getElementById(`input${worker}`);
+                    total += parseFloat(input.value) || 0;
+                }
+            });
+            
+            document.getElementById('totalWorkerAmount').textContent = formatCurrency(total);
+            
+            // Kiểm tra xem tổng tiền công phân bổ có bằng tổng tiền công không
+            const tienCong = parseFloat(document.getElementById('inputTienCong').value) || 0;
+            const errorElement = document.getElementById('errorWorkerAmount');
+            
+            if (Math.abs(total - tienCong) > 100) { // Cho phép sai số nhỏ
+                errorElement.style.display = 'block';
+            } else {
+                errorElement.style.display = 'none';
+            }
+            
+            return total;
+        }
+        
+        // Tính tổng chi phí
+        function calculateTotalAmount() {
+            const phiVatTu = parseFloat(document.getElementById('inputPhiVatTu').value) || 0;
+            const tienCong = parseFloat(document.getElementById('inputTienCong').value) || 0;
+            const total = phiVatTu + tienCong;
+            
+            document.getElementById('inputTongCong').value = formatCurrency(total);
+            
+            // Cập nhật tổng tiền công phân bổ
+            calculateWorkerTotal();
+            
+            return total;
+        }
+        
+        // Xóa form
+        function clearForm() {
+            document.getElementById('dataInputForm').reset();
+            
+            // Reset các ô input công nhân
+            ['Trieu', 'Teo', 'Thien', 'Thuan'].forEach(worker => {
+                document.getElementById(`input${worker}`).value = '0';
+                document.getElementById(`input${worker}`).disabled = true;
+                document.getElementById(`check${worker}`).checked = false;
+            });
+            
+            // Đặt lại ngày là hôm nay
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('inputNgay').value = today;
+            
+            // Tạo ID mới
+            generateNewId();
+            
+            // Tính lại tổng
+            calculateTotalAmount();
+            
+            // Xóa thông báo lỗi
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+            });
+        }
+        
+        // Kiểm tra dữ liệu nhập
+        function validateForm() {
+            let isValid = true;
+            
+            // Kiểm tra ngày
+            const ngay = document.getElementById('inputNgay').value;
+            if (!ngay) {
+                document.getElementById('errorNgay').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('errorNgay').classList.remove('show');
+            }
+            
+            // Kiểm tra nội dung
+            const noiDung = document.getElementById('inputNoiDung').value.trim();
+            if (!noiDung) {
+                document.getElementById('errorNoiDung').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('errorNoiDung').classList.remove('show');
+            }
+            
+            // Kiểm tra tổng tiền công phân bổ
+            const tienCong = parseFloat(document.getElementById('inputTienCong').value) || 0;
+            const workerTotal = calculateWorkerTotal();
+            
+            if (tienCong > 0 && Math.abs(workerTotal - tienCong) > 100) {
+                document.getElementById('errorWorkerAmount').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('errorWorkerAmount').style.display = 'none';
+            }
+            
+            return isValid;
+        }
+        
+        // Lưu dữ liệu
+        async function saveData() {
+            try {
+                // Kiểm tra dữ liệu
+                if (!validateForm()) {
+                    alert('Vui lòng kiểm tra lại thông tin nhập!');
+                    return;
+                }
+                
+                // Hiển thị thông báo đang lưu
+                const saveButton = document.querySelector('.btn-success');
+                const originalText = saveButton.innerHTML;
+                saveButton.innerHTML = '⏳ Đang lưu...';
+                saveButton.disabled = true;
+                
+                // Lấy dữ liệu từ form
+                const formData = {
+                    id: document.getElementById('inputId').value,
+                    ngay: document.getElementById('inputNgay').value,
+                    noiDung: document.getElementById('inputNoiDung').value.trim(),
+                    phiVatTu: parseFloat(document.getElementById('inputPhiVatTu').value) || 0,
+                    tienCong: parseFloat(document.getElementById('inputTienCong').value) || 0,
+                    ghiChu: document.getElementById('inputGhiChu').value.trim(),
+                    trieu: document.getElementById('checkTrieu').checked ? 
+                           (parseFloat(document.getElementById('inputTrieu').value) || 0) : 0,
+                    teo: document.getElementById('checkTeo').checked ? 
+                         (parseFloat(document.getElementById('inputTeo').value) || 0) : 0,
+                    thien: document.getElementById('checkThien').checked ? 
+                           (parseFloat(document.getElementById('inputThien').value) || 0) : 0,
+                    thuan: document.getElementById('checkThuan').checked ? 
+                           (parseFloat(document.getElementById('inputThuan').value) || 0) : 0
+                };
+                
+                // Định dạng ngày theo dd/mm/yyyy
+                const dateObj = new Date(formData.ngay);
+                const formattedDate = `${dateObj.getDate().toString().padStart(2, '0')}/` +
+                                     `${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/` +
+                                     `${dateObj.getFullYear()}`;
+                
+                // Tạo dòng dữ liệu
+                const rowData = [
+                    formData.id,
+                    formattedDate,
+                    formData.noiDung,
+                    formData.phiVatTu.toString(),
+                    formData.tienCong.toString(),
+                    formData.ghiChu,
+                    formData.trieu.toString(),
+                    formData.teo.toString(),
+                    formData.thien.toString(),
+                    formData.thuan.toString()
+                ];
+                
+                // Lưu vào localStorage
+                saveToLocalStorage(rowData);
+                
+                // Thêm vào dữ liệu hiện tại
+                currentRows.push(rowData);
+                
+                // Thành công
+                alert('✅ Dữ liệu đã được lưu thành công vào bộ nhớ tạm!');
+                
+                // Đóng form
+                hideInputForm();
+                
+                // Cập nhật lại dữ liệu
+                setTimeout(() => {
+                    loadData();
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Lỗi khi lưu dữ liệu:', error);
+                alert('❌ Có lỗi xảy ra khi lưu dữ liệu: ' + error.message);
+            } finally {
+                // Khôi phục trạng thái nút
+                const saveButton = document.querySelector('.btn-success');
+                saveButton.innerHTML = '💾 Lưu dữ liệu';
+                saveButton.disabled = false;
+            }
+        }
+        
+        // Lưu vào localStorage
+        function saveToLocalStorage(rowData) {
+            try {
+                // Lấy dữ liệu hiện có từ localStorage
+                const localStorageData = JSON.parse(localStorage.getItem('chiPhiLamVuon') || '[]');
+                
+                // Thêm dữ liệu mới
+                localStorageData.push({
+                    id: rowData[0],
+                    ngay: rowData[1],
+                    noiDung: rowData[2],
+                    phiVatTu: rowData[3],
+                    tienCong: rowData[4],
+                    ghiChu: rowData[5],
+                    trieu: rowData[6],
+                    teo: rowData[7],
+                    thien: rowData[8],
+                    thuan: rowData[9],
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Lưu lại vào localStorage
+                localStorage.setItem('chiPhiLamVuon', JSON.stringify(localStorageData));
+                
+                console.log('✅ Đã lưu dữ liệu vào localStorage:', localStorageData.length, 'bản ghi');
+                
+                return true;
+                
+            } catch (error) {
+                console.error('Lỗi khi lưu vào localStorage:', error);
+                return false;
+            }
+        }
         
         // ============================
         // KHỞI TẠO HỆ THỐNG
@@ -809,7 +988,7 @@
             // Cập nhật thông tin hiển thị
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
-            document.getElementById('sheetIdDisplay').textContent = SHEET_ID;
+            document.getElementById('dataMode').textContent = 'Dữ liệu mẫu';
             
             // Cập nhật thời gian thực
             updateCurrentTime();
@@ -824,7 +1003,43 @@
             // Bắt đầu tự động cập nhật
             startAutoUpdate();
             
+            // Thêm event listener cho các ô nhập số tiền
+            setupFormListeners();
+            
             console.log('✅ Hệ thống đã được khởi tạo');
+        }
+        
+        // Thiết lập event listener cho form
+        function setupFormListeners() {
+            // Tự động tính tổng khi thay đổi phí vật tư hoặc tiền công
+            document.getElementById('inputPhiVatTu').addEventListener('input', calculateTotalAmount);
+            document.getElementById('inputTienCong').addEventListener('input', calculateTotalAmount);
+            
+            // Tự động tính tổng tiền công phân bổ
+            document.querySelectorAll('.worker-input').forEach(input => {
+                input.addEventListener('input', calculateWorkerTotal);
+            });
+            
+            // Định dạng số tiền khi mất focus
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value) {
+                        const num = parseFloat(this.value);
+                        if (!isNaN(num)) {
+                            this.value = num.toLocaleString('vi-VN');
+                        }
+                    }
+                });
+                
+                input.addEventListener('focus', function() {
+                    if (this.value) {
+                        const num = parseFloat(this.value.replace(/\./g, ''));
+                        if (!isNaN(num)) {
+                            this.value = num;
+                        }
+                    }
+                });
+            });
         }
         
         // Cập nhật thời gian hiện tại
@@ -875,96 +1090,186 @@
         }
         
         // ============================
-        // XỬ LÝ DỮ LIỆU - SỬ DỤNG GOOGLE SHEETS API V4
+        // XỬ LÝ DỮ LIỆU
         // ============================
         
-        // Tải dữ liệu từ Google Sheet
+        // Tải dữ liệu
         async function loadData() {
             try {
-                console.log('📥 Đang tải dữ liệu từ Google Sheet...');
+                console.log('📥 Đang tải dữ liệu...');
                 
                 document.getElementById('connectionStatus').textContent = '🔄 Đang tải dữ liệu...';
                 document.getElementById('connectionStatus').style.color = '#FF9800';
                 document.getElementById('debugInfo').style.display = 'block';
-                document.getElementById('debugInfo').innerHTML = '<small>Đang kết nối với Google Sheets API...</small>';
+                document.getElementById('debugInfo').innerHTML = '<small>Đang kết nối...</small>';
                 
-                // PHƯƠNG PHÁP 1: Sử dụng Google Sheets API v4
-                try {
-                    const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+                // Thử kết nối với Google Sheet
+                const googleData = await tryGoogleSheetConnection();
+                
+                if (googleData.success) {
+                    // Sử dụng dữ liệu từ Google Sheet
+                    currentRows = googleData.data;
+                    document.getElementById('connectionStatus').textContent = '✅ Kết nối thành công';
+                    document.getElementById('connectionStatus').style.color = '#4CAF50';
+                    document.getElementById('dataMode').textContent = 'Dữ liệu Google Sheet';
+                } else {
+                    // Sử dụng dữ liệu từ localStorage
+                    const localStorageData = getDataFromLocalStorage();
                     
-                    document.getElementById('debugInfo').innerHTML = `<small>Đang gọi API: ${apiUrl.substring(0, 50)}...</small>`;
-                    
-                    const response = await fetch(apiUrl);
-                    
-                    if (!response.ok) {
-                        throw new Error(`API Error: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    
-                    if (data.values && data.values.length > 0) {
-                        currentRows = data.values;
-                        processDataSuccess();
-                        return;
+                    if (localStorageData.length > 0) {
+                        // Tạo header cho dữ liệu
+                        currentRows = [
+                            ["ID", "Ngày", "Nội dung", "Phí vật tư", "Tiền công", "Ghi chú", "Triều", "Tèo", "Thiện", "Thuận"]
+                        ];
+                        
+                        // Thêm dữ liệu từ localStorage
+                        localStorageData.forEach(item => {
+                            currentRows.push([
+                                item.id,
+                                item.ngay,
+                                item.noiDung,
+                                item.phiVatTu,
+                                item.tienCong,
+                                item.ghiChu || '',
+                                item.trieu,
+                                item.teo,
+                                item.thien,
+                                item.thuan
+                            ]);
+                        });
+                        
+                        document.getElementById('connectionStatus').textContent = '⚠️ Đang sử dụng dữ liệu đã lưu';
+                        document.getElementById('connectionStatus').style.color = '#FF9800';
+                        document.getElementById('dataMode').textContent = `Dữ liệu đã lưu (${localStorageData.length} bản ghi)`;
+                        document.getElementById('debugInfo').innerHTML = `<small>Sử dụng dữ liệu từ bộ nhớ tạm: ${localStorageData.length} bản ghi</small>`;
                     } else {
-                        throw new Error('Sheet trống hoặc không có dữ liệu');
-                    }
-                    
-                } catch (apiError) {
-                    console.log('API method failed, trying CSV method...', apiError);
-                    
-                    // PHƯƠNG PHÁP 2: Sử dụng CSV export
-                    try {
-                        const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
-                        document.getElementById('debugInfo').innerHTML = `<small>Đang thử CSV: ${csvUrl.substring(0, 50)}...</small>`;
-                        
-                        const response = await fetch(csvUrl);
-                        
-                        if (!response.ok) {
-                            throw new Error(`CSV Error: ${response.status}`);
-                        }
-                        
-                        const csvText = await response.text();
-                        currentRows = parseCSV(csvText);
-                        processDataSuccess();
-                        
-                    } catch (csvError) {
-                        console.log('CSV method failed, trying public access...', csvError);
-                        
-                        // PHƯƠNG PHÁP 3: Public access
-                        try {
-                            const publicUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv`;
-                            document.getElementById('debugInfo').innerHTML = `<small>Đang thử public access...</small>`;
-                            
-                            const response = await fetch(publicUrl);
-                            
-                            if (!response.ok) {
-                                throw new Error(`Public Error: ${response.status}`);
-                            }
-                            
-                            const csvText = await response.text();
-                            currentRows = parseCSV(csvText);
-                            processDataSuccess();
-                            
-                        } catch (publicError) {
-                            console.log('All methods failed:', publicError);
-                            throw new Error('Không thể kết nối với Google Sheet');
-                        }
+                        // Sử dụng dữ liệu mẫu
+                        showSampleData();
+                        document.getElementById('connectionStatus').textContent = '⚠️ Đang sử dụng dữ liệu mẫu';
+                        document.getElementById('connectionStatus').style.color = '#FF9800';
+                        document.getElementById('dataMode').textContent = 'Dữ liệu mẫu';
+                        document.getElementById('debugInfo').innerHTML = '<small>Sử dụng dữ liệu mẫu</small>';
                     }
                 }
+                
+                // Xử lý dữ liệu thành công
+                processDataSuccess();
                 
             } catch (error) {
                 console.error('❌ Lỗi khi tải dữ liệu:', error);
                 
-                // Hiển thị dữ liệu mẫu để kiểm tra
+                // Sử dụng dữ liệu mẫu
                 showSampleData();
                 
-                document.getElementById('connectionStatus').textContent = '⚠️ Đang sử dụng dữ liệu mẫu';
-                document.getElementById('connectionStatus').style.color = '#FF9800';
+                document.getElementById('connectionStatus').textContent = '❌ Lỗi kết nối';
+                document.getElementById('connectionStatus').style.color = '#f44336';
                 document.getElementById('debugInfo').innerHTML = `<small>Lỗi: ${error.message}. Đang dùng dữ liệu mẫu.</small>`;
                 
                 // Thử lại sau 30 giây
                 setTimeout(loadData, 30000);
+            }
+        }
+        
+        // Thử kết nối với Google Sheet
+        async function tryGoogleSheetConnection() {
+            try {
+                // Thử các phương pháp khác nhau để kết nối
+                const methods = [
+                    tryGoogleSheetsAPI,
+                    tryCSVExport,
+                    tryPublicAccess
+                ];
+                
+                for (const method of methods) {
+                    try {
+                        const result = await method();
+                        if (result.success) {
+                            return result;
+                        }
+                    } catch (error) {
+                        console.log(`Method failed: ${method.name}`, error);
+                        continue;
+                    }
+                }
+                
+                throw new Error('Tất cả phương pháp kết nối đều thất bại');
+                
+            } catch (error) {
+                return {
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+        
+        // Thử Google Sheets API
+        async function tryGoogleSheetsAPI() {
+            // Sử dụng API key công khai
+            const API_KEY = 'AIzaSyC9Jw2CTp7pdnc2j6nO3h0zY3lK6U2B1Y0';
+            const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+            
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.values && data.values.length > 0) {
+                return {
+                    success: true,
+                    data: data.values
+                };
+            } else {
+                throw new Error('Sheet trống hoặc không có dữ liệu');
+            }
+        }
+        
+        // Thử CSV export
+        async function tryCSVExport() {
+            const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+            const response = await fetch(csvUrl);
+            
+            if (!response.ok) {
+                throw new Error(`CSV Error: ${response.status}`);
+            }
+            
+            const csvText = await response.text();
+            const rows = parseCSV(csvText);
+            
+            return {
+                success: true,
+                data: rows
+            };
+        }
+        
+        // Thử public access
+        async function tryPublicAccess() {
+            const publicUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv`;
+            const response = await fetch(publicUrl);
+            
+            if (!response.ok) {
+                throw new Error(`Public Error: ${response.status}`);
+            }
+            
+            const csvText = await response.text();
+            const rows = parseCSV(csvText);
+            
+            return {
+                success: true,
+                data: rows
+            };
+        }
+        
+        // Lấy dữ liệu từ localStorage
+        function getDataFromLocalStorage() {
+            try {
+                const data = JSON.parse(localStorage.getItem('chiPhiLamVuon') || '[]');
+                return Array.isArray(data) ? data : [];
+            } catch (error) {
+                console.error('Lỗi khi đọc từ localStorage:', error);
+                return [];
             }
         }
         
@@ -981,11 +1286,6 @@
             // Tính toán và hiển thị tổng
             calculateAndDisplayTotals(currentRows);
             
-            // Cập nhật trạng thái
-            document.getElementById('connectionStatus').textContent = `✅ Đã tải ${currentRows.length} hàng`;
-            document.getElementById('connectionStatus').style.color = '#4CAF50';
-            document.getElementById('debugInfo').innerHTML = `<small>Thành công! ${currentRows.length} hàng dữ liệu.</small>`;
-            
             document.getElementById('lastUpdate').textContent = 
                 lastUpdateTime.toLocaleString('vi-VN', {
                     hour: '2-digit',
@@ -998,40 +1298,25 @@
                 displayDetailTable(currentRows);
             }
             
-            if (isChartVisible) {
-                updateCharts(currentRows);
-            }
-            
-            if (isSearchVisible) {
-                filterTable();
-            }
-            
-            if (isExportVisible) {
-                updateExportPreview();
-            }
-            
             console.log(`✅ Đã cập nhật dữ liệu lần ${updateCount} (${currentRows.length} hàng)`);
         }
         
-        // Hiển thị dữ liệu mẫu để kiểm tra
+        // Hiển thị dữ liệu mẫu
         function showSampleData() {
             currentRows = [
-                ["ID", "Ngày", "Nội dung", "Phí vật tư", "Tiền công", "", "Triều", "Tèo", "Thiện", "Thuận"],
-                ["Tiêu đề", "Date", "Description", "Material", "Labor", "", "Worker1", "Worker2", "Worker3", "Worker4"],
-                ["1", "01/01/2024", "Mua phân bón", "500000", "300000", "", "150000", "150000", "0", "0"],
-                ["2", "02/01/2024", "Thuê máy cày", "0", "1000000", "", "500000", "500000", "0", "0"],
-                ["3", "03/01/2024", "Mua cây giống", "800000", "200000", "", "100000", "100000", "0", "0"],
-                ["4", "04/01/2024", "Làm cỏ", "0", "600000", "", "200000", "200000", "200000", "0"],
-                ["5", "05/01/2024", "Tưới tiêu", "300000", "400000", "", "100000", "100000", "100000", "100000"]
+                ["ID", "Ngày", "Nội dung", "Phí vật tư", "Tiền công", "Ghi chú", "Triều", "Tèo", "Thiện", "Thuận"],
+                ["1", "01/01/2025", "Mua phân bón", "500000", "300000", "Mua tại cửa hàng A", "150000", "150000", "0", "0"],
+                ["2", "02/01/2025", "Thuê máy cày", "0", "1000000", "Thuê 1 ngày", "500000", "500000", "0", "0"],
+                ["3", "03/01/2025", "Mua cây giống", "800000", "200000", "Cây ăn quả", "100000", "100000", "0", "0"],
+                ["4", "05/01/2025", "Làm cỏ", "0", "600000", "Khu vực A", "200000", "200000", "200000", "0"],
+                ["5", "06/01/2025", "Tưới tiêu", "300000", "400000", "Lắp hệ thống", "100000", "100000", "100000", "100000"]
             ];
             
             calculateAndDisplayTotals(currentRows);
             
-            // Cập nhật các phần hiển thị
-            if (isDetailVisible) displayDetailTable(currentRows);
-            if (isChartVisible) updateCharts(currentRows);
-            if (isSearchVisible) filterTable();
-            if (isExportVisible) updateExportPreview();
+            if (isDetailVisible) {
+                displayDetailTable(currentRows);
+            }
         }
         
         // Phân tích CSV
@@ -1042,7 +1327,6 @@
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (line) {
-                    // Xử lý dấu ngoặc kép và dấu phẩy trong trường
                     const row = [];
                     let inQuotes = false;
                     let field = '';
@@ -1087,11 +1371,9 @@
             if (!value && value !== 0) return '0 ₫';
             
             if (typeof value === 'string') {
-                // Loại bỏ tất cả ký tự không phải số, trừ dấu chấm và dấu phẩy
                 const cleanValue = value.replace(/[^\d.,]/g, '');
                 if (!cleanValue) return '0 ₫';
                 
-                // Chuyển đổi sang số
                 const num = parseFloat(cleanValue.replace(/\./g, '').replace(',', '.'));
                 return isNaN(num) ? '0 ₫' : formatCurrency(num);
             }
@@ -1163,10 +1445,6 @@
             });
         }
         
-        // ============================
-        // CÁC CHỨC NĂNG HIỂN THỊ
-        // ============================
-        
         // Hiển thị/ẩn chi tiết
         function toggleDetail() {
             const detailSection = document.getElementById('detailSection');
@@ -1195,19 +1473,19 @@
             
             let html = `
                 <div style="overflow-x: auto;">
-                    <table>
+                    <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>ID</th>
-                                <th>Ngày</th>
-                                <th>Nội dung</th>
-                                <th>Phí vật tư</th>
-                                <th>Tiền công</th>
-                                <th>Triều</th>
-                                <th>Tèo</th>
-                                <th>Thiện</th>
-                                <th>Thuận</th>
+                            <tr style="background: linear-gradient(to right, #4caf50, #66bb6a); color: white;">
+                                <th style="padding: 15px; text-align: left;">STT</th>
+                                <th style="padding: 15px; text-align: left;">ID</th>
+                                <th style="padding: 15px; text-align: left;">Ngày</th>
+                                <th style="padding: 15px; text-align: left;">Nội dung</th>
+                                <th style="padding: 15px; text-align: left;">Phí vật tư</th>
+                                <th style="padding: 15px; text-align: left;">Tiền công</th>
+                                <th style="padding: 15px; text-align: left;">Triều</th>
+                                <th style="padding: 15px; text-align: left;">Tèo</th>
+                                <th style="padding: 15px; text-align: left;">Thiện</th>
+                                <th style="padding: 15px; text-align: left;">Thuận</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1221,17 +1499,17 @@
                     const rowNumber = i + 1;
                     
                     html += `
-                        <tr>
-                            <td>${rowNumber}</td>
-                            <td>${row[0] || ''}</td>
-                            <td>${row[1] || ''}</td>
-                            <td>${row[2] || ''}</td>
-                            <td>${displayAmount(row[3])}</td>
-                            <td>${displayAmount(row[4])}</td>
-                            <td>${row.length > 6 ? displayAmount(row[6]) : '0 ₫'}</td>
-                            <td>${row.length > 7 ? displayAmount(row[7]) : '0 ₫'}</td>
-                            <td>${row.length > 8 ? displayAmount(row[8]) : '0 ₫'}</td>
-                            <td>${row.length > 9 ? displayAmount(row[9]) : '0 ₫'}</td>
+                        <tr style="border-bottom: 1px solid #e0e0e0;">
+                            <td style="padding: 12px 15px;">${rowNumber}</td>
+                            <td style="padding: 12px 15px;">${row[0] || ''}</td>
+                            <td style="padding: 12px 15px;">${row[1] || ''}</td>
+                            <td style="padding: 12px 15px;">${row[2] || ''}</td>
+                            <td style="padding: 12px 15px;">${displayAmount(row[3])}</td>
+                            <td style="padding: 12px 15px;">${displayAmount(row[4])}</td>
+                            <td style="padding: 12px 15px;">${row.length > 6 ? displayAmount(row[6]) : '0 ₫'}</td>
+                            <td style="padding: 12px 15px;">${row.length > 7 ? displayAmount(row[7]) : '0 ₫'}</td>
+                            <td style="padding: 12px 15px;">${row.length > 8 ? displayAmount(row[8]) : '0 ₫'}</td>
+                            <td style="padding: 12px 15px;">${row.length > 9 ? displayAmount(row[9]) : '0 ₫'}</td>
                         </tr>
                     `;
                     displayedCount++;
@@ -1241,7 +1519,7 @@
             html += `
                         </tbody>
                     </table>
-                    <div class="data-info">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #4caf50;">
                         <p><strong>📈 Thống kê chi tiết:</strong></p>
                         <p>Tổng số hàng: ${displayedCount}</p>
                         <p>Thời gian: ${new Date().toLocaleTimeString('vi-VN')}</p>
@@ -1250,1016 +1528,14 @@
             `;
             
             detailContent.innerHTML = html;
-            document.getElementById('loadingDetail').style.display = 'none';
+            if (document.getElementById('loadingDetail')) {
+                document.getElementById('loadingDetail').style.display = 'none';
+            }
         }
         
-        // Hiển thị/ẩn biểu đồ
+        // Hiển thị/ẩn biểu đồ (tạm thời đơn giản)
         function toggleChartSection() {
-            const chartSection = document.getElementById('chartSection');
-            const sectionContent = chartSection.querySelector('.section-content');
-            const chartButton = document.getElementById('chartButtonText');
-            
-            isChartVisible = !isChartVisible;
-            
-            if (isChartVisible) {
-                sectionContent.classList.add('active');
-                chartButton.textContent = 'Ẩn biểu đồ';
-                updateCharts(currentRows);
-            } else {
-                sectionContent.classList.remove('active');
-                chartButton.textContent = '📊 Xem biểu đồ';
-            }
-        }
-        
-        // Cập nhật biểu đồ
-        function updateCharts(rows) {
-            if (!rows || rows.length === 0) {
-                // Hiển thị thông báo nếu không có dữ liệu
-                document.getElementById('costDistributionChart').parentElement.innerHTML = '<p class="no-results">Không có dữ liệu cho biểu đồ</p>';
-                document.getElementById('workerChart').parentElement.innerHTML = '<p class="no-results">Không có dữ liệu cho biểu đồ</p>';
-                document.getElementById('trendChart').parentElement.innerHTML = '<p class="no-results">Không có dữ liệu cho biểu đồ</p>';
-                return;
-            }
-            
-            // Xóa biểu đồ cũ
-            if (costChart) costChart.destroy();
-            if (workerChart) workerChart.destroy();
-            if (trendChart) trendChart.destroy();
-            
-            // Tạo biểu đồ mới
-            createCostDistributionChart(rows);
-            createWorkerChart(rows);
-            createTrendChart(rows);
-        }
-        
-        // Tạo biểu đồ phân bổ chi phí
-        function createCostDistributionChart(rows) {
-            const ctx = document.getElementById('costDistributionChart').getContext('2d');
-            
-            let totalVatTu = 0;
-            let totalTienCong = 0;
-            
-            for (let i = Math.max(START_ROW - 1, 0); i < rows.length; i++) {
-                const row = rows[i];
-                if (row && row.length >= 5) {
-                    totalVatTu += parseSheetNumber(row[3]);
-                    totalTienCong += parseSheetNumber(row[4]);
-                }
-            }
-            
-            const data = {
-                labels: ['Phí vật tư', 'Tiền công'],
-                datasets: [{
-                    data: [totalVatTu, totalTienCong],
-                    backgroundColor: ['#4CAF50', '#2196F3'],
-                    borderWidth: 2
-                }]
-            };
-            
-            costChart = new Chart(ctx, {
-                type: currentChartType,
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => `${context.label}: ${formatCurrency(context.raw)}`
-                            }
-                        }
-                    }
-                }
-            });
-            
-            // Tạo legend
-            document.getElementById('costChartLegend').innerHTML = `
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #4CAF50;"></div>
-                    <span>Phí vật tư: ${formatCurrency(totalVatTu)}</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #2196F3;"></div>
-                    <span>Tiền công: ${formatCurrency(totalTienCong)}</span>
-                </div>
-            `;
-        }
-        
-        // Tạo biểu đồ tiền công theo công nhân
-        function createWorkerChart(rows) {
-            const ctx = document.getElementById('workerChart').getContext('2d');
-            
-            const workerTotals = {
-                'Triều': 0,
-                'Tèo': 0,
-                'Thiện': 0,
-                'Thuận': 0
-            };
-            
-            for (let i = Math.max(START_ROW - 1, 0); i < rows.length; i++) {
-                const row = rows[i];
-                if (row && row.length >= 7) {
-                    if (row.length > 6) workerTotals['Triều'] += parseSheetNumber(row[6]);
-                    if (row.length > 7) workerTotals['Tèo'] += parseSheetNumber(row[7]);
-                    if (row.length > 8) workerTotals['Thiện'] += parseSheetNumber(row[8]);
-                    if (row.length > 9) workerTotals['Thuận'] += parseSheetNumber(row[9]);
-                }
-            }
-            
-            const data = {
-                labels: Object.keys(workerTotals),
-                datasets: [{
-                    label: 'Tiền công',
-                    data: Object.values(workerTotals),
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-                    borderWidth: 2
-                }]
-            };
-            
-            workerChart = new Chart(ctx, {
-                type: currentChartType === 'line' ? 'bar' : currentChartType,
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => `${context.label}: ${formatCurrency(context.raw)}`
-                            }
-                        }
-                    }
-                }
-            });
-            
-            // Tạo legend
-            let legendHtml = '';
-            Object.entries(workerTotals).forEach(([worker, total], index) => {
-                const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'];
-                legendHtml += `
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: ${colors[index]}"></div>
-                        <span>${worker}: ${formatCurrency(total)}</span>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('workerChartLegend').innerHTML = legendHtml;
-        }
-        
-        // Tạo biểu đồ xu hướng
-        function createTrendChart(rows) {
-            const ctx = document.getElementById('trendChart').getContext('2d');
-            
-            // Nhóm dữ liệu theo tháng
-            const monthlyData = {};
-            
-            for (let i = Math.max(START_ROW - 1, 0); i < rows.length; i++) {
-                const row = rows[i];
-                if (!row || row.length < 5) continue;
-                
-                const dateStr = row[1];
-                const vatTu = parseSheetNumber(row[3]);
-                const tienCong = parseSheetNumber(row[4]);
-                
-                if (dateStr) {
-                    const dateParts = dateStr.split('/');
-                    if (dateParts.length >= 2) {
-                        const month = parseInt(dateParts[1]);
-                        const year = dateParts.length === 3 ? dateParts[2] : new Date().getFullYear();
-                        const key = `Tháng ${month}/${year}`;
-                        
-                        if (!monthlyData[key]) {
-                            monthlyData[key] = { vatTu: 0, tienCong: 0 };
-                        }
-                        
-                        monthlyData[key].vatTu += vatTu;
-                        monthlyData[key].tienCong += tienCong;
-                    }
-                }
-            }
-            
-            // Sắp xếp theo thời gian
-            const sortedKeys = Object.keys(monthlyData).sort((a, b) => {
-                const [aMonth, aYear] = a.match(/\d+/g).map(Number);
-                const [bMonth, bYear] = b.match(/\d+/g).map(Number);
-                if (aYear !== bYear) return aYear - bYear;
-                return aMonth - bMonth;
-            });
-            
-            if (sortedKeys.length === 0) {
-                document.getElementById('trendChart').parentElement.innerHTML = '<p class="no-results">Không có dữ liệu theo thời gian</p>';
-                return;
-            }
-            
-            const labels = sortedKeys;
-            const vatTuData = sortedKeys.map(key => monthlyData[key].vatTu);
-            const tienCongData = sortedKeys.map(key => monthlyData[key].tienCong);
-            
-            trendChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Phí vật tư',
-                            data: vatTuData,
-                            borderColor: '#4CAF50',
-                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        },
-                        {
-                            label: 'Tiền công',
-                            data: tienCongData,
-                            borderColor: '#2196F3',
-                            backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top' }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: value => formatCurrency(value).replace('₫', '')
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Thay đổi loại biểu đồ
-        function changeChartType(type) {
-            currentChartType = type;
-            updateCharts(currentRows);
-        }
-        
-        // Hiển thị/ẩn phần tìm kiếm
-        function toggleSearchSection() {
-            const searchSection = document.getElementById('searchSection');
-            const sectionContent = searchSection.querySelector('.section-content');
-            const searchButton = document.getElementById('searchButtonText');
-            
-            isSearchVisible = !isSearchVisible;
-            
-            if (isSearchVisible) {
-                sectionContent.classList.add('active');
-                searchButton.textContent = 'Ẩn tìm kiếm';
-                filterTable();
-            } else {
-                sectionContent.classList.remove('active');
-                searchButton.textContent = '🔍 Tìm kiếm & Lọc';
-            }
-        }
-        
-        // Lọc bảng
-        function filterTable() {
-            if (!currentRows || currentRows.length === 0) return;
-            
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const category = document.getElementById('categoryFilter').value;
-            const worker = document.getElementById('workerFilter').value;
-            const amount = document.getElementById('amountFilter').value;
-            
-            const filtered = [];
-            
-            for (let i = Math.max(START_ROW - 1, 0); i < currentRows.length; i++) {
-                const row = currentRows[i];
-                if (!row || row.length < 5) continue;
-                
-                let match = true;
-                
-                // Lọc theo từ khóa
-                if (searchTerm) {
-                    const rowText = (row[0] + ' ' + row[1] + ' ' + row[2]).toLowerCase();
-                    if (!rowText.includes(searchTerm)) {
-                        match = false;
-                    }
-                }
-                
-                // Lọc theo danh mục
-                if (match && category) {
-                    const vatTu = parseSheetNumber(row[3]);
-                    const tienCong = parseSheetNumber(row[4]);
-                    
-                    if (category === 'vat_tu' && vatTu === 0) match = false;
-                    if (category === 'tien_cong' && tienCong === 0) match = false;
-                }
-                
-                // Lọc theo công nhân
-                if (match && worker) {
-                    let workerAmount = 0;
-                    switch(worker) {
-                        case 'Triều': workerAmount = row.length > 6 ? parseSheetNumber(row[6]) : 0; break;
-                        case 'Tèo': workerAmount = row.length > 7 ? parseSheetNumber(row[7]) : 0; break;
-                        case 'Thiện': workerAmount = row.length > 8 ? parseSheetNumber(row[8]) : 0; break;
-                        case 'Thuận': workerAmount = row.length > 9 ? parseSheetNumber(row[9]) : 0; break;
-                    }
-                    if (workerAmount === 0) match = false;
-                }
-                
-                // Lọc theo mức chi phí
-                if (match && amount) {
-                    const total = parseSheetNumber(row[3]) + parseSheetNumber(row[4]);
-                    
-                    switch(amount) {
-                        case '0-500000': if (total >= 500000) match = false; break;
-                        case '500000-1000000': if (total < 500000 || total >= 1000000) match = false; break;
-                        case '1000000-5000000': if (total < 1000000 || total >= 5000000) match = false; break;
-                        case '5000000+': if (total < 5000000) match = false; break;
-                    }
-                }
-                
-                if (match) {
-                    filtered.push({ index: i, row: row });
-                }
-            }
-            
-            currentFilteredRows = filtered;
-            displaySearchResults(filtered);
-        }
-        
-        // Hiển thị kết quả tìm kiếm
-        function displaySearchResults(filtered) {
-            const searchResults = document.getElementById('searchResults');
-            const resultsInfo = document.getElementById('searchResultsInfo');
-            const resultsCount = document.getElementById('resultsCount');
-            
-            if (filtered.length === 0) {
-                searchResults.innerHTML = '<div class="no-results">Không tìm thấy kết quả phù hợp</div>';
-                resultsInfo.style.display = 'none';
-                return;
-            }
-            
-            resultsInfo.style.display = 'flex';
-            resultsCount.textContent = `${filtered.length} kết quả`;
-            
-            let html = `
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>ID</th>
-                                <th>Ngày</th>
-                                <th>Nội dung</th>
-                                <th>Phí vật tư</th>
-                                <th>Tiền công</th>
-                                <th>Tổng</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            let totalVatTu = 0, totalTienCong = 0, totalAll = 0;
-            
-            filtered.forEach((item, idx) => {
-                const row = item.row;
-                const vatTu = parseSheetNumber(row[3]);
-                const tienCong = parseSheetNumber(row[4]);
-                const total = vatTu + tienCong;
-                
-                totalVatTu += vatTu;
-                totalTienCong += tienCong;
-                totalAll += total;
-                
-                html += `
-                    <tr>
-                        <td>${idx + 1}</td>
-                        <td>${row[0] || ''}</td>
-                        <td>${row[1] || ''}</td>
-                        <td>${row[2] || ''}</td>
-                        <td>${formatCurrency(vatTu)}</td>
-                        <td>${formatCurrency(tienCong)}</td>
-                        <td><strong>${formatCurrency(total)}</strong></td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                        </tbody>
-                        <tfoot style="background-color: #f5f5f5; font-weight: bold;">
-                            <tr>
-                                <td colspan="4" style="text-align: right;">Tổng (${filtered.length} hàng):</td>
-                                <td>${formatCurrency(totalVatTu)}</td>
-                                <td>${formatCurrency(totalTienCong)}</td>
-                                <td>${formatCurrency(totalAll)}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            `;
-            
-            searchResults.innerHTML = html;
-        }
-        
-        // Xóa tìm kiếm
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            filterTable();
-        }
-        
-        // Xóa tất cả bộ lọc
-        function clearAllFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('categoryFilter').value = '';
-            document.getElementById('workerFilter').value = '';
-            document.getElementById('amountFilter').value = '';
-            filterTable();
-        }
-        
-        // Hiển thị/ẩn phần xuất file
-        function toggleExportSection() {
-            const exportSection = document.getElementById('exportSection');
-            const sectionContent = exportSection.querySelector('.section-content');
-            const exportButton = document.getElementById('exportButtonText');
-            
-            isExportVisible = !isExportVisible;
-            
-            if (isExportVisible) {
-                sectionContent.classList.add('active');
-                exportButton.textContent = 'Ẩn xuất file';
-                updateExportPreview();
-            } else {
-                sectionContent.classList.remove('active');
-                exportButton.textContent = '📁 Xuất file';
-            }
-        }
-        
-        // Cập nhật preview xuất file
-        function updateExportPreview() {
-            const totalRows = Math.max(0, currentRows.length - START_ROW + 1);
-            document.getElementById('totalPreviewRows').textContent = totalRows;
-            
-            const previewBody = document.getElementById('exportPreviewBody');
-            
-            if (totalRows <= 0) {
-                previewBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Chưa có dữ liệu</td></tr>';
-                return;
-            }
-            
-            let html = '';
-            const limit = Math.min(5, totalRows);
-            
-            for (let i = 0; i < limit; i++) {
-                const rowIndex = START_ROW - 1 + i;
-                const row = currentRows[rowIndex];
-                if (row && row.length >= 5) {
-                    const vatTu = parseSheetNumber(row[3]);
-                    const tienCong = parseSheetNumber(row[4]);
-                    const total = vatTu + tienCong;
-                    
-                    html += `
-                        <tr>
-                            <td>${i + 1}</td>
-                            <td>${row[0] || ''}</td>
-                            <td>${row[1] || ''}</td>
-                            <td>${(row[2] || '').substring(0, 30)}${(row[2] || '').length > 30 ? '...' : ''}</td>
-                            <td>${formatCurrency(vatTu)}</td>
-                            <td>${formatCurrency(tienCong)}</td>
-                            <td>${formatCurrency(total)}</td>
-                        </tr>
-                    `;
-                }
-            }
-            
-            previewBody.innerHTML = html;
-        }
-        
-        // ============================
-        // HÀM XUẤT DỮ LIỆU
-        // ============================
-        
-        // Xuất toàn bộ dữ liệu
-        async function exportAllData() {
-            try {
-                if (!currentRows || currentRows.length === 0) {
-                    alert('Không có dữ liệu để xuất');
-                    return;
-                }
-                
-                showExportProgress();
-                updateExportProgress(10, 'Đang chuẩn bị dữ liệu...');
-                
-                // Tạo dữ liệu cho Excel
-                const data = [
-                    ['STT', 'ID', 'Ngày', 'Nội dung', 'Phí vật tư', 'Tiền công', 'Triều', 'Tèo', 'Thiện', 'Thuận', 'Tổng']
-                ];
-                
-                updateExportProgress(30, 'Đang xử lý dữ liệu...');
-                
-                let totalVatTu = 0, totalTienCong = 0, totalAll = 0;
-                let idx = 0;
-                
-                for (let i = Math.max(START_ROW - 1, 0); i < currentRows.length; i++) {
-                    const row = currentRows[i];
-                    if (row && row.length >= 5) {
-                        idx++;
-                        const vatTu = parseSheetNumber(row[3]);
-                        const tienCong = parseSheetNumber(row[4]);
-                        const total = vatTu + tienCong;
-                        
-                        totalVatTu += vatTu;
-                        totalTienCong += tienCong;
-                        totalAll += total;
-                        
-                        data.push([
-                            idx,
-                            row[0] || '',
-                            row[1] || '',
-                            row[2] || '',
-                            vatTu,
-                            tienCong,
-                            row.length > 6 ? parseSheetNumber(row[6]) : 0,
-                            row.length > 7 ? parseSheetNumber(row[7]) : 0,
-                            row.length > 8 ? parseSheetNumber(row[8]) : 0,
-                            row.length > 9 ? parseSheetNumber(row[9]) : 0,
-                            total
-                        ]);
-                    }
-                }
-                
-                // Thêm tổng kết
-                data.push([]);
-                data.push(['TỔNG KẾT', '', '', '', '', '', '', '', '', '', '']);
-                data.push(['Tổng phí vật tư:', '', '', '', totalVatTu, '', '', '', '', '', '']);
-                data.push(['Tổng tiền công:', '', '', '', '', totalTienCong, '', '', '', '', '']);
-                data.push(['Tổng chi phí:', '', '', '', '', '', '', '', '', '', totalAll]);
-                
-                updateExportProgress(70, 'Đang tạo file Excel...');
-                
-                // Tạo workbook
-                const ws = XLSX.utils.aoa_to_sheet(data);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Chi phí làm vườn");
-                
-                updateExportProgress(90, 'Đang tải file xuống...');
-                
-                // Xuất file
-                const fileName = `Chi_phi_lam_vuon_${new Date().toISOString().slice(0,10)}.xlsx`;
-                XLSX.writeFile(wb, fileName);
-                
-                updateExportProgress(100, 'Xuất file thành công!');
-                setTimeout(hideExportProgress, 1000);
-                
-            } catch (error) {
-                console.error('Lỗi khi xuất Excel:', error);
-                alert('Có lỗi xảy ra khi xuất file');
-                hideExportProgress();
-            }
-        }
-        
-        // HÀM XUẤT PDF CHUYÊN NGHIỆP
-        async function exportSummaryReport() {
-            try {
-                if (!currentRows || currentRows.length === 0) {
-                    alert('Không có dữ liệu để xuất');
-                    return;
-                }
-                
-                showExportProgress();
-                updateExportProgress(10, 'Đang chuẩn bị dữ liệu...');
-                
-                // Lấy dữ liệu để tính toán
-                let totalVatTu = 0, totalTienCong = 0, totalAll = 0;
-                let dataCount = 0;
-                
-                for (let i = Math.max(START_ROW - 1, 0); i < currentRows.length; i++) {
-                    const row = currentRows[i];
-                    if (row && row.length >= 5) {
-                        dataCount++;
-                        totalVatTu += parseSheetNumber(row[3]);
-                        totalTienCong += parseSheetNumber(row[4]);
-                    }
-                }
-                
-                totalAll = totalVatTu + totalTienCong;
-                
-                // Tính tỷ lệ phần trăm
-                const percentVatTu = totalAll > 0 ? ((totalVatTu / totalAll) * 100).toFixed(1) : '0.0';
-                const percentTienCong = totalAll > 0 ? ((totalTienCong / totalAll) * 100).toFixed(1) : '0.0';
-                const avgCostPerItem = dataCount > 0 ? formatCurrency(totalAll / dataCount) : formatCurrency(0);
-                
-                updateExportProgress(30, 'Đang tạo nội dung báo cáo...');
-                
-                const now = new Date();
-                const formattedDate = now.toLocaleDateString('vi-VN');
-                const formattedTime = now.toLocaleTimeString('vi-VN');
-                
-                // Tạo một div tạm để chứa nội dung PDF
-                const pdfContainer = document.createElement('div');
-                pdfContainer.id = 'pdf-temp-container';
-                pdfContainer.style.cssText = `
-                    position: fixed;
-                    left: 0;
-                    top: 0;
-                    width: 800px;
-                    min-height: 1123px;
-                    background: white;
-                    padding: 40px;
-                    font-family: 'Arial', sans-serif;
-                    color: #000;
-                    z-index: 9999;
-                    transform: translateX(-100%);
-                    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-                `;
-                
-                // Tạo nội dung HTML cho PDF
-                pdfContainer.innerHTML = `
-                    <div id="pdf-content" style="font-family: 'Arial', sans-serif;">
-                        <!-- Header -->
-                        <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2e7d32; padding-bottom: 20px;">
-                            <h1 style="color: #2e7d32; font-size: 24px; margin-bottom: 10px; font-weight: bold;">BÁO CÁO CHI PHÍ LÀM VƯỜN</h1>
-                            <p style="font-size: 14px; color: #666;">Hệ thống quản lý và theo dõi chi phí tự động cập nhật</p>
-                            <p style="font-size: 12px; color: #888;">Ngày xuất: ${formattedDate} ${formattedTime}</p>
-                        </div>
-                        
-                        <!-- Thông tin hệ thống -->
-                        <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;">
-                            <h2 style="color: #2e7d32; font-size: 16px; margin-bottom: 15px; font-weight: bold;">📊 THÔNG TIN HỆ THỐNG</h2>
-                            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                                <tr>
-                                    <td style="padding: 10px 0; border-bottom: 1px solid #ddd; width: 40%;"><strong>Tổng số hạng mục:</strong></td>
-                                    <td style="padding: 10px 0; border-bottom: 1px solid #ddd;">${dataCount}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 0; border-bottom: 1px solid #ddd;"><strong>Tổng chi phí:</strong></td>
-                                    <td style="padding: 10px 0; border-bottom: 1px solid #ddd; color: #d32f2f; font-weight: bold;">${formatCurrency(totalAll)}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 0; border-bottom: 1px solid #ddd;"><strong>Phí vật tư:</strong></td>
-                                    <td style="padding: 10px 0; border-bottom: 1px solid #ddd;">${formatCurrency(totalVatTu)}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 0; border-bottom: 1px solid #ddd;"><strong>Tiền công:</strong></td>
-                                    <td style="padding: 10px 0; border-bottom: 1px solid #ddd;">${formatCurrency(totalTienCong)}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 0;"><strong>Lần cập nhật cuối:</strong></td>
-                                    <td style="padding: 10px 0;">${lastUpdateTime ? lastUpdateTime.toLocaleString('vi-VN') : 'Chưa cập nhật'}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        
-                        <!-- Phân bổ chi phí -->
-                        <div style="margin-bottom: 30px;">
-                            <h2 style="color: #2e7d32; font-size: 16px; margin-bottom: 15px; font-weight: bold;">📈 PHÂN BỔ CHI PHÍ</h2>
-                            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
-                                <div style="text-align: center; padding: 15px; background: #e8f5e9; border-radius: 8px; width: 45%; border: 1px solid #4CAF50;">
-                                    <div style="font-size: 20px; color: #2e7d32; font-weight: bold;">${formatCurrency(totalVatTu)}</div>
-                                    <div style="font-size: 14px; color: #666;">Phí vật tư</div>
-                                    <div style="font-size: 12px; color: #4CAF50; margin-top: 5px; font-weight: bold;">${percentVatTu}%</div>
-                                </div>
-                                <div style="text-align: center; padding: 15px; background: #e3f2fd; border-radius: 8px; width: 45%; border: 1px solid #2196F3;">
-                                    <div style="font-size: 20px; color: #1565c0; font-weight: bold;">${formatCurrency(totalTienCong)}</div>
-                                    <div style="font-size: 14px; color: #666;">Tiền công</div>
-                                    <div style="font-size: 12px; color: #2196F3; margin-top: 5px; font-weight: bold;">${percentTienCong}%</div>
-                                </div>
-                            </div>
-                        </div>
-                `;
-                
-                // Thêm bảng dữ liệu mẫu nếu có dữ liệu
-                if (dataCount > 0) {
-                    // Thêm dữ liệu mẫu
-                    const sampleCount = Math.min(10, dataCount);
-                    let sampleDataHTML = '';
-                    for (let i = 0; i < sampleCount; i++) {
-                        const rowIndex = START_ROW - 1 + i;
-                        if (rowIndex < currentRows.length) {
-                            const row = currentRows[rowIndex];
-                            if (row && row.length >= 5) {
-                                const vatTu = parseSheetNumber(row[3]);
-                                const tienCong = parseSheetNumber(row[4]);
-                                const total = vatTu + tienCong;
-                                
-                                sampleDataHTML += `
-                                    <tr style="${i % 2 === 0 ? 'background: #f9f9f9;' : ''}">
-                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">${i + 1}</td>
-                                        <td style="padding: 6px; border: 1px solid #ddd;">${row[1] || ''}</td>
-                                        <td style="padding: 6px; border: 1px solid #ddd;">${(row[2] || '').substring(0, 40)}${(row[2] || '').length > 40 ? '...' : ''}</td>
-                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${formatCurrency(vatTu)}</td>
-                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: right;">${formatCurrency(tienCong)}</td>
-                                        <td style="padding: 6px; border: 1px solid #ddd; text-align: right; font-weight: bold;">${formatCurrency(total)}</td>
-                                    </tr>
-                                `;
-                            }
-                        }
-                    }
-                    
-                    pdfContainer.innerHTML += `
-                        <!-- Bảng dữ liệu mẫu -->
-                        <div style="margin-bottom: 30px;">
-                            <h2 style="color: #2e7d32; font-size: 16px; margin-bottom: 15px; font-weight: bold;">📋 DỮ LIỆU MẪU (${sampleCount} HÀNG ĐẦU)</h2>
-                            <div style="overflow-x: auto;">
-                                <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; font-size: 12px; min-width: 720px;">
-                                    <thead>
-                                        <tr style="background: #2e7d32; color: white;">
-                                            <th style="padding: 8px; border: 1px solid #ddd; text-align: center;">STT</th>
-                                            <th style="padding: 8px; border: 1px solid #ddd;">Ngày</th>
-                                            <th style="padding: 8px; border: 1px solid #ddd;">Nội dung</th>
-                                            <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Phí vật tư</th>
-                                            <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Tiền công</th>
-                                            <th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Tổng</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${sampleDataHTML}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p style="font-size: 11px; color: #666; margin-top: 10px; text-align: center;">
-                                Hiển thị ${sampleCount} trong tổng số ${dataCount} hạng mục
-                            </p>
-                        </div>
-                    `;
-                }
-                
-                pdfContainer.innerHTML += `
-                        <!-- Phân tích chi tiết -->
-                        <div style="margin-bottom: 30px; padding: 20px; background: #fff8e1; border-radius: 8px; border: 1px solid #ffd54f;">
-                            <h2 style="color: #2e7d32; font-size: 16px; margin-bottom: 15px; font-weight: bold;">📊 PHÂN TÍCH CHI TIẾT</h2>
-                            <div style="font-size: 13px;">
-                                <p>• <strong>Tỷ lệ phân bổ:</strong> Phí vật tư chiếm <strong>${percentVatTu}%</strong>, Tiền công chiếm <strong>${percentTienCong}%</strong> tổng chi phí.</p>
-                                <p>• <strong>Chi phí trung bình:</strong> ${avgCostPerItem} / hạng mục.</p>
-                                <p>• <strong>Thời gian cập nhật:</strong> Hệ thống tự động cập nhật mỗi 3 phút.</p>
-                                <p>• <strong>Tổng số hạng mục:</strong> ${dataCount} hạng mục được ghi nhận.</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Footer -->
-                        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 11px;">
-                            <p>Hệ thống quản lý chi phí làm vườn &copy; ${new Date().getFullYear()}</p>
-                            <p style="margin-top: 5px;">Google Sheet ID: ${SHEET_ID} | Tên sheet: ${SHEET_NAME}</p>
-                            <p style="margin-top: 5px;">Báo cáo được tạo tự động - Trang 1/1</p>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(pdfContainer);
-                
-                updateExportProgress(50, 'Đang tạo PDF...');
-                
-                // Chờ DOM render xong
-                setTimeout(() => {
-                    // Sử dụng html2canvas để chụp nội dung
-                    html2canvas(pdfContainer, {
-                        scale: 2,
-                        useCORS: true,
-                        logging: false,
-                        backgroundColor: '#ffffff',
-                        allowTaint: true
-                    }).then(canvas => {
-                        updateExportProgress(80, 'Đang xử lý hình ảnh...');
-                        
-                        const { jsPDF } = window.jspdf;
-                        const doc = new jsPDF({
-                            orientation: 'portrait',
-                            unit: 'mm',
-                            format: 'a4'
-                        });
-                        
-                        // Thêm hình ảnh vào PDF
-                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                        const imgWidth = 190; // mm cho A4 (210mm - margin 20mm)
-                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                        
-                        // Thêm hình ảnh vào trang đầu
-                        doc.addImage(imgData, 'JPEG', 10, 10, imgWidth, imgHeight);
-                        
-                        updateExportProgress(95, 'Đang lưu file...');
-                        
-                        // Lưu file
-                        const fileName = `Bao_cao_chi_phi_lam_vuon_${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}.pdf`;
-                        doc.save(fileName);
-                        
-                        // Dọn dẹp
-                        setTimeout(() => {
-                            if (pdfContainer.parentNode) {
-                                document.body.removeChild(pdfContainer);
-                            }
-                        }, 1000);
-                        
-                        updateExportProgress(100, 'Xuất PDF thành công!');
-                        setTimeout(hideExportProgress, 1000);
-                        
-                    }).catch(error => {
-                        console.error('Lỗi khi tạo canvas:', error);
-                        // Fallback: tạo PDF cơ bản
-                        createBasicPDF();
-                        if (pdfContainer.parentNode) {
-                            document.body.removeChild(pdfContainer);
-                        }
-                    });
-                    
-                }, 1000);
-                
-            } catch (error) {
-                console.error('Lỗi khi xuất PDF:', error);
-                alert('Có lỗi xảy ra khi xuất PDF: ' + error.message);
-                hideExportProgress();
-                
-                // Xóa container nếu tồn tại
-                const existingContainer = document.getElementById('pdf-temp-container');
-                if (existingContainer && existingContainer.parentNode) {
-                    document.body.removeChild(existingContainer);
-                }
-            }
-        }
-        
-        // Hàm tạo PDF cơ bản (fallback)
-        function createBasicPDF() {
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                
-                // Tính tổng
-                let totalVatTu = 0, totalTienCong = 0, totalAll = 0;
-                let dataCount = 0;
-                
-                for (let i = Math.max(START_ROW - 1, 0); i < currentRows.length; i++) {
-                    const row = currentRows[i];
-                    if (row && row.length >= 5) {
-                        dataCount++;
-                        totalVatTu += parseSheetNumber(row[3]);
-                        totalTienCong += parseSheetNumber(row[4]);
-                    }
-                }
-                
-                totalAll = totalVatTu + totalTienCong;
-                const percentVatTu = totalAll > 0 ? ((totalVatTu / totalAll) * 100).toFixed(1) : '0.0';
-                const percentTienCong = totalAll > 0 ? ((totalTienCong / totalAll) * 100).toFixed(1) : '0.0';
-                const now = new Date();
-                
-                // Tiêu đề
-                doc.setFontSize(16);
-                doc.setFont('helvetica', 'bold');
-                doc.text('BÁO CÁO CHI PHÍ LÀM VƯỜN', 105, 15, { align: 'center' });
-                
-                doc.setFontSize(10);
-                doc.setFont('helvetica', 'normal');
-                doc.text(`Ngày xuất: ${now.toLocaleDateString('vi-VN')} ${now.toLocaleTimeString('vi-VN')}`, 105, 22, { align: 'center' });
-                
-                // Thông tin tổng quan
-                doc.setFontSize(12);
-                doc.setFont('helvetica', 'bold');
-                doc.text('THÔNG TIN TỔNG QUAN', 20, 35);
-                
-                doc.setFontSize(10);
-                doc.setFont('helvetica', 'normal');
-                doc.text(`Tổng số hạng mục: ${dataCount}`, 20, 45);
-                doc.text(`Tổng chi phí: ${formatCurrency(totalAll)}`, 20, 52);
-                doc.text(`Phí vật tư: ${formatCurrency(totalVatTu)} (${percentVatTu}%)`, 20, 59);
-                doc.text(`Tiền công: ${formatCurrency(totalTienCong)} (${percentTienCong}%)`, 20, 66);
-                
-                // Biểu đồ đơn giản
-                if (totalAll > 0) {
-                    doc.setDrawColor(76, 175, 80);
-                    doc.setFillColor(76, 175, 80);
-                    doc.rect(20, 75, 80, 15, 'F');
-                    
-                    doc.setDrawColor(33, 150, 243);
-                    doc.setFillColor(33, 150, 243);
-                    doc.rect(20, 95, (totalTienCong / totalAll) * 80, 15, 'F');
-                    
-                    doc.setFontSize(9);
-                    doc.text('Phí vật tư', 25, 85);
-                    doc.text('Tiền công', 25, 105);
-                }
-                
-                // Dữ liệu mẫu
-                if (dataCount > 0) {
-                    doc.setFontSize(12);
-                    doc.setFont('helvetica', 'bold');
-                    doc.text('DỮ LIỆU MẪU', 20, 125);
-                    
-                    let yPos = 135;
-                    const sampleCount = Math.min(5, dataCount);
-                    
-                    for (let i = 0; i < sampleCount && yPos < 280; i++) {
-                        const rowIndex = START_ROW - 1 + i;
-                        if (rowIndex < currentRows.length) {
-                            const row = currentRows[rowIndex];
-                            if (row && row.length >= 5) {
-                                const content = (row[2] || '').substring(0, 40);
-                                const total = parseSheetNumber(row[3]) + parseSheetNumber(row[4]);
-                                
-                                doc.setFontSize(9);
-                                doc.text(`${i+1}. ${content}`, 25, yPos);
-                                doc.text(formatCurrency(total), 160, yPos);
-                                
-                                yPos += 7;
-                            }
-                        }
-                    }
-                    
-                    // Footer
-                    doc.setFontSize(8);
-                    doc.text(`Hiển thị ${sampleCount} trong tổng số ${dataCount} hạng mục`, 105, yPos + 10, { align: 'center' });
-                }
-                
-                doc.setFontSize(8);
-                doc.text(`Hệ thống quản lý chi phí làm vườn © ${now.getFullYear()}`, 105, 290, { align: 'center' });
-                
-                // Lưu file
-                const fileName = `Bao_cao_chi_phi_${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}.pdf`;
-                doc.save(fileName);
-                
-                updateExportProgress(100, 'Xuất PDF thành công!');
-                setTimeout(hideExportProgress, 1000);
-                
-            } catch (error) {
-                console.error('Lỗi khi tạo PDF cơ bản:', error);
-                alert('Có lỗi xảy ra khi xuất PDF cơ bản');
-                hideExportProgress();
-            }
-        }
-        
-        // Xuất kết quả tìm kiếm
-        async function exportSearchResults() {
-            try {
-                if (!currentFilteredRows || currentFilteredRows.length === 0) {
-                    alert('Không có kết quả tìm kiếm để xuất');
-                    return;
-                }
-                
-                showExportProgress();
-                updateExportProgress(10, 'Đang chuẩn bị dữ liệu...');
-                
-                // Tạo dữ liệu Excel
-                const data = [
-                    ['STT', 'ID', 'Ngày', 'Nội dung', 'Phí vật tư', 'Tiền công', 'Tổng']
-                ];
-                
-                updateExportProgress(40, 'Đang xử lý dữ liệu...');
-                
-                currentFilteredRows.forEach((item, idx) => {
-                    const row = item.row;
-                    const vatTu = parseSheetNumber(row[3]);
-                    const tienCong = parseSheetNumber(row[4]);
-                    const total = vatTu + tienCong;
-                    
-                    data.push([
-                        idx + 1,
-                        row[0] || '',
-                        row[1] || '',
-                        row[2] || '',
-                        vatTu,
-                        tienCong,
-                        total
-                    ]);
-                });
-                
-                updateExportProgress(80, 'Đang tạo file...');
-                
-                // Tạo workbook
-                const ws = XLSX.utils.aoa_to_sheet(data);
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Kết quả tìm kiếm");
-                
-                // Xuất file
-                const fileName = `Ket_qua_tim_kiem_${new Date().toISOString().slice(0,10)}.xlsx`;
-                XLSX.writeFile(wb, fileName);
-                
-                updateExportProgress(100, 'Xuất file thành công!');
-                setTimeout(hideExportProgress, 1000);
-                
-            } catch (error) {
-                console.error('Lỗi khi xuất kết quả tìm kiếm:', error);
-                alert('Có lỗi xảy ra khi xuất file');
-                hideExportProgress();
-            }
-        }
-        
-        // Hiển thị thanh tiến trình
-        function showExportProgress() {
-            document.getElementById('exportProgress').style.display = 'block';
-            document.getElementById('progressFill').style.width = '0%';
-            document.getElementById('progressText').textContent = 'Đang chuẩn bị...';
-        }
-        
-        // Cập nhật tiến trình
-        function updateExportProgress(percent, message) {
-            document.getElementById('progressFill').style.width = percent + '%';
-            document.getElementById('progressText').textContent = message;
-        }
-        
-        // Ẩn thanh tiến trình
-        function hideExportProgress() {
-            setTimeout(() => {
-                document.getElementById('exportProgress').style.display = 'none';
-            }, 500);
+            alert('Chức năng biểu đồ đang được phát triển. Vui lòng sử dụng chức năng "Xem chi tiết dữ liệu".');
         }
         
         // ============================
@@ -2272,8 +1548,20 @@
             initSystem();
         });
         
-        // Cho phép refresh bằng F5
+        // Đóng modal khi click ra ngoài
+        document.getElementById('inputFormModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                hideInputForm();
+            }
+        });
+        
+        // Đóng modal bằng phím ESC
         document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                hideInputForm();
+            }
+            
+            // Refresh bằng F5
             if (event.key === 'F5') {
                 event.preventDefault();
                 loadData();
