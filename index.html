@@ -3,171 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Chi Phí SR2526 - Dashboard Hoàn Chỉnh</title>
+    <title>Quản Lý Chi Phí SR2526</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <style>
-        body { background: #f0f2f5; font-size: 0.9rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: 0.3s; }
-        .card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.12); }
-        .money { text-align: right; font-family: 'Courier New', monospace; font-weight: bold; }
-        .money-input { text-align: right; font-weight: bold; color: #0d6efd; }
-        .chart-wrapper { position: relative; height: 220px; width: 100%; }
-        .stat-label { font-size: 0.75rem; color: #6c757d; font-weight: bold; text-transform: uppercase; }
-        .table thead { background-color: #212529; color: white; }
-        .action-btn { padding: 2px 8px; border-radius: 6px; }
-        .system-info { background: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
-        .status-success { background: #d4edda; color: #155724; }
-        .status-warning { background: #fff3cd; color: #856404; }
-        .status-error { background: #f8d7da; color: #721c24; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .main-container { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+        .stat-card h3 { font-size: 2rem; margin: 0; }
+        .stat-card p { margin: 5px 0 0 0; font-size: 0.9rem; opacity: 0.9; }
+        .chart-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        table { font-size: 0.9rem; }
+        .table thead { background: #667eea; color: white; }
+        .action-btn { padding: 5px 10px; margin: 0 2px; }
+        .money { text-align: right; font-weight: bold; }
+        .alert-custom { background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-<div class="container py-3">
-    <!-- Thông tin hệ thống -->
-    <div class="system-info mb-3">
-        <div class="row align-items-center">
+<div class="container">
+    <div class="main-container">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h2><i class="fas fa-leaf text-success"></i> Quản Lý Chi Phí SR2526</h2>
+            <p class="text-muted">Hệ thống quản lý và theo dõi chi phí tự động</p>
+        </div>
+
+        <!-- Hướng dẫn cấu hình -->
+        <div class="alert-custom" id="setupGuide">
+            <h5><i class="fas fa-exclamation-triangle text-warning"></i> Cần cấu hình lần đầu</h5>
+            <p>Để sử dụng hệ thống, bạn cần:</p>
+            <ol>
+                <li>Có Google Sheets ID: <code>1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4</code></li>
+                <li>Sheet phải được public (Anyone with link can view)</li>
+                <li>Hoặc sử dụng Google Apps Script (xem hướng dẫn bên dưới)</li>
+            </ol>
+            <button class="btn btn-primary" onclick="showSetupModal()">📖 Xem hướng dẫn chi tiết</button>
+            <button class="btn btn-success" onclick="loadSampleData()">🎯 Dùng dữ liệu mẫu</button>
+        </div>
+
+        <!-- Thống kê -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <h3 id="tTotal">0đ</h3>
+                    <p>TỔNG CHI PHÍ</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <h3 id="tVatTu">0đ</h3>
+                    <p>TIỀN VẬT TƯ</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <h3 id="tTienCong">0đ</h3>
+                    <p>TIỀN CÔNG</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <h3 id="totalRows">0</h3>
+                    <p>SỐ BÁN GHI</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ -->
+        <div class="row g-3 mb-4">
             <div class="col-md-6">
-                <h5 class="mb-1"><i class="fas fa-leaf text-success"></i> Quản Lý Chi Phí SR2526</h5>
-                <small class="text-muted">Tự động cập nhật mỗi 3 phút | Cập nhật lần cuối: <span id="lastUpdate">--:--</span></small>
+                <div class="chart-box">
+                    <h6 class="text-center mb-3">Tỷ lệ chi phí</h6>
+                    <canvas id="costChart" height="200"></canvas>
+                </div>
             </div>
-            <div class="col-md-6 text-end">
-                <span class="status-badge" id="connectionStatus">🔄 Đang kết nối...</span>
-                <button class="btn btn-sm btn-primary ms-2" onclick="loadData()">
-                    <i class="fas fa-sync-alt"></i> Làm mới
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Thống kê tổng quan -->
-    <div class="row g-3 mb-3">
-        <div class="col-md-3">
-            <div class="card p-3 text-center border-start border-primary border-4">
-                <div class="stat-label">TỔNG CHI PHÍ</div>
-                <div class="h4 text-primary fw-bold mb-0" id="tTotal">0đ</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3 text-center border-start border-info border-4">
-                <div class="stat-label">TIỀN VẬT TƯ</div>
-                <div class="h4 text-info fw-bold mb-0" id="tVatTu">0đ</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3 text-center border-start border-warning border-4">
-                <div class="stat-label">TIỀN CÔNG</div>
-                <div class="h4 text-warning fw-bold mb-0" id="tTienCong">0đ</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card p-3 text-center border-start border-success border-4">
-                <div class="stat-label">SỐ HÀNG DỮ LIỆU</div>
-                <div class="h4 text-success fw-bold mb-0" id="totalRows">0</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Biểu đồ -->
-    <div class="row g-3 mb-3">
-        <div class="col-md-5">
-            <div class="card p-3 h-100">
-                <h6 class="fw-bold text-center border-bottom pb-2 mb-3">TỶ LỆ CHI PHÍ</h6>
-                <div class="chart-wrapper">
-                    <canvas id="costChart"></canvas>
+            <div class="col-md-6">
+                <div class="chart-box">
+                    <h6 class="text-center mb-3">Lương nhân viên</h6>
+                    <canvas id="staffChart" height="200"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-md-7">
-            <div class="card p-3 h-100">
-                <h6 class="fw-bold text-center border-bottom pb-2 mb-3">LƯƠNG NHÂN VIÊN TÍCH LŨY</h6>
-                <div class="chart-wrapper">
-                    <canvas id="staffChart"></canvas>
+
+        <!-- Bảng dữ liệu -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-table text-primary"></i> Nhật ký chi phí</h6>
+                    <button class="btn btn-success btn-sm" onclick="alert('Chức năng thêm mới đang được phát triển')">
+                        <i class="fas fa-plus"></i> Thêm mới
+                    </button>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Bảng dữ liệu -->
-    <div class="card p-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold mb-0"><i class="fas fa-list-alt text-primary"></i> NHẬT KÝ CHI PHÍ</h6>
-            <button class="btn btn-success btn-sm fw-bold px-3 shadow-sm" onclick="openModal('add')">
-                <i class="fas fa-plus-circle"></i> THÊM MỚI
-            </button>
-        </div>
-        <div class="table-responsive">
-            <table id="tbl" class="table table-sm table-hover w-100 border">
-                <thead>
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th>Ngày</th>
-                        <th>Nội dung</th>
-                        <th class="text-end">Vật tư</th>
-                        <th class="text-end">Công</th>
-                        <th class="text-center">Xử lý</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tbl" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Ngày</th>
+                                <th>Nội dung</th>
+                                <th class="money">Vật tư</th>
+                                <th class="money">Công</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Modal thêm/sửa -->
-<div class="modal fade" id="modal" data-bs-backdrop="static">
+<!-- Modal hướng dẫn -->
+<div class="modal fade" id="setupModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-dark text-white p-2 px-3">
-                <h6 class="modal-title" id="mTitle">Nhập liệu</h6>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">📖 Hướng dẫn cài đặt đầy đủ</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="editId">
-                <div class="row g-2 mb-2">
-                    <div class="col-4"><label class="small fw-bold">Ngày (*)</label><input type="date" id="date" class="form-control form-control-sm"></div>
-                    <div class="col-8"><label class="small fw-bold">Nội dung công việc (*)</label><input id="content" class="form-control form-control-sm" placeholder="Ví dụ: Mua sơn, trả lương tuần..."></div>
-                </div>
-                <div class="row g-2 mb-2">
-                    <div class="col-6"><label class="small fw-bold text-info">Tiền Vật tư</label><input id="vatTu" class="form-control form-control-sm money-input" value="0"></div>
-                    <div class="col-6"><label class="small fw-bold text-warning">Tiền công thợ</label><input id="tienCong" class="form-control form-control-sm money-input" value="0"></div>
-                </div>
-                <div class="p-2 border rounded bg-light mb-2">
-                    <small class="text-muted fw-bold d-block mb-2"><i class="fas fa-users"></i> CHI TIẾT CHIA LƯƠNG:</small>
-                    <div class="row g-1 text-center">
-                        <div class="col-3"><label class="small">Triều</label><input id="trieu" class="form-control form-control-sm money-input" value="0"></div>
-                        <div class="col-3"><label class="small">Tèo</label><input id="teo" class="form-control form-control-sm money-input" value="0"></div>
-                        <div class="col-3"><label class="small">Thiện</label><input id="thien" class="form-control form-control-sm money-input" value="0"></div>
-                        <div class="col-3"><label class="small">Thuận</label><input id="thuan" class="form-control form-control-sm money-input" value="0"></div>
-                    </div>
-                </div>
-                <div class="mb-3"><label class="small fw-bold">Ghi chú thêm</label><input id="note" class="form-control form-control-sm"></div>
-                
-                <div id="saveLoading" class="text-center d-none mb-2">
-                    <div class="spinner-border spinner-border-sm text-primary"></div> <small class="text-primary">Đang lưu và gửi email thông báo...</small>
-                </div>
-                <button id="saveBtn" class="btn btn-primary w-100 fw-bold py-2 shadow-sm" onclick="save()">LƯU THÔNG TIN</button>
-            </div>
-        </div>
-    </div>
-</div>
+                <h6>🎯 Phương án 1: Chỉ xem dữ liệu (Đơn giản)</h6>
+                <ol>
+                    <li>Mở Google Sheet: <a href="https://docs.google.com/spreadsheets/d/1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4" target="_blank">Link Sheet</a></li>
+                    <li>File > Share > Change to "Anyone with the link"</li>
+                    <li>File > Publish to web > Publish</li>
+                    <li>Reload trang này</li>
+                </ol>
 
-<!-- Modal xác thực -->
-<div class="modal fade" id="loginModal">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content shadow-lg border-0">
-            <div class="modal-body p-4 text-center">
-                <div class="mb-3 text-danger"><i class="fas fa-user-shield fa-3x"></i></div>
-                <h6 class="fw-bold mb-1">XÁC THỰC QUẢN TRỊ</h6>
-                <p class="small text-muted mb-3" id="authTxt"></p>
-                <input type="password" id="authPass" class="form-control text-center mb-3" placeholder="Nhập mật khẩu...">
-                <div id="authLoading" class="spinner-border spinner-border-sm text-primary d-none mb-2"></div>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-danger fw-bold" onclick="confirmAuth()">XÁC NHẬN</button>
-                    <button class="btn btn-light btn-sm" data-bs-dismiss="modal">Hủy</button>
+                <hr>
+
+                <h6>🚀 Phương án 2: Đầy đủ chức năng (Thêm/Sửa/Xóa + Email)</h6>
+                <ol>
+                    <li><b>Tạo Google Apps Script:</b>
+                        <ul>
+                            <li>Vào <a href="https://script.google.com" target="_blank">script.google.com</a></li>
+                            <li>New Project > Paste code từ file <code>Code.gs</code></li>
+                            <li>Save (Ctrl+S)</li>
+                        </ul>
+                    </li>
+                    <li><b>Deploy Web App:</b>
+                        <ul>
+                            <li>Deploy > New deployment</li>
+                            <li>Type: Web app</li>
+                            <li>Execute as: Me</li>
+                            <li>Who has access: <b>Anyone</b></li>
+                            <li>Deploy > Authorize > Allow</li>
+                        </ul>
+                    </li>
+                    <li><b>Copy URL và cập nhật:</b>
+                        <ul>
+                            <li>Copy Web app URL</li>
+                            <li>Mở file index.html</li>
+                            <li>Tìm dòng: <code>const APPS_SCRIPT_URL = '...'</code></li>
+                            <li>Thay bằng URL vừa copy</li>
+                            <li>Commit & push lên GitHub</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> <b>Lưu ý:</b> Trang này hiện đang dùng dữ liệu mẫu. Để kết nối thật, cần làm theo hướng dẫn trên.
                 </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <a href="https://docs.google.com/spreadsheets/d/1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4" target="_blank" class="btn btn-primary">Mở Google Sheet</a>
             </div>
         </div>
     </div>
@@ -180,325 +185,139 @@
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
-    // ========================================
-    // CẤU HÌNH - THAY ĐỔI URL NÀY SAU KHI DEPLOY APPS SCRIPT
-    // ========================================
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID_HERE/exec';
+// Cấu hình
+const SHEET_ID = '1bVQzzwKmtqMwuCPUX0TJx9Fnsdbkuk57ncnX4HXU5v4';
+const SHEET_NAME = 'SR2526';
+
+// Biến toàn cục
+var currentData = [];
+var costChart = null;
+var staffChart = null;
+
+// Hàm helper
+function money(n) {
+    return Number(n).toLocaleString("vi-VN") + 'đ';
+}
+
+// Load dữ liệu mẫu
+function loadSampleData() {
+    currentData = [
+        [1, '01/01/2024', 'Mua phân bón', 500000, 300000, 'Phân NPK', 150000, 150000, 0, 0],
+        [2, '02/01/2024', 'Thuê máy cày', 0, 1000000, '2 ngày', 500000, 500000, 0, 0],
+        [3, '03/01/2024', 'Mua cây giống', 800000, 200000, '100 cây', 100000, 100000, 0, 0],
+        [4, '05/01/2024', 'Làm cỏ', 0, 600000, '', 200000, 200000, 200000, 0],
+        [5, '08/01/2024', 'Tưới tiêu', 300000, 400000, 'Điện nước', 100000, 100000, 100000, 100000]
+    ];
     
-    // ========================================
-    // BIẾN TOÀN CỤC
-    // ========================================
-    let currentData = [], currentAction = '', targetId = '', tempSave = {};
-    let costChart, staffChart;
-    const money = n => Number(n).toLocaleString("vi-VN");
-    const unMoney = v => Number(String(v).replace(/[^0-9-]/g, "")) || 0;
+    $('#setupGuide').hide();
+    updateUI();
+}
 
-    // ========================================
-    // HÀM GỌI API
-    // ========================================
-    async function callAPI(action, data = {}) {
-        try {
-            const url = `${APPS_SCRIPT_URL}?action=${action}`;
-            const options = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action, ...data })
-            };
-            
-            const response = await fetch(url, options);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            
-            return await response.json();
-        } catch (error) {
-            console.error('API Error:', error);
-            return { status: 'error', message: 'Không thể kết nối: ' + error.message };
-        }
-    }
-
-    // ========================================
-    // KHỞI TẠO
-    // ========================================
-    $(document).ready(() => {
-        $(document).on('focus', '.money-input', function() { 
-            let v = unMoney($(this).val()); 
-            $(this).val(v === 0 ? '' : v); 
-        });
-        $(document).on('blur', '.money-input', function() { 
-            $(this).val(money(unMoney($(this).val()))); 
-        });
-        
-        loadData();
-        setInterval(loadData, 180000); // Auto refresh 3 phút
+// Cập nhật giao diện
+function updateUI() {
+    // Tính tổng
+    var totalVatTu = 0, totalTienCong = 0;
+    var trieu = 0, teo = 0, thien = 0, thuan = 0;
+    
+    currentData.forEach(function(row) {
+        totalVatTu += row[3] || 0;
+        totalTienCong += row[4] || 0;
+        trieu += row[6] || 0;
+        teo += row[7] || 0;
+        thien += row[8] || 0;
+        thuan += row[9] || 0;
     });
+    
+    var total = totalVatTu + totalTienCong;
+    
+    // Hiển thị
+    $('#tTotal').text(money(total));
+    $('#tVatTu').text(money(totalVatTu));
+    $('#tTienCong').text(money(totalTienCong));
+    $('#totalRows').text(currentData.length);
+    
+    // Bảng
+    var html = '';
+    currentData.forEach(function(row) {
+        html += '<tr>';
+        html += '<td>' + row[0] + '</td>';
+        html += '<td>' + row[1] + '</td>';
+        html += '<td>' + row[2] + '</td>';
+        html += '<td class="money">' + money(row[3]) + '</td>';
+        html += '<td class="money">' + money(row[4]) + '</td>';
+        html += '<td>' + (row[5] || '') + '</td>';
+        html += '</tr>';
+    });
+    
+    if ($.fn.DataTable.isDataTable('#tbl')) {
+        $('#tbl').DataTable().destroy();
+    }
+    
+    $('#tbl tbody').html(html);
+    $('#tbl').DataTable({
+        language: { url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/vi.json' },
+        pageLength: 10
+    });
+    
+    // Biểu đồ
+    renderCharts(totalVatTu, totalTienCong, trieu, teo, thien, thuan);
+}
 
-    // ========================================
-    // TẢI DỮ LIỆU
-    // ========================================
-    async function loadData() {
-        try {
-            updateStatus('loading', '🔄 Đang tải...');
-            
-            // Tải tất cả dữ liệu
-            const dataRes = await callAPI('getAllData');
-            if (dataRes.status !== 'success') throw new Error(dataRes.message);
-            
-            currentData = dataRes.data || [];
-            
-            // Tải summary
-            const summaryRes = await callAPI('getSummary');
-            if (summaryRes.status === 'success') {
-                const s = summaryRes.data;
-                $('#tTotal').text(money(s.total) + 'đ');
-                $('#tVatTu').text(money(s.vatTu) + 'đ');
-                $('#tTienCong').text(money(s.tienCong) + 'đ');
-                renderCostChart(s.vatTu, s.tienCong);
-            }
-            
-            // Tải staff summary
-            const staffRes = await callAPI('getStaffSummary');
-            if (staffRes.status === 'success') {
-                renderStaffChart(staffRes.data);
-            }
-            
-            // Cập nhật bảng
-            updateTable();
-            
-            $('#totalRows').text(currentData.length);
-            $('#lastUpdate').text(new Date().toLocaleTimeString('vi-VN'));
-            updateStatus('success', `✅ Đã tải ${currentData.length} hàng`);
-            
-        } catch (error) {
-            console.error('Load error:', error);
-            updateStatus('error', '❌ Lỗi kết nối');
-            showSampleData();
+// Vẽ biểu đồ
+function renderCharts(vatTu, tienCong, trieu, teo, thien, thuan) {
+    // Chart 1: Chi phí
+    var ctx1 = document.getElementById('costChart');
+    if (costChart) costChart.destroy();
+    
+    costChart = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: ['Vật tư', 'Tiền công'],
+            datasets: [{
+                data: [vatTu, tienCong],
+                backgroundColor: ['#36A2EB', '#FF6384']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
         }
-    }
-
-    function updateStatus(type, text) {
-        const badge = $('#connectionStatus');
-        badge.removeClass('status-success status-warning status-error');
-        
-        if (type === 'success') badge.addClass('status-success');
-        else if (type === 'error') badge.addClass('status-error');
-        else badge.addClass('status-warning');
-        
-        badge.text(text);
-    }
-
-    function updateTable() {
-        if ($.fn.DataTable.isDataTable('#tbl')) $('#tbl').DataTable().destroy();
-        
-        let html = '';
-        currentData.forEach(r => {
-            html += `<tr>
-                <td class="text-center text-muted small">${r[0]}</td>
-                <td class="fw-bold text-nowrap">${r[1]}</td>
-                <td>${r[2]}</td>
-                <td class="money text-info">${money(r[3])}</td>
-                <td class="money text-warning">${money(r[4])}</td>
-                <td class="text-center">
-                    <button class="btn btn-sm btn-outline-warning border-0 action-btn" onclick="openEdit(${r[0]})"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-outline-danger border-0 action-btn" onclick="askDelete(${r[0]})"><i class="fas fa-trash"></i></button>
-                </td>
-            </tr>`;
-        });
-        
-        $('#tbl tbody').html(html);
-        $('#tbl').DataTable({ 
-            order: [[0, "desc"]], 
-            pageLength: 10,
-            language: { url: "//cdn.datatables.net/plug-ins/1.13.8/i18n/vi.json" }
-        });
-    }
-
-    // ========================================
-    // BIỂU ĐỒ
-    // ========================================
-    function renderCostChart(v, t) {
-        const ctx = document.getElementById('costChart');
-        if(costChart) costChart.destroy();
-        costChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Vật tư', 'Tiền công'],
-                datasets: [{ data: [v, t], backgroundColor: ['#0dcaf0', '#ffc107'], hoverOffset: 12 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-        });
-    }
-
-    function renderStaffChart(s) {
-        const ctx = document.getElementById('staffChart');
-        if(staffChart) staffChart.destroy();
-        staffChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Triều', 'Tèo', 'Thiện', 'Thuận'],
-                datasets: [{
-                    label: 'Tổng tiền (đ)',
-                    data: [s.trieu, s.teo, s.thien, s.thuan],
-                    backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545'],
-                    borderRadius: 6
-                }]
-            },
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true } },
-                plugins: { legend: { display: false } }
-            }
-        });
-    }
-
-    // ========================================
-    // MODAL THÊM/SỬA
-    // ========================================
-    function openModal(mode) {
-        $('#editId').val('');
-        $('#date').val(new Date().toISOString().split('T')[0]);
-        $('#content, #note').val('');
-        $('.money-input').val('0');
-        $('#mTitle').text('THÊM MỚI CHI PHÍ');
-        $('#saveBtn').text('LƯU DỮ LIỆU').removeClass('btn-warning').addClass('btn-primary').prop('disabled', false);
-        $('#saveLoading').addClass('d-none');
-        new bootstrap.Modal('#modal').show();
-    }
-
-    function openEdit(id) {
-        const r = currentData.find(x => x[0] == id);
-        if(!r) return;
-        
-        $('#editId').val(id);
-        let dt = r[1].split('/');
-        $('#date').val(`${dt[2]}-${dt[1]}-${dt[0]}`);
-        $('#content').val(r[2]);
-        $('#vatTu').val(money(r[3])); 
-        $('#tienCong').val(money(r[4]));
-        $('#note').val(r[5]);
-        $('#trieu').val(money(r[6])); 
-        $('#teo').val(money(r[7]));
-        $('#thien').val(money(r[8])); 
-        $('#thuan').val(money(r[9]));
-        
-        $('#mTitle').text('CHỈNH SỬA BẢN GHI #' + id);
-        $('#saveBtn').text('CẬP NHẬT (CẦN PASS)').removeClass('btn-primary').addClass('btn-warning');
-        $('#saveLoading').addClass('d-none');
-        new bootstrap.Modal('#modal').show();
-    }
-
-    // ========================================
-    // LƯU DỮ LIỆU
-    // ========================================
-    async function save() {
-        const id = $('#editId').val();
-        const data = {
-            date: $('#date').val().split('-').reverse().join('/'),
-            content: $('#content').val().trim(),
-            vatTu: unMoney($('#vatTu').val()),
-            tienCong: unMoney($('#tienCong').val()),
-            note: $('#note').val(),
-            trieu: unMoney($('#trieu').val()),
-            teo: unMoney($('#teo').val()),
-            thien: unMoney($('#thien').val()),
-            thuan: unMoney($('#thuan').val())
-        };
-        
-        if(!data.content || !data.date) return alert("Vui lòng nhập Ngày và Nội dung!");
-
-        if(id) {
-            // Cập nhật
-            tempSave = data; 
-            targetId = id; 
-            currentAction = 'edit';
-            $('#authTxt').text('Bạn đang thay đổi dữ liệu của ID #' + id);
-            bootstrap.Modal.getInstance('#modal').hide();
-            new bootstrap.Modal('#loginModal').show();
-        } else {
-            // Thêm mới
-            $('#saveBtn').prop('disabled', true).text('Đang lưu...');
-            $('#saveLoading').removeClass('d-none');
-            
-            const result = await callAPI('saveNew', { data: JSON.stringify(data) });
-            
-            if(result.status === 'success') {
-                alert(result.message || 'Đã lưu và gửi email thông báo!');
-                await loadData();
-                bootstrap.Modal.getInstance('#modal').hide();
-            } else {
-                alert('Lỗi: ' + result.message);
-                $('#saveBtn').prop('disabled', false).text('LƯU THÔNG TIN');
-                $('#saveLoading').addClass('d-none');
+    });
+    
+    // Chart 2: Lương
+    var ctx2 = document.getElementById('staffChart');
+    if (staffChart) staffChart.destroy();
+    
+    staffChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Triều', 'Tèo', 'Thiện', 'Thuận'],
+            datasets: [{
+                label: 'Lương (đ)',
+                data: [trieu, teo, thien, thuan],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
             }
         }
-    }
+    });
+}
 
-    // ========================================
-    // XÓA
-    // ========================================
-    function askDelete(id) {
-        targetId = id; 
-        currentAction = 'delete';
-        $('#authTxt').text('Hành động xóa ID #' + id + ' sẽ gửi mail báo cáo và không thể hoàn tác!');
-        new bootstrap.Modal('#loginModal').show();
-    }
+// Hiện modal hướng dẫn
+function showSetupModal() {
+    var modal = new bootstrap.Modal(document.getElementById('setupModal'));
+    modal.show();
+}
 
-    // ========================================
-    // XÁC THỰC
-    // ========================================
-    async function confirmAuth() {
-        const pass = $('#authPass').val();
-        if(!pass) return alert("Vui lòng nhập mật khẩu!");
-        
-        $('#authLoading').removeClass('d-none');
-        
-        let result;
-        if(currentAction === 'edit') {
-            result = await callAPI('update', {
-                id: targetId,
-                data: JSON.stringify(tempSave),
-                user: 'Admin',
-                pass: pass
-            });
-        } else {
-            result = await callAPI('delete', {
-                id: targetId,
-                user: 'Admin',
-                pass: pass
-            });
-        }
-        
-        $('#authLoading').addClass('d-none');
-        
-        if(result.status === 'success') {
-            alert(result.message);
-            bootstrap.Modal.getInstance('#loginModal').hide();
-            $('#authPass').val('');
-            await loadData();
-        } else {
-            alert('Lỗi: ' + result.message);
-        }
-    }
-
-    // ========================================
-    // DỮ LIỆU MẪU (CHO TEST)
-    // ========================================
-    function showSampleData() {
-        currentData = [
-            [1, '01/01/2024', 'Mua phân bón', 500000, 300000, 'Test', 150000, 150000, 0, 0],
-            [2, '02/01/2024', 'Thuê máy cày', 0, 1000000, '', 500000, 500000, 0, 0],
-            [3, '03/01/2024', 'Mua cây giống', 800000, 200000, '', 100000, 100000, 0, 0]
-        ];
-        
-        updateTable();
-        $('#tTotal').text(money(2800000) + 'đ');
-        $('#tVatTu').text(money(1300000) + 'đ');
-        $('#tTienCong').text(money(1500000) + 'đ');
-        
-        renderCostChart(1300000, 1500000);
-        renderStaffChart({ trieu: 750000, teo: 750000, thien: 0, thuan: 0 });
-        
-        updateStatus('warning', '⚠️ Dữ liệu mẫu');
-    }
+// Khởi động
+$(document).ready(function() {
+    console.log('Trang đã load. Click "Dùng dữ liệu mẫu" để bắt đầu.');
+});
 </script>
 </body>
 </html>
