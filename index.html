@@ -1,336 +1,337 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Chi Phí SR2526 - GitHub Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản Lý SR2526 - Dashboard Hoàn Chỉnh</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --primary-color: #2e7d32; --secondary-color: #4caf50; }
-        body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; padding: 20px; }
-        header { 
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white; padding: 25px; border-radius: 15px; text-align: center;
-            margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .card { border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        .table-container { background: white; padding: 20px; border-radius: 12px; overflow-x: auto; }
-        .btn-add { background-color: #ff9800; color: white; font-weight: bold; border-radius: 30px; padding: 10px 25px; }
-        .btn-add:hover { background-color: #f57c00; color: white; }
-        .money { font-family: 'Courier New', monospace; font-weight: bold; text-align: right; }
-        .loading-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(255,255,255,0.8); display: none; justify-content: center; 
-            align-items: center; z-index: 9999; 
-        }
+        body { background: #f0f2f5; font-size: 0.9rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: 0.3s; }
+        .card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.12); }
+        .money { text-align: right; font-family: 'Courier New', monospace; font-weight: bold; }
+        .money-input { text-align: right; font-weight: bold; color: #0d6efd; }
+        .chart-wrapper { position: relative; height: 220px; width: 100%; }
+        .stat-label { font-size: 0.75rem; color: #6c757d; font-weight: bold; text-transform: uppercase; }
+        .table thead { background-color: #212529; color: white; }
+        .action-btn { padding: 2px 8px; border-radius: 6px; }
     </style>
 </head>
 <body>
-
-<div id="loadingOverlay" class="loading-overlay">
-    <div class="text-center">
-        <div class="spinner-border text-success" role="status"></div>
-        <p class="mt-2 fw-bold">Đang xử lý dữ liệu...</p>
-    </div>
-</div>
-
-<div class="container-fluid">
-    <header>
-        <h1><i class="fas fa-seedling"></i> HỆ THỐNG QUẢN LÝ CHI PHÍ SR2526</h1>
-        <p class="mb-0">Dữ liệu đồng bộ trực tiếp với Google Sheet & Email Thông Báo</p>
-    </header>
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div id="connectionStatus" class="fw-bold text-success">
-            <i class="fas fa-check-circle"></i> Đã kết nối hệ thống
+<div class="container py-3">
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card p-3 text-center border-start border-primary border-4">
+                <div class="stat-label">TỔNG CHI PHÍ</div>
+                <div class="h4 text-primary fw-bold mb-0" id="tTotal">0</div>
+            </div>
         </div>
-        <button class="btn btn-add shadow-sm" onclick="openAddModal()">
-            <i class="fas fa-plus-circle"></i> THÊM MỚI DỮ LIỆU
-        </button>
+        <div class="col-md-4">
+            <div class="card p-3 text-center border-start border-info border-4">
+                <div class="stat-label">TIỀN VẬT TƯ</div>
+                <div class="h4 text-info fw-bold mb-0" id="tVatTu">0</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 text-center border-start border-warning border-4">
+                <div class="stat-label">TIỀN CÔNG</div>
+                <div class="h4 text-warning fw-bold mb-0" id="tTienCong">0</div>
+            </div>
+        </div>
     </div>
 
-    <div class="card table-container">
-        <table id="dataTable" class="table table-hover table-bordered w-100">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Ngày</th>
-                    <th>Nội dung</th>
-                    <th>Vật tư</th>
-                    <th>Công thợ</th>
-                    <th>Ghi chú</th>
-                    <th>Triều</th>
-                    <th>Tèo</th>
-                    <th>Thiện</th>
-                    <th>Thuận</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                </tbody>
-        </table>
+    <div class="row g-3 mb-3">
+        <div class="col-md-5">
+            <div class="card p-3 h-100">
+                <h6 class="fw-bold text-center border-bottom pb-2 mb-3">TỶ LỆ CHI PHÍ</h6>
+                <div class="chart-wrapper">
+                    <canvas id="costChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="card p-3 h-100">
+                <h6 class="fw-bold text-center border-bottom pb-2 mb-3">LƯƠNG NHÂN VIÊN TÍCH LŨY</h6>
+                <div class="chart-wrapper">
+                    <canvas id="staffChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0"><i class="fas fa-list-alt text-primary"></i> NHẬT KÝ CHI PHÍ</h6>
+            <button class="btn btn-success btn-sm fw-bold px-3 shadow-sm" onclick="openModal('add')">
+                <i class="fas fa-plus-circle"></i> THÊM MỚI
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table id="tbl" class="table table-sm table-hover w-100 border">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th>Ngày</th>
+                        <th>Nội dung</th>
+                        <th class="text-end">Vật tư</th>
+                        <th class="text-end">Công</th>
+                        <th class="text-center">Xử lý</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<div class="modal fade" id="dataModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="modalTitle">NHẬP CHI PHÍ MỚI</h5>
+            <div class="modal-header bg-dark text-white p-2 px-3">
+                <h6 class="modal-title" id="mTitle">Nhập liệu</h6>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="entryForm">
-                    <input type="hidden" id="editId">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">Ngày (*)</label>
-                            <input type="date" id="fDate" class="form-control" required>
-                        </div>
-                        <div class="col-md-8">
-                            <label class="form-label fw-bold">Nội dung công việc (*)</label>
-                            <input type="text" id="fContent" class="form-control" placeholder="Ví dụ: Mua phân bón, Trả lương..." required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-primary">Tiền Vật tư (VNĐ)</label>
-                            <input type="number" id="fVatTu" class="form-control" value="0">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-danger">Tiền Công thợ (VNĐ)</label>
-                            <input type="number" id="fTienCong" class="form-control" value="0">
-                        </div>
-                        <div class="col-12 p-3 bg-light border rounded">
-                            <label class="d-block mb-2 fw-bold text-secondary text-center">CHIA LƯƠNG CHI TIẾT</label>
-                            <div class="row g-2 text-center">
-                                <div class="col-3"><label class="small">Triều</label><input type="number" id="fTrieu" class="form-control" value="0"></div>
-                                <div class="col-3"><label class="small">Tèo</label><input type="number" id="fTeo" class="form-control" value="0"></div>
-                                <div class="col-3"><label class="small">Thiện</label><input type="number" id="fThien" class="form-control" value="0"></div>
-                                <div class="col-3"><label class="small">Thuận</label><input type="number" id="fThuan" class="form-control" value="0"></div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-bold">Ghi chú thêm</label>
-                            <input type="text" id="fNote" class="form-control">
-                        </div>
+                <input type="hidden" id="editId">
+                <div class="row g-2 mb-2">
+                    <div class="col-4"><label class="small fw-bold">Ngày (*)</label><input type="date" id="date" class="form-control form-control-sm"></div>
+                    <div class="col-8"><label class="small fw-bold">Nội dung công việc (*)</label><input id="content" class="form-control form-control-sm" placeholder="Ví dụ: Mua sơn, trả lương tuần..."></div>
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-6"><label class="small fw-bold text-info">Tiền Vật tư</label><input id="vatTu" class="form-control form-control-sm money-input" value="0"></div>
+                    <div class="col-6"><label class="small fw-bold text-warning">Tiền công thợ</label><input id="tienCong" class="form-control form-control-sm money-input" value="0"></div>
+                </div>
+                <div class="p-2 border rounded bg-light mb-2">
+                    <small class="text-muted fw-bold d-block mb-2"><i class="fas fa-users"></i> CHI TIẾT CHIA LƯƠNG:</small>
+                    <div class="row g-1 text-center">
+                        <div class="col-3"><label class="small">Triều</label><input id="trieu" class="form-control form-control-sm money-input" value="0"></div>
+                        <div class="col-3"><label class="small">Tèo</label><input id="teo" class="form-control form-control-sm money-input" value="0"></div>
+                        <div class="col-3"><label class="small">Thiện</label><input id="thien" class="form-control form-control-sm money-input" value="0"></div>
+                        <div class="col-3"><label class="small">Thuận</label><input id="thuan" class="form-control form-control-sm money-input" value="0"></div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-success px-4" id="btnSave" onclick="handleSave()">LƯU DỮ LIỆU</button>
+                </div>
+                <div class="mb-3"><label class="small fw-bold">Ghi chú thêm</label><input id="note" class="form-control form-control-sm"></div>
+                
+                <div id="saveLoading" class="text-center d-none mb-2">
+                    <div class="spinner-border spinner-border-sm text-primary"></div> <small class="text-primary">Đang lưu và gửi email thông báo...</small>
+                </div>
+                <button id="saveBtn" class="btn btn-primary w-100 fw-bold py-2 shadow-sm" onclick="save()">LƯU THÔNG TIN</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="loginModal">
     <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content border-danger">
-            <div class="modal-body text-center p-4">
-                <h5 class="fw-bold text-danger mb-3"><i class="fas fa-user-shield"></i> ADMIN CHỈNH SỬA</h5>
-                <p id="authMsg" class="small mb-3 text-muted"></p>
-                <input type="password" id="authPass" class="form-control text-center mb-3 shadow-sm" placeholder="Nhập mật khẩu phongtn...">
-                <button class="btn btn-danger w-100 fw-bold" onclick="confirmAdminAction()">XÁC NHẬN</button>
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3 text-danger"><i class="fas fa-user-shield fa-3x"></i></div>
+                <h6 class="fw-bold mb-1">XÁC THỰC QUẢN TRỊ</h6>
+                <p class="small text-muted mb-3" id="authTxt"></p>
+                <input type="password" id="authPass" class="form-control text-center mb-3" placeholder="Nhập mật khẩu...">
+                <div id="authLoading" class="spinner-border spinner-border-sm text-primary d-none mb-2"></div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-danger fw-bold" onclick="confirmAuth()">XÁC NHẬN</button>
+                    <button class="btn btn-light btn-sm" data-bs-dismiss="modal">Hủy</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
-    // URL Web App của bạn
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyWfwnhOJ6frT_FBA-YFjIdN7ESldIB6m88zHFwxk4rqjZHL_vyJyHf1XeOgPZm6xdfdA/exec";
+    let currentData = [], currentAction = '', targetId = '', tempSave = {};
+    let costChart, staffChart;
     
-    let currentAction = '', targetId = '', tempSaveData = {};
-    let dataTable;
+    const money = n => Number(n).toLocaleString("vi-VN");
+    const unMoney = v => Number(String(v).replace(/[^0-9-]/g, "")) || 0;
 
-    $(document).ready(function() {
-        loadData();
+    $(document).ready(() => {
+        // Tự động định dạng tiền khi nhập
+        $(document).on('focus', '.money-input', function() { 
+            let v = unMoney($(this).val()); 
+            $(this).val(v === 0 ? '' : v); 
+        });
+        $(document).on('blur', '.money-input', function() { 
+            $(this).val(money(unMoney($(this).val()))); 
+        });
+        load();
     });
 
-    // LẤY DỮ LIỆU TỪ SHEET (CÔNG KHAI HOẶC QUA WEB APP)
-    async function loadData() {
-        showLoading(true);
-        try {
-            // Chúng ta lấy dữ liệu trực tiếp qua Web App để đảm bảo mới nhất
-            const response = await fetch(WEB_APP_URL);
-            const data = await response.json();
-            renderTable(data);
-        } catch (e) {
-            console.error(e);
-            alert("Không thể tải dữ liệu. Vui lòng kiểm tra kết nối!");
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    function renderTable(data) {
-        if ($.fn.DataTable.isDataTable('#dataTable')) {
-            $('#dataTable').DataTable().destroy();
-        }
-
-        let html = '';
-        data.slice(1).forEach(row => { // Bỏ qua dòng tiêu đề
-            if(!row[0]) return;
-            html += `
-                <tr>
-                    <td class="fw-bold text-center">${row[0]}</td>
-                    <td>${formatDate(row[1])}</td>
-                    <td>${row[2]}</td>
-                    <td class="money text-primary">${formatMoney(row[3])}</td>
-                    <td class="money text-danger">${formatMoney(row[4])}</td>
-                    <td class="small">${row[5] || ''}</td>
-                    <td class="money">${formatMoney(row[6])}</td>
-                    <td class="money">${formatMoney(row[7])}</td>
-                    <td class="money">${formatMoney(row[8])}</td>
-                    <td class="money">${formatMoney(row[9])}</td>
+    // Hàm tải dữ liệu tổng thể
+    function load() {
+        // Tải bảng
+        google.script.run.withSuccessHandler(d => {
+            currentData = d;
+            if ($.fn.DataTable.isDataTable('#tbl')) $('#tbl').DataTable().destroy();
+            let h = '';
+            d.forEach(r => {
+                h += `<tr>
+                    <td class="text-center text-muted small">${r[0]}</td>
+                    <td class="fw-bold text-nowrap">${r[1]}</td>
+                    <td>${r[2]}</td>
+                    <td class="money text-info">${money(r[3])}</td>
+                    <td class="money text-warning">${money(r[4])}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick='openEditModal(${JSON.stringify(row)})'>
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="openDeleteModal('${row[0]}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <button class="btn btn-sm btn-outline-warning border-0 action-btn" onclick="openEdit(${r[0]})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger border-0 action-btn" onclick="askDelete(${r[0]})"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
-        });
-        $('#tableBody').html(html);
-        dataTable = $('#dataTable').DataTable({
-            language: { url: '//cdn.datatables.net/plug-ins/1.13.8/i18n/vi.json' },
-            order: [[0, 'desc']]
-        });
-    }
-
-    // MỞ MODAL THÊM
-    function openAddModal() {
-        currentAction = 'add';
-        $('#editId').val('');
-        $('#entryForm')[0].reset();
-        $('#fDate').val(new Date().toISOString().split('T')[0]);
-        $('#modalTitle').text("THÊM CHI PHÍ MỚI");
-        new bootstrap.Modal('#dataModal').show();
-    }
-
-    // MỞ MODAL SỬA
-    function openEditModal(row) {
-        currentAction = 'edit';
-        targetId = row[0];
-        $('#editId').val(row[0]);
-        
-        // Chuyển định dạng ngày dd/mm/yyyy sang yyyy-mm-dd để input date hiểu
-        const parts = row[1].split('/');
-        $('#fDate').val(`${parts[2]}-${parts[1]}-${parts[0]}`);
-        
-        $('#fContent').val(row[2]);
-        $('#fVatTu').val(row[3]);
-        $('#fTienCong').val(row[4]);
-        $('#fNote').val(row[5]);
-        $('#fTrieu').val(row[6]);
-        $('#fTeo').val(row[7]);
-        $('#fThien').val(row[8]);
-        $('#fThuan').val(row[9]);
-
-        $('#modalTitle').text("CHỈNH SỬA ID: #" + targetId);
-        new bootstrap.Modal('#dataModal').show();
-    }
-
-    // MỞ MODAL XÓA
-    function openDeleteModal(id) {
-        currentAction = 'delete';
-        targetId = id;
-        $('#authMsg').text("Xóa bản ghi #" + id + " sẽ gửi email thông báo tới Admin.");
-        new bootstrap.Modal('#authModal').show();
-    }
-
-    // XỬ LÝ LƯU (THÊM HOẶC CẦN XÁC THỰC ĐỂ SỬA)
-    async function handleSave() {
-        const data = {
-            date: $('#fDate').val().split('-').reverse().join('/'),
-            content: $('#fContent').val().trim(),
-            vatTu: Number($('#fVatTu').val()),
-            tienCong: Number($('#fTienCong').val()),
-            note: $('#fNote').val().trim(),
-            trieu: Number($('#fTrieu').val()),
-            teo: Number($('#fTeo').val()),
-            thien: Number($('#fThien').val()),
-            thuan: Number($('#fThuan').val())
-        };
-
-        if (!data.content || !data.date) return alert("Vui lòng nhập Ngày và Nội dung!");
-
-        if (currentAction === 'add') {
-            await callAPI({ action: 'add', data: data });
-        } else {
-            tempSaveData = data;
-            bootstrap.Modal.getInstance('#dataModal').hide();
-            $('#authMsg').text("Cập nhật bản ghi #" + targetId + " sẽ gửi email thông báo.");
-            new bootstrap.Modal('#authModal').show();
-        }
-    }
-
-    // XÁC NHẬN ADMIN
-    async function confirmAdminAction() {
-        const pass = $('#authPass').val();
-        if (!pass) return alert("Vui lòng nhập mật khẩu!");
-
-        const payload = {
-            action: currentAction,
-            id: targetId,
-            user: 'Admin',
-            pass: pass,
-            data: currentAction === 'edit' ? tempSaveData : null
-        };
-
-        await callAPI(payload);
-    }
-
-    // HÀM GỌI API LÊN GOOGLE APPS SCRIPT
-    async function callAPI(body) {
-        showLoading(true);
-        try {
-            // Sử dụng fetch POST tới Apps Script
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors', // Cần thiết khi gọi từ domain khác tới Apps Script
-                body: JSON.stringify(body)
             });
+            $('#tbl tbody').html(h);
+            $('#tbl').DataTable({ 
+                order: [[0, "desc"]], 
+                pageLength: 8, 
+                language: { url: "//cdn.datatables.net/plug-ins/1.13.8/i18n/vi.json" } 
+            });
+        }).getAllData();
 
-            // Vì 'no-cors' không trả về dữ liệu response, 
-            // ta sẽ đợi 2 giây rồi load lại dữ liệu để kiểm tra kết quả
-            setTimeout(() => {
-                alert("Yêu cầu đã được gửi! Hệ thống sẽ cập nhật và gửi Email.");
-                location.reload();
-            }, 2500);
+        // Tải biểu đồ tròn & Thống kê
+        google.script.run.withSuccessHandler(s => {
+            $('#tTotal').text(money(s.total) + 'đ');
+            $('#tVatTu').text(money(s.vatTu) + 'đ');
+            $('#tTienCong').text(money(s.tienCong) + 'đ');
+            renderCostChart(s.vatTu, s.tienCong);
+        }).getSummaryData();
 
-        } catch (e) {
-            alert("Lỗi: " + e.message);
-            showLoading(false);
+        // Tải biểu đồ cột lương
+        google.script.run.withSuccessHandler(s => {
+            renderStaffChart(s);
+        }).getStaffSummaryData();
+    }
+
+    function renderCostChart(v, t) {
+        const ctx = document.getElementById('costChart');
+        if(costChart) costChart.destroy();
+        costChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Vật tư', 'Tiền công'],
+                datasets: [{ data: [v, t], backgroundColor: ['#0dcaf0', '#ffc107'], hoverOffset: 12 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+    }
+
+    function renderStaffChart(s) {
+        const ctx = document.getElementById('staffChart');
+        if(staffChart) staffChart.destroy();
+        staffChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Triều', 'Tèo', 'Thiện', 'Thuận'],
+                datasets: [{
+                    label: 'Tổng tiền (đ)',
+                    data: [s.trieu, s.teo, s.thien, s.thuan],
+                    backgroundColor: '#0d6efd',
+                    borderRadius: 6
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    function openModal(mode) {
+        $('#editId').val('');
+        $('#date').val(new Date().toISOString().split('T')[0]);
+        $('#content').val(''); $('#note').val('');
+        $('.money-input').val('0');
+        $('#mTitle').text('THÊM MỚI CHI PHÍ');
+        $('#saveBtn').text('LƯU DỮ LIỆU').removeClass('btn-warning').addClass('btn-primary').prop('disabled', false);
+        $('#saveLoading').addClass('d-none');
+        new bootstrap.Modal('#modal').show();
+    }
+
+    function openEdit(id) {
+        const r = currentData.find(x => x[0] == id);
+        if(!r) return;
+        $('#editId').val(id);
+        let dt = r[1].split('/'); 
+        $('#date').val(`${dt[2]}-${dt[1]}-${dt[0]}`);
+        $('#content').val(r[2]); 
+        $('#vatTu').val(money(r[3])); $('#tienCong').val(money(r[4]));
+        $('#note').val(r[5]); 
+        $('#trieu').val(money(r[6])); $('#teo').val(money(r[7]));
+        $('#thien').val(money(r[8])); $('#thuan').val(money(r[9]));
+        $('#mTitle').text('CHỈNH SỬA BẢN GHI #' + id);
+        $('#saveBtn').text('CẬP NHẬT (CẦN PASS)').removeClass('btn-primary').addClass('btn-warning').prop('disabled', false);
+        $('#saveLoading').addClass('d-none');
+        new bootstrap.Modal('#modal').show();
+    }
+
+    function save() {
+        const id = $('#editId').val();
+        const data = {
+            date: $('#date').val().split('-').reverse().join('/'),
+            content: $('#content').val().trim(),
+            vatTu: unMoney($('#vatTu').val()),
+            tienCong: unMoney($('#tienCong').val()),
+            note: $('#note').val(),
+            trieu: unMoney($('#trieu').val()), teo: unMoney($('#teo').val()),
+            thien: unMoney($('#thien').val()), thuan: unMoney($('#thuan').val())
+        };
+        
+        if(!data.content || !data.date) return alert("Vui lòng nhập Ngày và Nội dung!");
+
+        if(id) {
+            // Trường hợp cập nhật
+            tempSave = data; targetId = id; currentAction = 'edit';
+            $('#authTxt').text('Bạn đang thay đổi dữ liệu của ID #' + id);
+            bootstrap.Modal.getInstance('#modal').hide();
+            new bootstrap.Modal('#loginModal').show();
+        } else {
+            // Trường hợp thêm mới (Gửi mail luôn)
+            $('#saveBtn').prop('disabled', true).text('Đang xử lý...');
+            $('#saveLoading').removeClass('d-none');
+            
+            google.script.run.withSuccessHandler((res) => { 
+                alert(res.message); 
+                load(); 
+                bootstrap.Modal.getInstance('#modal').hide(); 
+            }).saveNewEntryFromClient(data);
         }
     }
 
-    // TIỆN ÍCH
-    function formatMoney(num) {
-        return num ? Number(num).toLocaleString('vi-VN') : '0';
+    function askDelete(id) {
+        targetId = id; currentAction = 'delete';
+        $('#authTxt').text('Hành động xóa ID #' + id + ' sẽ gửi mail báo cáo và không thể hoàn tác!');
+        new bootstrap.Modal('#loginModal').show();
     }
 
-    function formatDate(dateStr) {
-        if (!dateStr) return '';
-        if (dateStr.includes('/')) return dateStr;
-        const d = new Date(dateStr);
-        return isNaN(d) ? dateStr : d.toLocaleDateString('vi-VN');
-    }
+    function confirmAuth() {
+        const p = $('#authPass').val();
+        if(!p) return alert("Vui lòng nhập mật khẩu!");
+        
+        $('#authLoading').removeClass('d-none');
+        const handleRes = (res) => {
+            $('#authLoading').addClass('d-none');
+            if(res.status === 'success') {
+                alert(res.message);
+                bootstrap.Modal.getInstance('#loginModal').hide();
+                $('#authPass').val('');
+                load();
+            } else alert(res.message);
+        };
 
-    function showLoading(show) {
-        $('#loadingOverlay').css('display', show ? 'flex' : 'none');
+        if(currentAction === 'edit') {
+            google.script.run.withSuccessHandler(handleRes).performUpdate(targetId, tempSave, 'Admin', p);
+        } else {
+            google.script.run.withSuccessHandler(handleRes).performDelete(targetId, 'Admin', p);
+        }
     }
 </script>
-
 </body>
 </html>
