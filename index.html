@@ -3,39 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quản Lý Chi Phí SR2526</title>
+    <title>Quan Ly Chi Phi SR2526</title>
 
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/628/628283.png?v=1">
-    
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/628/628283.png?v=1">
-    
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/628/628283.png?v=2">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/628/628283.png?v=2">
+
     <meta name="theme-color" content="#2e7d32">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SR2526">
 
     <style>
+        /* ============================================
+           FILE NÀY DÙNG CHO: GITHUB PAGES (PWA)
+           File Index.html kia dùng cho: Web App Google
+           ============================================ */
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body, html {
-            margin: 0;
-            padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background-color: #f4f6f8;
+            background: #1b5e20;
+            font-family: Arial, sans-serif;
         }
+
+        /* Thanh tiêu đề phiên bản - hiển thị trước khi iframe tải xong */
+        #version-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 36px;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        #version-bar .v-title {
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        #version-bar .v-badge {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        /* Màn hình loading khi iframe chưa load */
+        #splash {
+            position: fixed;
+            inset: 36px 0 0 0;
+            background: #f0f5f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            z-index: 998;
+            transition: opacity 0.4s;
+        }
+        #splash img { width: 72px; height: 72px; border-radius: 50%; }
+        #splash p { color: #2e7d32; font-size: 14px; font-weight: 700; }
+        .spinner {
+            width: 44px; height: 44px;
+            border: 4px solid #c8e6c9;
+            border-top-color: #2e7d32;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         iframe {
             position: absolute;
-            top: 0;
+            top: 36px; /* bên dưới thanh phiên bản */
             left: 0;
             width: 100%;
-            height: 100%;
+            height: calc(100% - 36px);
             border: none;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
+        iframe.loaded { opacity: 1; }
     </style>
 </head>
 <body>
-    <iframe 
-        src="https://script.google.com/macros/s/AKfycbwxUu6VZYtcJOFeTCdYZ2kcPVeeWEbceYx5HUrpLDXf-NZWlSxqwzFu4YyzxAU4f-N9wg/exec"
-        allow="geolocation; microphone; camera; clipboard-write; self">
+
+    <!-- THANH PHIÊN BẢN - Nhìn vào đây để biết đang chạy phiên bản nào -->
+    <div id="version-bar">
+        <span class="v-title">SR2526 - Quan Ly Chi Phi</span>
+        <span class="v-badge">Phien ban v6.1</span>
+    </div>
+
+    <!-- SPLASH LOADING -->
+    <div id="splash">
+        <img src="https://img.icons8.com/color/96/durian.png" alt="SR2526">
+        <div class="spinner"></div>
+        <p>Dang tai ung dung...</p>
+    </div>
+
+    <!--
+        =====================================================
+        QUAN TRONG: URL PHIA DUOI PHAI LA URL DEPLOY MOI NHAT
+        Moi khi deploy lai Apps Script, copy URL moi va thay
+        vao thuoc tinh src cua the iframe ben duoi.
+        =====================================================
+        URL HIEN TAI (v6.1 - cap nhat 05/04/2026):
+    -->
+    <iframe
+        id="appFrame"
+        src="https://script.google.com/macros/s/AKfycbzSQDZSRXqPnOJoR5hrVJ-PHHrbgWd4iR17e9thVJi_T48RjHssN5FIloy4a2VFj21ZNg/exec"
+        allow="geolocation; microphone; camera; clipboard-write; self"
+        onload="iframeLoaded()">
     </iframe>
+
+    <script>
+        function iframeLoaded() {
+            document.getElementById('appFrame').classList.add('loaded');
+            // Ẩn splash sau 0.5s để iframe có thời gian render
+            setTimeout(() => {
+                const splash = document.getElementById('splash');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.style.display = 'none', 400);
+            }, 500);
+        }
+
+        // Nếu sau 15s iframe chưa load, vẫn ẩn splash
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            if (splash && splash.style.display !== 'none') {
+                splash.style.opacity = '0';
+                setTimeout(() => splash.style.display = 'none', 400);
+            }
+        }, 15000);
+    </script>
 </body>
 </html>
