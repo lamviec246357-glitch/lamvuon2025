@@ -1,7 +1,7 @@
 {
-  "name": "Quan Ly Chi Phi SR2526",
-  "short_name": "Chi Phi SR",
-  "description": "Ung dung quan ly chi phi lam vuon SR2526",
+  "name": "Quản Lý Chi Phí SR2526",
+  "short_name": "Chi Phí SR",
+  "description": "Ứng dụng quản lý chi phí làm vườn SR2526",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
@@ -62,9 +62,9 @@
   "categories": ["productivity", "finance"],
   "shortcuts": [
     {
-      "name": "Them moi chi phi",
-      "short_name": "Them moi",
-      "description": "Mo trang them moi chi phi",
+      "name": "Thêm mới chi phí",
+      "short_name": "Thêm mới",
+      "description": "Mở trang thêm mới chi phí",
       "url": "./index.html",
       "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
     }
